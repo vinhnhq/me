@@ -1,12 +1,18 @@
 import type { ReactNode } from "react";
-import { ThemePicker } from "@/components/theme-picker";
+import { ReaderControls } from "@/components/reader-controls";
 
-/** The bar above every page: the theme switch on the left, the page's links on the right. */
-export function SiteNav({ children }: { children: ReactNode }) {
+/**
+ * The bar above every page: the page's links on the left; text size, theme
+ * and the page's own action (the CV's "Save as PDF") on the right.
+ */
+export function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
     <nav className="actions no-print">
-      <ThemePicker />
       <span className="links">{children}</span>
+      <span className="controls">
+        <ReaderControls />
+        {action}
+      </span>
     </nav>
   );
 }

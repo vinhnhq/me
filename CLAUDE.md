@@ -8,10 +8,16 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - `content/resume.md` — the CV, the single source. Home page `/` and the PDF render it. Its front
   matter (name, headline, email, phone, location, github, x) and the paragraphs before the first
   `##` feed the header (`components/resume-header.tsx`); the rest is the body.
-- Themes: light and dark only (`lib/themes.ts` + `[data-theme]` blocks in `app/globals.css`), one
-  toggle button. The accent is K-Studio's `--primary` (wine on light, rose on dark) — Vinh's lucky
-  colour, keep it. The choice is kept in localStorage; with none the page follows the system.
-  Print and the PDF are always light.
+- Reader controls in the top bar (`components/reader-controls.tsx`, `lib/themes.ts`): pill-shaped
+  segmented buttons in the style of tungv.com — text size (S/M/L, hidden on phones) and theme
+  (light / dark / follow the device) — plus a "Save as PDF" pill on the CV. Choices are kept in
+  localStorage. Print and the PDF are always light at the default size.
+- Accent is burgundy `#800020` (Vinh's lucky colour — keep it); on dark it is a lighter red,
+  `oklch(0.66 0.18 18)`, because burgundy itself is unreadable on a dark page.
+- Favicon: `app/icon.tsx` / `app/apple-icon.tsx`, white "VN" on dark, like Tung's "TV".
+- To check on a real iOS Safari: `xcrun simctl openurl booted http://localhost:<port>/` then
+  `xcrun simctl io booted screenshot <file>` (Vinh keeps Device Hub open). Add a `?r=N` query if it
+  shows stale CSS.
 - In `resume.md`, a job is `### Title` + an italic `*Org · Dates · Where*` line (read from the
   end, so the org may itself contain " · "). Bullets under a `<!-- more -->` line are folded on
   the web ("All N highlights") and printed in full in the PDF (`components/resume-body.tsx`).

@@ -8,9 +8,14 @@ export default async function ResumePage() {
   const resume = await getResume();
   return (
     <main className="page resume" data-resume>
-      <SiteNav>
+      <SiteNav
+        action={
+          <a className="pill" href="/api/pdf">
+            Save as PDF
+          </a>
+        }
+      >
         <Link href="/blog">Blog</Link>
-        <a href="/api/pdf">Download PDF</a>
       </SiteNav>
       <ResumeHeader resume={resume} />
       <ResumeBody sections={resume.sections} />

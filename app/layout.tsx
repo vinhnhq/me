@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL } from "@/lib/site";
-import { THEME_BOOT } from "@/lib/themes";
+import { SETTINGS_BOOT } from "@/lib/themes";
 import "./globals.css";
 
 // Geist, Vercel's own face. Latin only: the site is in English.
@@ -18,10 +18,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // the boot script sets data-theme before React hydrates: that mismatch is expected
+    // the boot script sets data-theme and data-size before React hydrates: that mismatch is expected
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOT }} />
       </head>
       <body>
         {children}
