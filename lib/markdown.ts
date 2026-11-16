@@ -4,7 +4,13 @@ import { marked } from "marked";
 
 const CONTENT = path.join(process.cwd(), "content");
 
-const toHtml = (source: string) => marked.parse(source, { async: false, gfm: true });
+/** Markdown → HTML. The content is ours, so no sanitising. A table gets its own
+ *  sideways scroller, so on a phone it never pushes the page wider than the screen. */
+const toHtml = (source: string) =>
+  marked
+    .parse(source, { async: false, gfm: true })
+    .replaceAll("<table>", '<div class="table-scroll"><table>')
+    .replaceAll("</table>", "</table></div>");
 
 /**
  * Content files open with a `---` block of `key: value` lines. Nothing else
@@ -24,6 +30,29 @@ function parse(file: string, source: string, required: readonly string[]) {
   return { meta, body: source.slice(m[0].length) };
 }
 
+/** One job or degree: a `### Title` with an italic `*Org · Dates · Where*` line under it. */
+export type Entry = {
+  readonly title: string;
+  readonly org: string;
+  readonly when: string;
+  /** "full-time, Ho Chi Minh City" — absent on a degree */
+  readonly where?: string;
+  /** what is always shown: the intro line and the bullets above `<!-- more -->` */
+  readonly html: string;
+  /** the bullets under `<!-- more -->`: folded on the web, printed in the PDF */
+  readonly moreHtml?: string;
+  /** every bullet, shown or folded */
+  readonly count: number;
+};
+
+export type Section = {
+  readonly title: string;
+  /** set for a section of jobs or degrees */
+  readonly entries?: readonly Entry[];
+  /** set for a plain section, e.g. the skills list */
+  readonly html?: string;
+};
+
 export type Resume = {
   readonly name: string;
   readonly headline: string;
@@ -34,15 +63,53 @@ export type Resume = {
   readonly x: string;
   /** The paragraphs before the first `##`: they sit in the header, beside the photo. */
   readonly summaryHtml: string;
-  readonly bodyHtml: string;
+  readonly sections: readonly Section[];
 };
+
+const MORE = "<!-- more -->";
+
+function parseEntry(block: string): Entry {
+  const [titleLine, ...rest] = block.split("\n");
+  const title = titleLine.trim();
+  const metaAt = rest.findIndex((l) => l.trim() !== "");
+  const meta = /^\*(.+)\*$/.exec(rest[metaAt]?.trim() ?? "");
+  if (!meta) throw new Error(`content/resume.md: "${title}" needs an *Org · Dates · Where* line under it`);
+  // read from the end: the organisation itself may hold a " · " (three employers in one entry)
+  const parts = meta[1].split(" · ");
+  if (parts.length < 2) throw new Error(`content/resume.md: "${title}" needs at least *Org · Dates*`);
+  const where = parts.length > 2 ? parts.pop() : undefined;
+  const when = parts.pop()!;
+  const text = rest.slice(metaAt + 1).join("\n");
+  const [shown, more] = text.split(MORE);
+  return {
+    title,
+    org: parts.join(" · "),
+    when,
+    where,
+    html: toHtml(shown),
+    moreHtml: more?.trim() ? toHtml(more) : undefined,
+    count: (text.match(/^- /gm) ?? []).length,
+  };
+}
+
+function parseSection(block: string): Section {
+  const nl = block.indexOf("\n");
+  const title = block.slice(0, nl).trim();
+  const text = block.slice(nl + 1);
+  if (!/^### /m.test(text)) return { title, html: toHtml(text) };
+  const entries = text
+    .split(/^### /m)
+    .slice(1)
+    .map(parseEntry);
+  return { title, entries };
+}
 
 /** `content/resume.md`: the header fields, the summary, then the sections. */
 export async function getResume(): Promise<Resume> {
   const source = await readFile(path.join(CONTENT, "resume.md"), "utf8");
   const { meta, body } = parse("resume.md", source, ["name", "headline", "email", "phone", "location", "github", "x"]);
-  const cut = body.search(/^## /m);
-  if (cut < 0) throw new Error("content/resume.md has no sections");
+  const [summary, ...sections] = body.split(/^## /m);
+  if (sections.length === 0) throw new Error("content/resume.md has no sections");
   return {
     name: meta.name,
     headline: meta.headline,
@@ -51,9 +118,49 @@ export async function getResume(): Promise<Resume> {
     location: meta.location,
     github: meta.github,
     x: meta.x,
-    summaryHtml: toHtml(body.slice(0, cut)),
-    bodyHtml: toHtml(body.slice(cut)),
+    summaryHtml: toHtml(summary),
+    sections: sections.map(parseSection),
   };
+}
+
+/** A case study: `content/projects/<slug>.md`, linked from the CV. */
+export type Project = {
+  readonly slug: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly role: string;
+  readonly when: string;
+  readonly stack: string;
+  /** a public address to try, when there is one */
+  readonly link?: string;
+  readonly linkLabel?: string;
+  readonly html: string;
+};
+
+export async function listProjects(): Promise<Project[]> {
+  const files = (await readdir(path.join(CONTENT, "projects"))).filter((f) => f.endsWith(".md"));
+  return Promise.all(
+    files.map(async (f) => {
+      const slug = f.slice(0, -3);
+      const source = await readFile(path.join(CONTENT, "projects", f), "utf8");
+      const { meta, body } = parse(`projects/${f}`, source, ["title", "summary", "role", "when", "stack"]);
+      return {
+        slug,
+        title: meta.title,
+        summary: meta.summary,
+        role: meta.role,
+        when: meta.when,
+        stack: meta.stack,
+        link: meta.link,
+        linkLabel: meta.linkLabel,
+        html: toHtml(body),
+      };
+    }),
+  );
+}
+
+export async function getProject(slug: string): Promise<Project | undefined> {
+  return (await listProjects()).find((p) => p.slug === slug);
 }
 
 export type Post = {

@@ -12,6 +12,15 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   toggle button. The accent is K-Studio's `--primary` (wine on light, rose on dark) — Vinh's lucky
   colour, keep it. The choice is kept in localStorage; with none the page follows the system.
   Print and the PDF are always light.
+- In `resume.md`, a job is `### Title` + an italic `*Org · Dates · Where*` line (read from the
+  end, so the org may itself contain " · "). Bullets under a `<!-- more -->` line are folded on
+  the web ("All N highlights") and printed in full in the PDF (`components/resume-body.tsx`).
+- `content/projects/<slug>.md` — case studies (`/projects/<slug>`), linked from CV bullets. Front
+  matter: `title`, `summary`, `role`, `when`, `stack`, optional `link` + `linkLabel`.
+  `bao-minh-portal.md` is thin: it holds only the facts below — Vinh should add detail.
+- Phone rules (taken from k-studio's ui-review): no sideways overflow, 44px targets on any touch
+  screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
+  `bun run audit [baseUrl]` measures all of it on 320/390/820px × light/dark — run it after UI changes.
 - `content/blog/<slug>.md` — blog posts (`/blog`, `/blog/<slug>`), web only. Front matter is
   `title`, `date`, `description` (plain `key: value`, parsed by hand in `lib/markdown.ts`).
   The first post, `how-i-build-with-ai-agents`, carries numbers from the k-studio repo (first

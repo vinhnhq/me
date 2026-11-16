@@ -10,7 +10,7 @@ I build production software with AI coding agents, mostly Claude Code. The agent
 
 ## The project
 
-K-Studio is the operating system for a ~20-person wedding photo studio in Nha Trang. It replaced three things the studio ran by hand: an Excel cash book, a shoot schedule kept in Zalo, and a payroll sheet computed by hand. It covers contracts and invoices, shoot scheduling and crew, two money books (cash and bank), payroll, a photo-proofing gallery for couples, and server-rendered PDFs, in Vietnamese and English.
+[K-Studio](/projects/k-studio) is the operating system for a ~20-person wedding photo studio in Nha Trang. It replaced three things the studio ran by hand: an Excel cash book, a shoot schedule kept in Zalo, and a payroll sheet computed by hand. It covers contracts and invoices, shoot scheduling and crew, two money books (cash and bank), payroll, a photo-proofing gallery for couples, and server-rendered PDFs, in Vietnamese and English.
 
 | | |
 |---|---|
@@ -56,5 +56,3 @@ The insurance sales portal for Bảo Minh Gia Định (Jun 2025 – Apr 2026, ~5
 - Setting up the harness: repo instructions, skills, hooks and CI gates, so agents produce code a team can trust and review.
 - Writing specs and ADRs that people and agents can both work from.
 - Pairing that with 12 years of frontend and fullstack work, including leading teams of up to 8 and mentoring.
-
-[← Back to the résumé](/)

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ResumeBody } from "@/components/resume-body";
 import { ResumeHeader } from "@/components/resume-header";
 import { SiteNav } from "@/components/site-nav";
 import { getResume } from "@/lib/markdown";
@@ -12,7 +13,7 @@ export default async function ResumePage() {
         <a href="/api/pdf">Download PDF</a>
       </SiteNav>
       <ResumeHeader resume={resume} />
-      <article dangerouslySetInnerHTML={{ __html: resume.bodyHtml }} />
+      <ResumeBody sections={resume.sections} />
     </main>
   );
 }

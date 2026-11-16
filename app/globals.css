@@ -39,6 +39,12 @@
 
 html { -webkit-text-size-adjust: 100%; }
 
+/* Phone rules learned on K-Studio:
+   - nothing may push the page wider than the screen: long words and addresses wrap;
+   - a control answers at once: without `manipulation` iOS waits ~300ms for a double-tap. */
+body { overflow-wrap: break-word; }
+a, button, summary { touch-action: manipulation; }
+
 body {
   margin: 0;
   background: var(--bg);
@@ -70,7 +76,57 @@ h2 {
 h2::after { content: ""; flex: 1; height: 2px; background: var(--rule); }
 
 h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
-h3 + p em { color: var(--muted); font-style: normal; font-size: 0.9rem; }
+
+/* A job or degree: dates in a narrow column, the rest beside it. */
+.entry { display: grid; grid-template-columns: 10.5rem 1fr; column-gap: 1.5rem; margin-top: 1.75rem; }
+.entry > * { grid-column: 2; }
+.entry > .entry-when { grid-column: 1; grid-row: 1 / span 3; }
+.entry h3 { margin-top: 0; }
+.entry-text > :first-child { margin-top: 0.35rem; }
+.entry-org { color: var(--muted); font-weight: 400; }
+.entry-when {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.entry-when span { display: block; }
+.entry-when span:first-child { color: var(--fg); }
+
+/* The folded bullets. */
+.more summary {
+  display: inline-block;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  list-style: none;
+}
+.more summary::-webkit-details-marker { display: none; }
+.more summary::after { content: " +"; }
+.more[open] summary::after { content: " −"; }
+
+/* Case study. */
+.eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.25rem; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--rule); }
+.facts .wide { grid-column: 1 / -1; }
+.facts dt { font-size: 0.8rem; color: var(--muted); }
+.facts dd { margin: 0; }
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.table-scroll { overflow-x: auto; }
 
 p { margin: 0.5rem 0; }
 ul { padding-left: 1.1rem; margin: 0.5rem 0; }
@@ -138,7 +194,7 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
-.posts a { font-weight: 600; font-size: 1.05rem; }
+.posts a { display: inline-block; font-weight: 600; font-size: 1.05rem; }
 .posts time { display: block; color: var(--muted); font-size: 0.85rem; }
 .posts p { color: var(--muted); margin: 0.25rem 0 0; }
 
@@ -202,7 +258,36 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   .resume-header .intro { flex-direction: column; align-items: center; gap: 1rem; }
   .resume-header .intro h1, .headline { text-align: center; }
   .photo { width: 7.5rem; height: 7.5rem; }
-  .contact { justify-content: flex-start; }
+  /* one contact per line, in a column a thumb can run down */
+  .contact { flex-direction: column; align-items: flex-start; gap: 0; }
+  /* the dates drop under the title, on one line */
+  .entry { display: block; }
+  .entry-when { margin: 0.1rem 0 0.4rem; }
+  .entry-when span { display: inline; }
+  .entry-when span + span::before { content: " · "; }
+  .facts { grid-template-columns: 1fr; }
+  td:first-child { width: auto; }
+}
+
+/*
+  Touch screens of any width (K-Studio: "every control 44px on ANY touch
+  screen, not just below md"). The target is grown, not the drawing: links in
+  running text keep their size, but the ones that stand alone get a 44px box.
+*/
+@media (pointer: coarse) {
+  .theme-toggle { width: 2.75rem; height: 2.75rem; }
+  .actions .links { gap: 0.5rem; }
+  .actions .links a,
+  .contact a,
+  .contact li > span,
+  .more summary,
+  .posts a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .actions .links a { padding: 0 0.5rem; }
+  .contact li { min-height: 2.75rem; }
 }
 
 /* PDF: A4, always light, tighter. Links stay clickable in the PDF. */
@@ -218,7 +303,17 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   .no-print { display: none; }
   h1 { font-size: 21pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
-  h3 { margin: 0.8rem 0 0; break-after: avoid; }
+  h3 { margin: 0; break-after: avoid; }
+  /* paper: stacked, every bullet, no fold */
+  .entry { display: block; margin-top: 0.8rem; }
+  .entry-when { font-family: inherit; font-size: 8.6pt; margin: 0; }
+  .entry-when span { display: inline; color: var(--muted); }
+  .entry-when span:first-child { color: var(--muted); }
+  .entry-when span + span::before { content: " · "; }
+  .more summary { display: none; }
+  .more::details-content { content-visibility: visible; display: block; }
+  .entry-text > ul:last-child { margin-bottom: 0; }
+  .more ul { margin-top: 0; }
   li { margin: 0.12rem 0; break-inside: avoid; }
   a { text-decoration: none; }
   .resume-header .intro { gap: 6mm; }
