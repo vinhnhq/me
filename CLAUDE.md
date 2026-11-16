@@ -52,12 +52,12 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
   measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on
   `<html>`; the motion is a CSS scroll-driven animation, with a requestAnimationFrame fallback.
-- Phone header (≤40rem) is a menu button on the left and "Save as PDF" on the right, nothing
+- Phone and tablet header (≤60rem, so iPad and iPad mini upright; Vinh, 2026-11-16) is a menu button on the left and "Save as PDF" on the right, nothing
   else; scrolled, the name lands beside the button. The button (`components/site-menu.tsx`) opens
   a full-screen menu: Résumé, Blog, case studies, "Save as PDF", then a gap, then theme and text
   size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left out of
-  the menu but keeps its page. Wider screens have no menu (a desktop drawer was considered and
-  not built).
+  the menu but keeps its page. Desk-wide screens (≥60rem, a tablet on its side included) keep
+  the full row and have no menu (a desktop drawer was considered and not built).
 - The menu is a native `<dialog>` that FADES IN IN PLACE: its top row is laid exactly over the
   page's (button position measured on open), and both buttons share one `open` state, so the bars
   are seen to cross into an X where they stand. Do not swap it for Vaul / shadcn's Drawer: on iOS

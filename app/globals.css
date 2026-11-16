@@ -346,9 +346,10 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
 
 /*
-  The phone's menu (components/site-menu.tsx). On a phone the button is the
-  left end of the top row from the start, and once the page is scrolled the
-  name lands beside it. Wider screens never show it: everything fits in the row.
+  The menu of phones and tablets (components/site-menu.tsx). There the button
+  is the left end of the top row from the start, and once the page is scrolled
+  the name lands beside it. Desk-wide screens never show it: everything fits in
+  the row.
 */
 .menu-button, .menu-close {
   display: grid;
@@ -410,7 +411,8 @@ dialog.menu::backdrop { background: none; }
 html:has(dialog.menu[open]) { overflow: hidden; }
 .menu-top { display: flex; align-items: center; gap: 0.75rem; height: 2.75rem; margin: var(--menu-y, 0.75rem) 0 0 var(--menu-x, 1rem); }
 .menu-title { color: var(--fg); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; white-space: nowrap; }
-.menu-links, .menu-settings { margin-left: var(--menu-x, 1rem); }
+/* a column of its own on a tablet: the settings are not stretched across the screen */
+.menu-links, .menu-settings { margin-left: var(--menu-x, 1rem); max-width: 24rem; }
 .menu-links { display: flex; flex-direction: column; margin-top: 1.5rem; }
 .menu-links a, .menu-settings {
   opacity: 0;
@@ -526,14 +528,6 @@ dialog.menu[data-open="true"] .menu-settings {
   .resume-header .intro h1, .headline { text-align: center; }
   .resume-header .intro h1 { margin-inline: auto; }
   .photo { width: 7.5rem; height: 7.5rem; }
-  /* The top row on a phone is the menu button and "Save as PDF", nothing else:
-     the links, the theme and the text size are in the menu. Scrolled, the name
-     lands between the two. */
-  .actions > .links,
-  .actions > .controls > .segmented { display: none; }
-  .menu-button { display: grid; }
-  /* the bar's name stands clear of the button */
-  .sticky-name { margin-left: calc(2.75rem + 0.75rem); }
   /* the three words: the label on a line of its own, the words centred under it */
   .values { justify-content: center; row-gap: 0.35rem; margin-top: 1.25rem; }
   .values-label { flex-basis: 100%; margin-right: 0; text-align: center; }
@@ -542,6 +536,18 @@ dialog.menu[data-open="true"] .menu-settings {
   .contact { gap: 0 1.5rem; }
   .contact li:first-child, .contact li:last-child { flex-basis: 100%; }
   td:first-child { width: auto; }
+}
+
+/* Phones and tablets: the top row is the menu button and "Save as PDF", nothing
+   else; the links, the theme and the text size are in the menu. Scrolled, the
+   name lands between the two. A desk-wide screen (a tablet on its side
+   included) keeps the full row and has no menu. */
+@media (max-width: 60rem) {
+  .actions > .links,
+  .actions > .controls > .segmented { display: none; }
+  .menu-button { display: grid; }
+  /* the bar's name stands clear of the button */
+  .sticky-name { margin-left: calc(2.75rem + 0.75rem); }
 }
 
 /* Tablets: wider side margins. */
