@@ -60,7 +60,6 @@ export type Resume = {
   readonly phone: string;
   readonly location: string;
   readonly github: string;
-  readonly x: string;
   /** "A · B · C": the three words under the summary; optional */
   readonly values: readonly string[];
   /** The paragraphs before the first `##`: they sit in the header, beside the photo. */
@@ -109,7 +108,7 @@ function parseSection(block: string): Section {
 /** `content/resume.md`: the header fields, the summary, then the sections. */
 export async function getResume(): Promise<Resume> {
   const source = await readFile(path.join(CONTENT, "resume.md"), "utf8");
-  const { meta, body } = parse("resume.md", source, ["name", "headline", "email", "phone", "location", "github", "x"]);
+  const { meta, body } = parse("resume.md", source, ["name", "headline", "email", "phone", "location", "github"]);
   const [summary, ...sections] = body.split(/^## /m);
   if (sections.length === 0) throw new Error("content/resume.md has no sections");
   return {
@@ -119,7 +118,6 @@ export async function getResume(): Promise<Resume> {
     phone: meta.phone,
     location: meta.location,
     github: meta.github,
-    x: meta.x,
     values: (meta.values ?? "").split("·").map((v) => v.trim()).filter(Boolean),
     summaryHtml: toHtml(summary),
     sections: sections.map(parseSection),

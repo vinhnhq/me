@@ -43,17 +43,19 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - Fonts (`next/font/google`): Manrope for text (Vinh's choice, 2026-11-16), Geist Mono for dates,
   the contact line, pills and code. Neither Google subset has ← → arrows: on Vercel's Linux
   Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
-- Sticky bar (`components/sticky-bar.tsx`): the hand-over from the page's `h1` is CONTINUOUS and
-  tied to the scroll, as on tungv.com (Vinh preferred it to k-studio's discrete view-transition
-  morph, which he found less smooth). On the CV the big name shrinks and slides until it lands
-  exactly on the bar's name, then the two swap. Two legs, so it never crosses the photo: UP while
-  shrinking (scroll 0 → end), then LEFT along the bar (end → end + slide). The component measures `--head-end/-end2/-slide/-dx/-scale`;
-  the motion is a CSS scroll-driven animation (off the main thread), with a requestAnimationFrame
-  fallback. No backdrop blur. Theme/size state lives on `<html>` and is shared between both bars
-  through a `reader-settings` event.
+- Sticky top row: `.actions` (the page's top bar) is `position: sticky`, so the theme pill and
+  "Save as PDF" simply stay where they are; the links and the text-size pill fade out (on phones
+  "Save as PDF" too). `components/sticky-bar.tsx` draws the strip behind the row and holds the
+  name on its left. The hand-over is CONTINUOUS and tied to the scroll, as on tungv.com (Vinh
+  preferred it to k-studio's discrete view-transition morph). On the CV the big name travels in
+  two legs so it never crosses the photo: UP while shrinking (scroll 0 → end), then LEFT along
+  the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
+  measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on
+  `<html>`; the motion is a CSS scroll-driven animation, with a requestAnimationFrame fallback.
 - Values line under the summary comes from `values:` in `resume.md`'s front matter
   ("Ownership · Adaptability · Mentorship", chosen by Vinh 2026-11-16).
-- Contact line: plain mono text, no icons except the X and GitHub marks (same handle on both).
+- Contact line: plain mono text; only GitHub has a mark. No X/Twitter (removed 2026-11-16). The
+  location reads "Ho Chi Minh City, Viet Nam · Remote": Vinh is looking for a remote position.
 - Wave footer on every page (`components/wave-footer.tsx` + `.waves` in globals.css): CSS-only,
   scroll-driven, modelled on Vinh's friend Tung's site (tungv.com). Hidden in print.
 - Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.

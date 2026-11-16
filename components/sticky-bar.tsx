@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { ThemeControl } from "@/components/reader-controls";
+import { useEffect, useRef } from "react";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 
 /**
- * A slim bar that takes over at the top once the page's heading has scrolled
- * up to it: the name (a way home), the theme, and the page's own action.
+ * The ground and the name of the bar the page's top row becomes once it is
+ * scrolled: the row itself (`.actions`, theme and "Save as PDF") is sticky and
+ * simply stays; this draws the strip behind it and holds the name on its left.
  *
  * The hand-over is CONTINUOUS and tied to the scroll, the way tungv.com does
  * it. On the CV the big name is not swapped for a small one; it travels there,
@@ -24,14 +24,14 @@ const clamp = (n: number) => Math.min(1, Math.max(0, n));
  * heading's top meets the top of the bar's name.
  *
  * This component only MEASURES (end, slide, dx, scale → CSS variables on
- * <html>) and flips the discrete things (the bar usable from `end`, the names
- * swapped at `end + slide`). The per-frame motion is a CSS scroll-driven
+ * <html>) and flips the discrete things on <html>: `data-head-stuck` from
+ * `end` (what has faded out of the top row is then out of reach too), and
+ * `data-head-collapsed` at `end + slide` (the names swap). The per-frame motion is a CSS scroll-driven
  * animation (globals.css), which runs off the main thread, so it keeps up
  * during iOS momentum scrolling. Browsers without scroll timelines get the
  * same motion from a requestAnimationFrame loop here.
  */
-export function StickyBar({ name, action }: { name: string; action?: ReactNode }) {
-  const [stuck, setStuck] = useState(false);
+export function StickyBar({ name }: { name: string }) {
   const bar = useRef<HTMLDivElement>(null);
   const slot = useRef<HTMLSpanElement>(null);
 
@@ -71,7 +71,7 @@ export function StickyBar({ name, action }: { name: string; action?: ReactNode }
       const stuckNow = up >= 1;
       if (stuckNow !== isStuck) {
         isStuck = stuckNow;
-        setStuck(stuckNow);
+        root.toggleAttribute("data-head-stuck", stuckNow);
       }
       // without a travelling name there is no second leg to wait for
       const swappedNow = travels ? left >= 1 : stuckNow;
@@ -121,21 +121,18 @@ export function StickyBar({ name, action }: { name: string; action?: ReactNode }
       window.removeEventListener("scroll", onScroll);
       heading.style.scale = "";
       heading.style.translate = "";
-      for (const attr of ["data-head-collapsed", "data-head-travels"]) root.removeAttribute(attr);
+      for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels"]) root.removeAttribute(attr);
     };
   }, [name]);
 
   return (
-    <div ref={bar} className="sticky-bar no-print" data-stuck={stuck} inert={!stuck}>
+    // not `inert`: the name is a link home, reachable once it is shown (CSS hides it until then)
+    <div ref={bar} className="sticky-bar no-print">
       <div className="sticky-inner">
         <Link className="sticky-name" href="/">
           {/* the box the big name lands on: measured, so it hugs the text */}
           <span ref={slot}>{name}</span>
         </Link>
-        <span className="controls">
-          <ThemeControl />
-          {action}
-        </span>
       </div>
     </div>
   );

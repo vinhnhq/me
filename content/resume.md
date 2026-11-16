@@ -3,9 +3,8 @@ name: Vinh Nguyen
 headline: Senior Fullstack Engineer · React / Next.js / TypeScript
 email: nhquocvinh@gmail.com
 phone: +84 762 701 292
-location: Ho Chi Minh City, Viet Nam
+location: Ho Chi Minh City, Viet Nam · Remote
 github: vinhnhq
-x: vinhnhq
 values: Ownership · Adaptability · Mentorship
 ---
 

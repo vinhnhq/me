@@ -151,14 +151,29 @@ td { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: t
 td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 
 /* Top bar: links left; text size, theme and the page's action right. */
-.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1rem; font-size: 0.9rem; margin-bottom: 2rem; }
+.actions {
+  /* sticky: scrolled, this row IS the bar; .sticky-bar only draws the strip behind it */
+  position: sticky;
+  top: 0.5rem;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  /* the strip behind is the only thing here to press through to */
+  pointer-events: none;
+}
+.actions > * { pointer-events: auto; }
 .actions .links { display: flex; gap: 1.25rem; }
 .actions .links a { color: var(--muted); text-decoration: none; }
 .actions .links a:hover { color: var(--fg); }
-.actions .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.actions .controls { display: flex; align-items: center; gap: 0.5rem; }
 
 /* A pill of round buttons; the chosen one is a filled disc. */
-.segmented { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+/* solid, not see-through: stuck at the top, they float over the photo and text for a moment */
+.segmented { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; background: var(--bg); }
 .segmented button {
   display: grid;
   place-items: center;
@@ -190,6 +205,7 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   padding: 0 0.9rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
+  background: var(--bg);
   color: var(--fg);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.78rem;
@@ -250,9 +266,20 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   background: var(--bg);
   border-bottom: 1px solid var(--rule);
   opacity: 0;
+  visibility: hidden;
+  /* never in the way of the page under it; only its name can be pressed, once shown */
   pointer-events: none;
 }
-.sticky-bar[data-stuck="true"] { opacity: 1; pointer-events: auto; }
+html[data-head-stuck] .sticky-bar { opacity: 1; }
+html[data-head-stuck] .sticky-name { pointer-events: auto; }
+/* What leaves the top row once it is the bar: the links (the name takes their
+   place) and the text size. They fade with the scroll, and at the end are out
+   of reach as well as out of sight. */
+html[data-head-stuck] .actions .links,
+html[data-head-stuck] .actions .segmented[aria-label="Text size"] { visibility: hidden; }
+@media (max-width: 40rem) {
+  html[data-head-stuck] .actions .pill { visibility: hidden; }
+}
 
 /* On the CV the big name travels into the bar in two legs (up while shrinking,
    then left along the bar, clear of the photo) and stands in for the bar's own
@@ -260,22 +287,24 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
    the small one's does, so one scales exactly onto the other. */
 .resume-header h1 { width: fit-content; position: relative; z-index: 11; transform-origin: top left; }
 html[data-head-travels]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
+html[data-head-stuck] .sticky-bar { visibility: visible; }
 html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     /* fully there by the time the name arrives in its row */
     .sticky-bar {
+      visibility: visible;
       animation: bar-in linear both;
       animation-timeline: scroll(root);
       animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
     }
-    /* the page's own top bar bows out as this one comes in, so its pills are
-       never seen through the half-faded bar as a second, ghost set */
-    .actions {
+    /* gone before the name needs the room, and before the strip is half there */
+    .actions .links,
+    .actions .segmented[aria-label="Text size"],
+    .actions .pill {
       animation: bar-out linear both;
       animation-timeline: scroll(root);
-      /* gone before the new bar is half there */
       animation-range: calc(var(--head-end, 200px) * 0.15) calc(var(--head-end, 200px) * 0.6);
     }
     html[data-head-travels] main h1 {
@@ -288,6 +317,10 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 }
 @keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bar-out { to { opacity: 0; } }
+/* "Save as PDF" stays on anything wider than a phone */
+@media (min-width: 40.01rem) {
+  .actions .pill { animation: none !important; }
+}
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
 /* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
@@ -295,14 +328,12 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 .sticky-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
   max-width: 50rem;
-  min-height: 3.25rem;
+  /* the top row's height plus the 0.5rem it sticks at, above and below */
+  height: calc(1.75rem + 8px + 1rem);
   margin: 0 auto;
-  padding: 0.35rem 1rem;
+  padding: 0 1rem;
 }
-.sticky-inner .controls { display: flex; align-items: center; gap: 0.5rem; }
 .sticky-name { color: var(--fg); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
 /* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide */
 .sticky-name span { display: block; line-height: 1.15; }
@@ -379,7 +410,9 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   .segmented[aria-label="Text size"] { display: none; }
   /* one contact per line, in a column a thumb can run down */
   .contact { flex-direction: column; align-items: flex-start; gap: 0; }
-  .sticky-inner .pill { display: none; }
+  /* no room for the name beside both pills: "Save as PDF" leaves with the links,
+     and sits first so the theme stays put at the edge when it does */
+  .actions .pill { order: -1; }
   td:first-child { width: auto; }
 }
 
@@ -395,6 +428,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 */
 @media (pointer: coarse) {
   .segmented button { width: 2.75rem; height: 2.75rem; }
+  .sticky-inner { height: calc(2.75rem + 8px + 1rem); }
   .pill { height: calc(2.75rem + 8px); }
   .actions .links { gap: 0.5rem; }
   .actions .links a,
