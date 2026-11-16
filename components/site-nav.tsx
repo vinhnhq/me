@@ -10,13 +10,14 @@ import { listProjects } from "@/lib/markdown";
  * sticky: scrolled, the theme and the action stay where they are, the rest
  * fades, and `StickyBar` puts a strip behind them and the name on the left.
  *
- * On a phone the row is only a menu button and the page's action; `SiteMenu`
- * holds the links and the settings, and the name lands beside the button.
+ * On a phone or tablet the row is only a menu button and the page's action;
+ * `SiteMenu` holds the links and the settings. On a desk the menu button comes
+ * in when the page is scrolled, in the place of the links.
  */
 export async function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
   const menu: MenuLink[] = [
     { href: "/", label: "Résumé" },
-    { href: "/blog", label: "Blog", note: "Notes on how I work" },
+    { href: "/blog", label: "Blog", note: "Field notes from shipping real products" },
     ...(await listProjects())
       .filter((p) => p.inMenu)
       .map((p) => ({ href: `/projects/${p.slug}`, label: p.title, note: "Case study" })),
@@ -24,7 +25,7 @@ export async function SiteNav({ children, action }: { children: ReactNode; actio
   return (
     <>
       <nav className="actions no-print">
-        {/* phones only: it stands in for the links and the settings */}
+        {/* phones and tablets: always; a desk: once scrolled, where the links were */}
         <SiteMenu links={menu} />
         <span className="links">{children}</span>
         <span className="controls">

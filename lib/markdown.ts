@@ -178,13 +178,21 @@ export type Post = {
   /** ISO day, e.g. 2026-11-16 */
   readonly date: string;
   readonly description: string;
+  /** exactly three, e.g. ["ai-agents", "workflow", "testing"] */
+  readonly tags: readonly string[];
   readonly html: string;
 };
 
-/** A post is `content/blog/<slug>.md`: title, date, description, then the text. */
+/** A post is `content/blog/<slug>.md`: title, date, description, three tags, then the text. */
 function parsePost(slug: string, source: string): Post {
-  const { meta, body } = parse(`blog/${slug}.md`, source, ["title", "date", "description"]);
-  return { slug, title: meta.title, date: meta.date, description: meta.description, html: toHtml(body) };
+  const { meta, body } = parse(`blog/${slug}.md`, source, ["title", "date", "description", "tags"]);
+  const tags = meta.tags
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
+  // three, every time: enough to place a post, few enough to mean something
+  if (tags.length !== 3) throw new Error(`content/blog/${slug}.md needs exactly 3 tags, has ${tags.length}`);
+  return { slug, title: meta.title, date: meta.date, description: meta.description, tags, html: toHtml(body) };
 }
 
 /** Every post, newest first. */

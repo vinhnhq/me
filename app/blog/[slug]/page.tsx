@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
 import { notFound } from "next/navigation";
+import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -32,6 +33,7 @@ export default async function PostPage({ params }: Props) {
       <p className="lede">
         <time dateTime={post.date}>{formatDay(post.date)}</time>
       </p>
+      <Tags tags={post.tags} />
       <article dangerouslySetInnerHTML={{ __html: post.html }} />
     </main>
   );

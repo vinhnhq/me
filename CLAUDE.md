@@ -32,7 +32,8 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
   `bun run audit [baseUrl]` measures all of it on 320/390/820px × light/dark — run it after UI changes.
 - `content/blog/<slug>.md` — blog posts (`/blog`, `/blog/<slug>`), web only. Front matter is
-  `title`, `date`, `description` (plain `key: value`, parsed by hand in `lib/markdown.ts`).
+  `title`, `date`, `description`, `tags` (plain `key: value`, parsed by hand in `lib/markdown.ts`).
+  Every post needs EXACTLY three comma-separated tags; the build fails otherwise.
   The first post, `how-i-build-with-ai-agents`, carries numbers from the k-studio repo (first
   commit 2026-09-10, 325 commits, ~120k LOC, 42 tables, 32 specs, 14 ADRs, 89 test files +
   18 Playwright suites, ~350 landmines). Refresh them from there if they drift. `/agents` redirects to it.
@@ -57,7 +58,8 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   a full-screen menu: Résumé, Blog, case studies, "Save as PDF", then a gap, then theme and text
   size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left out of
   the menu but keeps its page. Desk-wide screens (≥60rem, a tablet on its side included) keep
-  the full row and have no menu (a desktop drawer was considered and not built).
+  the full row at the top of the page; once scrolled, the links fade out and the same menu
+  button comes in over them (Vinh asked for the menu on desktop too, 2026-11-16).
 - The menu is a native `<dialog>` that FADES IN IN PLACE: its top row is laid exactly over the
   page's (button position measured on open), and both buttons share one `open` state, so the bars
   are seen to cross into an X where they stand. Do not swap it for Vaul / shadcn's Drawer: on iOS

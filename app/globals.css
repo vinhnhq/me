@@ -190,7 +190,7 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 }
 .actions > * { pointer-events: auto; }
 .actions .links { display: flex; gap: 1.25rem; }
-.actions .links a { color: var(--muted); text-decoration: none; }
+.actions .links a { color: var(--muted); font-size: 1rem; font-weight: 500; text-decoration: none; }
 .actions .links a:hover { color: var(--fg); }
 .actions .controls { display: flex; align-items: center; gap: 0.5rem; }
 
@@ -351,12 +351,14 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   the name lands beside it. Desk-wide screens never show it: everything fits in
   the row.
 */
+/* as tall as the pills beside it; a full 44px on touch (set further down) */
+:root { --menu-size: calc(1.75rem + 8px); }
 .menu-button, .menu-close {
   display: grid;
   place-items: center;
   flex: none;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: var(--menu-size);
+  height: var(--menu-size);
   padding: 0;
   border: 1px solid var(--rule);
   border-radius: 50%;
@@ -409,7 +411,7 @@ dialog.menu[data-open="true"] { opacity: 1; }
 dialog.menu::backdrop { background: none; }
 /* the page behind does not scroll under the sheet */
 html:has(dialog.menu[open]) { overflow: hidden; }
-.menu-top { display: flex; align-items: center; gap: 0.75rem; height: 2.75rem; margin: var(--menu-y, 0.75rem) 0 0 var(--menu-x, 1rem); }
+.menu-top { display: flex; align-items: center; gap: 0.75rem; height: var(--menu-size); margin: var(--menu-y, 0.75rem) 0 0 var(--menu-x, 1rem); }
 .menu-title { color: var(--fg); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; white-space: nowrap; }
 /* a column of its own on a tablet: the settings are not stretched across the screen */
 .menu-links, .menu-settings { margin-left: var(--menu-x, 1rem); max-width: 24rem; }
@@ -466,6 +468,9 @@ dialog.menu[data-open="true"] .menu-settings {
 .posts a { display: inline-block; font-weight: 600; font-size: 1.05rem; }
 .posts time { display: block; color: var(--muted); font-size: 0.85rem; }
 .posts p { color: var(--muted); margin: 0.25rem 0 0; }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem; padding: 0; margin: 0.5rem 0 0; font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.78rem; color: var(--muted); }
+.tags li { margin: 0; }
+.post .tags { margin: 0 0 1.5rem; }
 
 /*
   Wave footer (components/wave-footer.tsx). `.waves` is the scroll timeline:
@@ -546,9 +551,26 @@ dialog.menu[data-open="true"] .menu-settings {
   .actions > .links,
   .actions > .controls > .segmented { display: none; }
   .menu-button { display: grid; }
-  /* the bar's name stands clear of the button */
-  .sticky-name { margin-left: calc(2.75rem + 0.75rem); }
 }
+/* A desk: the full row at the top of the page; scrolled, the links fade out and
+   the menu button comes in over them, as the row becomes the bar. */
+@media (min-width: 60.01rem) {
+  .menu-button { display: grid; position: absolute; left: 0; top: 50%; translate: 0 -50%; opacity: 0; visibility: hidden; }
+  html[data-head-stuck] .menu-button { opacity: 1; visibility: visible; }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 60.01rem) {
+    .menu-button {
+      visibility: visible;
+      animation: bar-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
+    }
+    html:not([data-head-stuck]) .menu-button { pointer-events: none; }
+  }
+}
+/* everywhere: the bar's name stands clear of the button */
+.sticky-name { margin-left: calc(var(--menu-size) + 0.75rem); }
 
 /* Tablets: wider side margins. */
 @media (min-width: 40.01rem) and (max-width: 60rem) {
@@ -561,6 +583,7 @@ dialog.menu[data-open="true"] .menu-settings {
   running text keep their size, but the ones that stand alone get a 44px box.
 */
 @media (pointer: coarse) {
+  :root { --menu-size: 2.75rem; }
   .segmented button { width: 2.75rem; height: 2.75rem; }
   .sticky-inner { height: calc(2.75rem + 8px + 1rem); }
   .pill { height: calc(2.75rem + 8px); }

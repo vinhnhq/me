@@ -2,6 +2,7 @@
 title: How I build with AI agents
 date: 2026-11-16
 description: The workflow, guardrails and numbers behind K-Studio, built with Claude Code.
+tags: ai-agents, workflow, testing
 ---
 
 I build production software with AI coding agents, mostly Claude Code. The agent writes most of the lines. I own the scope, the decisions, the review and what reaches production. This page explains how that works, using one real project you can open and click through.

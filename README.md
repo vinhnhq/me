@@ -3,7 +3,7 @@
 Vinh Nguyen's résumé site — https://vinhn.dev. Content is markdown; the site renders it.
 
 - `content/resume.md` — the CV (`/`, and the PDF)
-- `content/blog/<slug>.md` — blog posts (`/blog`), each opening with `title`, `date`, `description` front matter
+- `content/blog/<slug>.md` — blog posts (`/blog`), each opening with `title`, `date`, `description` and three `tags` as front matter
 - `content/projects/<slug>.md` — case studies (`/projects/<slug>`), linked from the CV
 - `public/vinh-nguyen.jpg` — the photo beside the name
 - `/api/pdf` — the CV as a PDF, drawn by Chromium on the server from the live page
