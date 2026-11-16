@@ -301,13 +301,9 @@ html[data-head-stuck] .sticky-name { pointer-events: auto; }
    of reach as well as out of sight. */
 html[data-head-stuck] .actions .links,
 html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] { visibility: hidden; }
-@media (max-width: 40rem) {
-  html[data-head-stuck] .actions .pill { visibility: hidden; }
-}
-/* the narrowest phones: button, name and theme do not fit; the theme is in the menu */
+/* the narrowest phones: the pill keeps only its last word, so the name fits beside it */
 @media (max-width: 23rem) {
   .pill-wide { display: none; }
-  html[data-head-stuck] .actions > .controls > .segmented { visibility: hidden; }
 }
 
 /* On the CV the big name travels into the bar in two legs (up while shrinking,
@@ -330,8 +326,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
     }
     /* gone before the name needs the room, and before the strip is half there */
     .actions .links,
-    .actions > .controls > .segmented[aria-label="Text size"],
-    .actions .pill {
+    .actions > .controls > .segmented[aria-label="Text size"] {
       animation: bar-out linear both;
       animation-timeline: scroll(root);
       animation-range: calc(var(--head-end, 200px) * 0.15) calc(var(--head-end, 200px) * 0.6);
@@ -346,38 +341,14 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 }
 @keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bar-out { to { opacity: 0; } }
-/* "Save as PDF" stays on anything wider than a phone */
-@media (min-width: 40.01rem) {
-  .actions .pill { animation: none !important; }
-}
-/* on a phone the menu button comes in where the links were */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) and (max-width: 40rem) {
-    .menu-button {
-      visibility: visible;
-      animation: bar-in linear both;
-      animation-timeline: scroll(root);
-      animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
-    }
-    html:not([data-head-stuck]) .menu-button { pointer-events: none; }
-  }
-  @media (prefers-reduced-motion: no-preference) and (max-width: 23rem) {
-    .actions > .controls > .segmented {
-      animation: bar-out linear both;
-      animation-timeline: scroll(root);
-      animation-range: calc(var(--head-end, 200px) * 0.15) calc(var(--head-end, 200px) * 0.6);
-    }
-  }
-}
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
 /* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
 
 /*
-  The phone's menu (components/site-menu.tsx). The button sits at the left end
-  of the top row, where the links were, and comes in as the row becomes the
-  bar; the name lands beside it. Wider screens never show it: everything fits
-  in the row.
+  The phone's menu (components/site-menu.tsx). On a phone the button is the
+  left end of the top row from the start, and once the page is scrolled the
+  name lands beside it. Wider screens never show it: everything fits in the row.
 */
 .menu-button, .menu-close {
   display: grid;
@@ -525,18 +496,21 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   .resume-header .intro h1, .headline { text-align: center; }
   .resume-header .intro h1 { margin-inline: auto; }
   .photo { width: 7.5rem; height: 7.5rem; }
-  /* the bar stays one row: a phone has its own text-size setting and pinch */
-  .actions > .controls > .segmented[aria-label="Text size"] { display: none; }
-  /* one contact per line, in a column a thumb can run down */
-  .contact { flex-direction: column; align-items: flex-start; gap: 0; }
-  /* no room for the name beside both pills: "Save as PDF" leaves with the links,
-     and sits first so the theme stays put at the edge when it does */
-  .actions .pill { order: -1; }
-  /* at the left end of the row, where the links fade out from under it */
-  .menu-button { display: grid; position: absolute; left: 0; top: 50%; translate: 0 -50%; opacity: 0; visibility: hidden; }
-  html[data-head-stuck] .menu-button { opacity: 1; visibility: visible; }
+  /* The top row on a phone is the menu button and "Save as PDF", nothing else:
+     the links, the theme and the text size are in the menu. Scrolled, the name
+     lands between the two. */
+  .actions > .links,
+  .actions > .controls > .segmented { display: none; }
+  .menu-button { display: grid; }
   /* the bar's name stands clear of the button */
   .sticky-name { margin-left: calc(2.75rem + 0.75rem); }
+  /* the three words: the label on a line of its own, the words centred under it */
+  .values { justify-content: center; row-gap: 0.35rem; margin-top: 1.25rem; }
+  .values-label { flex-basis: 100%; margin-right: 0; text-align: center; }
+  .values strong { font-size: 0.95rem; }
+  /* where, then phone and email side by side, then the handle */
+  .contact { gap: 0 1.5rem; }
+  .contact li:first-child, .contact li:last-child { flex-basis: 100%; }
   td:first-child { width: auto; }
 }
 
