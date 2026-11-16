@@ -143,7 +143,9 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
   - The menu is a native `<dialog>`: focus goes to its close button, stays inside, Escape closes,
     focus returns to the menu button.
 - Sharing: every page sets its own `openGraph` through `shareCard()` in `lib/site.ts` (a page's
-  `openGraph` replaces the layout's; Next does not merge them). The image is the photo.
+  `openGraph` replaces the layout's; Next does not merge them). The image is `/og.png`
+  (`app/og.png/route.tsx`, 1200×630): solid burgundy, the photo SMALL and round, name and
+  headline in words. Vinh did not want his photo filling the card (2026-11-16).
   `app/sitemap.ts` and `app/robots.ts` make `/sitemap.xml` and `/robots.txt`.
 - For AI agents and crawlers: `/llms.txt` (index, llmstxt.org) and `/llms-full.txt` (the CV and
   every post as one markdown file), both written from `content/` at build; schema.org JSON-LD

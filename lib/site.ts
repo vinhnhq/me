@@ -13,7 +13,8 @@ export function shareCard(title: string, description: string, path: string) {
     url: path,
     siteName: "Vinh Nguyen",
     locale: "en_US",
-    images: [{ url: "/vinh-nguyen.jpg", width: 448, height: 448, alt: "Vinh Nguyen" }],
+    // drawn by app/og.png/route.tsx: 1.91:1, the shape every platform expects
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Vinh Nguyen, Senior Fullstack Engineer" }],
   };
 }
 
