@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = (await listPosts()).filter((p) => p.listed);
+  const posts = await listPosts();
   return (
     <main className="page blog">
       <SiteNav>

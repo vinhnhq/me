@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
       { source: "/agents", destination: "/blog/how-i-build-with-ai-agents", permanent: true },
       { source: "/vinh-nguyen-resume.pdf", destination: "/api/pdf", permanent: false },
       // case studies are blog posts now
-      { source: "/projects/:slug", destination: "/blog/:slug", permanent: true },
+      { source: "/projects/k-studio", destination: "/blog/k-studio", permanent: true },
     ];
   },
 };

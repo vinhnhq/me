@@ -8,7 +8,7 @@
 import { chromium } from "playwright-core";
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const PAGES = ["/", "/blog", "/blog/how-i-build-with-ai-agents", "/blog/k-studio", "/blog/bao-minh-portal"];
+const PAGES = ["/", "/blog", "/blog/how-i-build-with-ai-agents", "/blog/k-studio"];
 const SCREENS = [
   { name: "iPhone SE", width: 320, height: 568 },
   { name: "iPhone", width: 390, height: 844 },

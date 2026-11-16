@@ -28,9 +28,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - The site is TWO places: the CV and a blog that holds everything else (Vinh, 2026-11-16). Case
   studies are ordinary posts in `content/blog/` with the tag `case-study` and extra front matter
   (`role`, `when`, `stack`, optional `link` + `linkLabel`) that the post page shows as a facts
-  block. `/projects/<slug>` redirects to `/blog/<slug>`. `bao-minh-portal.md` has `listed: no`:
-  its page exists and the CV links to it, but the blog list leaves it out (Vinh, 2026-11-16: it is
-  too like K-Studio, and K-Studio is the better one). It is also thin: only the facts below.
+  block. `/projects/k-studio` redirects to `/blog/k-studio`. There is NO page for the Bảo Minh
+  portal: Vinh dropped it (2026-11-16, too like K-Studio and K-Studio is the better one); it
+  lives only as a bullet on the CV. Do not re-create it.
 - Phone rules (taken from k-studio's ui-review): no sideways overflow, 44px targets on any touch
   screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
   `bun run audit [baseUrl]` measures all of it on 320/390/820px × light/dark — run it after UI changes.
