@@ -28,7 +28,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 400 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font: 400 16px/1.6 var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 .page {
@@ -62,12 +62,31 @@ strong { font-weight: 600; }
 .resume article > p:nth-of-type(1) { font-size: 1.1rem; color: var(--muted); margin-top: 0; }
 .resume article > p:nth-of-type(2) { font-size: 0.9rem; color: var(--muted); }
 
-code { font-size: 0.9em; background: var(--chip); padding: 0.1em 0.35em; border-radius: 4px; }
+code { font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 0.9em; background: var(--chip); padding: 0.1em 0.35em; border-radius: 4px; }
 
 table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
 thead { display: none; }
 td { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
+
+/* The photo sits beside the name; the heading and contact lines wrap around it. */
+.photo {
+  float: right;
+  width: 7rem;
+  height: 7rem;
+  margin: 0 0 0.75rem 1.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+}
+.resume article > h2 { clear: both; }
+
+.lede { color: var(--muted); margin-top: 0; }
+.posts { list-style: none; padding: 0; margin: 2rem 0 0; }
+.posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
+.posts a { font-weight: 600; font-size: 1.05rem; }
+.posts time { display: block; color: var(--muted); font-size: 0.85rem; }
+.posts p { color: var(--muted); margin: 0.25rem 0 0; }
 
 .actions { display: flex; gap: 1.25rem; justify-content: flex-end; font-size: 0.9rem; margin-bottom: 1.5rem; }
 
@@ -75,6 +94,7 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   .page { padding-top: 1.5rem; }
   h1 { font-size: 1.85rem; }
   .actions { justify-content: flex-start; }
+  .photo { width: 5rem; height: 5rem; margin-left: 1rem; }
 }
 
 /* PDF: A4, light, tighter. Links stay clickable in the PDF. */
@@ -89,6 +109,7 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
   h1 { font-size: 22pt; }
+  .photo { width: 26mm; height: 26mm; }
   h2 { margin: 1.2rem 0 0.6rem; }
   h3 { margin: 0.9rem 0 0; break-after: avoid; }
   li { margin: 0.15rem 0; break-inside: avoid; }

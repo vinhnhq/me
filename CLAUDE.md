@@ -6,11 +6,18 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 ## Shape
 
 - `content/resume.md` — the CV, the single source. Home page `/` and the PDF render it.
-- `content/agents.md` — "How I build with AI agents" (`/agents`), web only. Numbers come from
-  the k-studio repo (first commit 2026-09-10, 325 commits, ~120k LOC, 42 tables, 32 specs,
-  14 ADRs, 89 test files + 18 Playwright suites, ~350 landmines). Refresh them from there if they drift.
-- Next.js 16 App Router, static, plain CSS (`app/globals.css`, light/dark, print = A4 light).
-- `bun run pdf` (site must be running on :3100) → `public/vinh-nguyen-resume.pdf`, 2 pages.
+- `content/blog/<slug>.md` — blog posts (`/blog`, `/blog/<slug>`), web only. Front matter is
+  `title`, `date`, `description` (plain `key: value`, parsed by hand in `lib/markdown.ts`).
+  The first post, `how-i-build-with-ai-agents`, carries numbers from the k-studio repo (first
+  commit 2026-09-10, 325 commits, ~120k LOC, 42 tables, 32 specs, 14 ADRs, 89 test files +
+  18 Playwright suites, ~350 landmines). Refresh them from there if they drift. `/agents` redirects to it.
+- `/api/pdf` — the CV as a 2-page A4 PDF, drawn by Chromium from the live `/` (`lib/pdf.ts`, the
+  k-studio approach: `@sparticuz/chromium` on Vercel, local Playwright Chromium elsewhere).
+  Cached by the CDN for a day. Keep the `outputFileTracingIncludes` in `next.config.ts`.
+- Next.js 16 App Router, plain CSS (`app/globals.css`, light/dark, print = A4 light).
+- Font is Geist via `next/font/google`. Its Google subsets have no ← → arrows: on Vercel's Linux
+  Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
+- Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.
 
 ## Facts behind the CV
 
@@ -26,8 +33,6 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 
 - Live at https://vinhn.dev (domain registered at Cloudflare, DNS-only CNAME to Vercel).
 - GitHub `vinhnhq/me` (private) → Vercel project `vinhnguyen-projects/me`. A push to `main` deploys to production.
-- After a CV change, re-export the PDF before pushing: `SITE_URL=https://vinhn.dev bun run pdf`
-  (site running on :3100, or pass another base URL as the first argument).
 
 ## Open
 
