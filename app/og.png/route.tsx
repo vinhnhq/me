@@ -24,28 +24,34 @@ export async function GET(): Promise<Response> {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "72px 80px",
+          padding: "64px 72px",
           background: "#800020",
           color: "#fff",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+        {/* Few things, all large: LinkedIn shows this card as a thumbnail about 200px wide. */}
+        <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
           {/* biome-ignore lint: an ImageResponse draws plain <img> */}
           <img
             src={`data:image/jpeg;base64,${photo.toString("base64")}`}
-            width={120}
-            height={120}
+            width={170}
+            height={170}
             alt=""
-            style={{ borderRadius: 60, border: "4px solid rgba(255,255,255,0.85)" }}
+            style={{ borderRadius: 85, border: "5px solid rgba(255,255,255,0.9)" }}
           />
-          <div style={{ display: "flex", fontSize: 30, opacity: 0.8 }}>vinhn.dev</div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", fontSize: 112, fontWeight: 700, letterSpacing: -4, lineHeight: 1 }}>{r.name}</div>
+            <div style={{ display: "flex", fontSize: 50, marginTop: 14 }}>{role}</div>
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontSize: 92, fontWeight: 700, letterSpacing: -3, lineHeight: 1.05 }}>{r.name}</div>
-          <div style={{ display: "flex", fontSize: 44, marginTop: 18 }}>{role}</div>
-          <div style={{ display: "flex", fontSize: 30, marginTop: 14, opacity: 0.8 }}>{stack.join(" · ")}</div>
+        <div style={{ display: "flex", fontSize: 40, opacity: 0.85 }}>{[...stack, "Open to remote"].join(" · ")}</div>
+        {/* the call to action: what pressing the card does, and where it goes */}
+        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+          <div style={{ display: "flex", padding: "20px 44px", borderRadius: 60, background: "#fff", color: "#800020", fontSize: 44, fontWeight: 700 }}>
+            View my résumé
+          </div>
+          <div style={{ display: "flex", fontSize: 44 }}>vinhn.dev</div>
         </div>
-        <div style={{ display: "flex", fontSize: 28, opacity: 0.8 }}>{r.location}</div>
       </div>
     ),
     { width: 1200, height: 630 },
