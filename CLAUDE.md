@@ -52,10 +52,13 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
   measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on
   `<html>`; the motion is a CSS scroll-driven animation, with a requestAnimationFrame fallback.
-- Phone menu (`components/site-menu.tsx`): at ≤40rem, once scrolled, the row is the name plus a
-  menu button; it opens a full-screen native `<dialog>` with the pages, case studies, "Save as
-  PDF", theme and text size. Wider screens have no menu: everything fits in the row (a desktop
-  drawer was considered and not built).
+- Phone menu (`components/site-menu.tsx`): at ≤40rem, once scrolled, the row is a menu button
+  (left), the name, and the theme pill. The button opens a full-screen drawer with the pages, case
+  studies, "Save as PDF", theme and text size. The drawer is Vaul (the library under shadcn's
+  Drawer) used directly with plain CSS, because the site has no Tailwind. Wider screens have no
+  menu: everything fits in the row (a desktop drawer was considered and not built).
+- `bun run audit` compares page width with the SCREEN width: a phone browser widens `innerWidth`
+  to fit an overflowing page, so comparing against `innerWidth` passes falsely.
 - Values line under the summary comes from `values:` in `resume.md`'s front matter
   ("Ownership · Adaptability · Mentorship", chosen by Vinh 2026-11-16).
 - Contact line: plain mono text; only GitHub has a mark. No X/Twitter (removed 2026-11-16). The

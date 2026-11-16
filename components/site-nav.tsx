@@ -10,8 +10,8 @@ import { listProjects } from "@/lib/markdown";
  * sticky: scrolled, the theme and the action stay where they are, the rest
  * fades, and `StickyBar` puts a strip behind them and the name on the left.
  *
- * On a phone there is no room for that: scrolled, the row keeps the name and a
- * menu button, and `SiteMenu` holds everything else.
+ * On a phone there is less room: scrolled, the row is a menu button, the name
+ * and the theme, and `SiteMenu` holds everything else.
  */
 export async function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
   const menu: MenuLink[] = [
@@ -22,12 +22,13 @@ export async function SiteNav({ children, action }: { children: ReactNode; actio
   return (
     <>
       <nav className="actions no-print">
+        {/* phones only, once scrolled: it takes the links' place, left of the name */}
+        <SiteMenu links={menu} />
         <span className="links">{children}</span>
         <span className="controls">
           <SizeControl />
           <ThemeControl />
           {action}
-          <SiteMenu links={menu} />
         </span>
       </nav>
       <StickyBar name="Vinh Nguyen" />

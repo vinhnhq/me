@@ -29,10 +29,12 @@ try {
       const page = await context.newPage();
       for (const path of PAGES) {
         await page.goto(base + path, { waitUntil: "networkidle" });
-        const problems = await page.evaluate(() => {
+        const problems = await page.evaluate((screenWidth) => {
           const out: string[] = [];
           const doc = document.documentElement;
-          if (doc.scrollWidth > innerWidth) out.push(`overflow: page is ${doc.scrollWidth}px wide on a ${innerWidth}px screen`);
+          // against the SCREEN, not innerWidth: a phone browser widens its layout
+          // viewport to fit an overflowing page, and innerWidth grows with it
+          if (doc.scrollWidth > screenWidth) out.push(`overflow: page is ${doc.scrollWidth}px wide on a ${screenWidth}px screen`);
 
           const label = (e: Element) => `<${e.tagName.toLowerCase()}> "${(e.textContent ?? "").trim().slice(0, 30)}"`;
 
@@ -91,7 +93,7 @@ try {
             }
           }
           return out;
-        });
+        }, screen.width);
         for (const p of problems) {
           failures++;
           console.log(`✗ ${screen.name} ${scheme} ${path} — ${p}`);

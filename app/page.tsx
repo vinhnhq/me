@@ -10,8 +10,9 @@ export default async function ResumePage() {
     <main className="page resume" data-resume>
       <SiteNav
         action={
-          <a className="pill" href="/api/pdf">
-            Save as PDF
+          <a className="pill" href="/api/pdf" aria-label="Save as PDF">
+            {/* the narrowest phones keep only the last word, so the row still fits */}
+            <span className="pill-wide">Save as&nbsp;</span>PDF
           </a>
         }
       >
