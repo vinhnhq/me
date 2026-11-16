@@ -157,6 +157,10 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
   on the CV (`ProfilePage` + `Person`) and on each post (`BlogPosting`). `robots.txt` allows
   every crawler, AI ones included: for a job search, being read is the point. In `next dev`,
   `/llms-full.txt` once 500'd on a stale module while the build was fine; restart dev if so.
+- Checkers used: opengraph.xyz, opengraph.to (92 before the theme colour, 32px icon and
+  manifest were added), LinkedIn Post Inspector. Deliberately NOT done: `twitter:site` (he has
+  no X account on the site), an SVG favicon (it would replace the approved icon's drawing), and
+  opengraph.xyz's "no call-to-action" warning (its own detector; the pill is on the card).
 - Never tested with a real screen reader (VoiceOver).
 
 ## PDF

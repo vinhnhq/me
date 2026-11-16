@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
 import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL, shareCard } from "@/lib/site";
@@ -24,6 +24,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: { type: "profile", firstName: "Vinh", lastName: "Nguyen", ...shareCard(TITLE, DESCRIPTION, "/") },
   twitter: { card: "summary_large_image" },
+};
+
+// The phone browser's toolbar takes the page's own ground (--bg in globals.css), light or dark.
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fbfaf8" },
+    { media: "(prefers-color-scheme: dark)", color: "#111214" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
