@@ -23,11 +23,12 @@ const LEAVE_MS = 240;
  * The phone's menu: a full-screen sheet with the pages, "Save as PDF", the
  * theme and the text size, behind a menu button at the left of the top row.
  *
- * The sheet does not slide in from anywhere. Its own top row is laid exactly
- * over the page's (the close button on the menu button, to the pixel, wherever
- * the page is scrolled), and the sheet fades in around it while the two bars
- * cross into an X. So what the eye follows is ONE button turning, in place,
- * and the page giving way to the menu under it; closing runs it backwards.
+ * The sheet does not slide in from anywhere: it fades in over the page. Its
+ * close button is large and sits in the top right corner, but it does not
+ * simply appear there. It starts exactly on the menu button (same place, same
+ * size) and travels to the corner, growing, while its two bars cross into an
+ * X; closing sends it back and uncrosses them. So the eye follows ONE button
+ * from where the thumb pressed to where it will press next.
  *
  * A native <dialog> opened with showModal(): the browser traps focus, closes
  * on Escape and makes the page inert. (Vaul, shadcn's drawer, was tried: on
@@ -37,6 +38,7 @@ const LEAVE_MS = 240;
  */
 export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
   const sheet = useRef<HTMLDialogElement>(null);
+  const closer = useRef<HTMLButtonElement>(null);
   const leaving = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [open, setOpen] = useState(false);
 
@@ -44,11 +46,24 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
     const d = sheet.current;
     if (!d) return;
     clearTimeout(leaving.current);
-    // the close button goes exactly where this button is right now
-    const at = e.currentTarget.getBoundingClientRect();
-    d.style.setProperty("--menu-y", `${at.top}px`);
-    d.style.setProperty("--menu-x", `${at.left}px`);
+    const from = e.currentTarget.getBoundingClientRect();
+    // the links keep the page's own left edge
+    d.style.setProperty("--menu-x", `${from.left}px`);
     d.showModal();
+    // The close button starts ON the menu button: measure how far its corner is
+    // from there and how much bigger it is, and hand that to the CSS as its
+    // "closed" pose. No transition while it is being put there.
+    const c = closer.current;
+    if (c) {
+      c.style.transition = "none";
+      for (const [k, v] of [["--from-x", "0px"], ["--from-y", "0px"], ["--from-scale", "1"]]) c.style.setProperty(k, v);
+      const to = c.getBoundingClientRect();
+      c.style.setProperty("--from-x", `${from.left + from.width / 2 - (to.left + to.width / 2)}px`);
+      c.style.setProperty("--from-y", `${from.top + from.height / 2 - (to.top + to.height / 2)}px`);
+      c.style.setProperty("--from-scale", String(from.width / to.width));
+      void c.offsetWidth; // the pose is applied before transitions are switched back on
+      c.style.transition = "";
+    }
     // one frame later, so the sheet is painted in its "closed" look first and the change is a transition
     requestAnimationFrame(() => setOpen(true));
   }
@@ -76,12 +91,9 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
           hide();
         }}
       >
-        <div className="menu-top">
-          <button type="button" className="menu-close" aria-label="Close menu" onClick={hide}>
-            <Bars open={open} />
-          </button>
-          <span className="menu-title">Vinh Nguyen</span>
-        </div>
+        <button ref={closer} type="button" className="menu-close" aria-label="Close menu" onClick={hide}>
+          <Bars open={open} />
+        </button>
         <nav className="menu-links" aria-label="Pages">
           {links.map((l, i) => (
             <Link key={l.href} href={l.href} onClick={hide} style={{ "--i": i } as CSSProperties}>

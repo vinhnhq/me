@@ -62,11 +62,13 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   the menu but keeps its page. Desk-wide screens (≥60rem, a tablet on its side included) keep
   the full row at the top of the page; once scrolled, the links fade out and the same menu
   button comes in over them (Vinh asked for the menu on desktop too, 2026-11-16).
-- The menu is a native `<dialog>` that FADES IN IN PLACE: its top row is laid exactly over the
-  page's (button position measured on open), and both buttons share one `open` state, so the bars
-  are seen to cross into an X where they stand. Do not swap it for Vaul / shadcn's Drawer: on iOS
-  Vaul pins `<body>` with `position: fixed`, which zeroes `scrollY`, and the header is driven by
-  `scrollY` (the page looked like it jumped to the top when the menu opened; tried 2026-11-16).
+- The menu is a native `<dialog>` that fades in over the page. Its close button is large and in
+  the top right corner (no name shown in the menu), and it TRAVELS there from the menu button:
+  on open its start pose (`--from-x/-y/-scale`) is measured so it begins exactly on the menu
+  button, then it moves and grows while the bars cross; closing reverses it. Do not swap the
+  menu for Vaul / shadcn's Drawer: on iOS Vaul pins `<body>` with `position: fixed`, which zeroes
+  `scrollY`, and the header is driven by `scrollY` (the page looked like it jumped to the top
+  when the menu opened; tried 2026-11-16).
 - On phones the Values label is centred with the three words under it, and phone + email share a line.
 - `bun run audit` compares page width with the SCREEN width: a phone browser widens `innerWidth`
   to fit an overflowing page, so comparing against `innerWidth` passes falsely.
