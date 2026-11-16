@@ -237,9 +237,9 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 .contact a:hover { color: var(--fg); text-decoration-color: currentColor; }
 
 /*
-  Sticky bar (components/sticky-bar.tsx): takes over once the heading has
-  scrolled away. No CSS transition of its own: the hand-over is a view
-  transition, and a half-run CSS fade would be what the browser snapshots.
+  Sticky bar (components/sticky-bar.tsx). The hand-over from the page's
+  heading is tied to the scroll: the component measures three numbers into
+  --head-end / --head-dx / --head-scale, and the motion below runs on them.
   Opaque, not blurred: a backdrop blur re-reads the text scrolling under it
   every frame (K-Studio's lesson).
 */
@@ -249,32 +249,36 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   z-index: 10;
   background: var(--bg);
   border-bottom: 1px solid var(--rule);
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
-.sticky-bar[data-stuck="true"] { visibility: visible; }
-/* the big heading keeps its box, so the page does not jump, but is not drawn twice */
-html[data-head-collapsed] main h1 { visibility: hidden; }
+.sticky-bar[data-stuck="true"] { opacity: 1; pointer-events: auto; }
 
-/*
-  The hand-over. Only the bar and the name are captured: the page itself is
-  opted out, so the text under a moving thumb is never frozen into a snapshot.
-  The bar fades in (it exists on one side only); the name, when the heading is
-  the name, morphs from one place to the other.
-*/
-html.head-transition:root { view-transition-name: none; }
-html.head-transition .sticky-bar { view-transition-name: page-bar; }
-html.head-morph:not([data-head-collapsed]) main h1,
-html.head-morph[data-head-collapsed] .sticky-name { view-transition-name: page-title; }
-::view-transition-group(page-title) { animation-duration: 260ms; animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); }
-::view-transition-group(page-bar),
-::view-transition-old(page-bar),
-::view-transition-new(page-bar) { animation-duration: 200ms; animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
-/* The big name's box hugs its text, as the small one's does: two boxes of the
-   same shape scale into each other cleanly, where a full-width heading would
-   show as a second, stretched ghost half way. */
-.resume-header h1 { width: fit-content; }
-/* the name sits above the bar while both are moving */
-::view-transition-group(page-title) { z-index: 1; }
+/* On the CV the big name travels into the bar and stands in for the bar's own
+   name until it lands; then the two change places. Its box hugs its text, as
+   the small one's does, so one scales exactly onto the other. */
+.resume-header h1 { width: fit-content; position: relative; z-index: 11; transform-origin: top left; }
+html[data-head-travels] .sticky-bar:not([data-stuck="true"]) .sticky-name { opacity: 0; }
+html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky-bar {
+      animation: bar-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
+    }
+    html[data-head-travels] main h1 {
+      animation: name-travel linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px var(--head-end, 200px);
+      will-change: transform;
+    }
+  }
+}
+@keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes name-travel { to { transform: translateX(var(--head-dx, 0px)) scale(var(--head-scale, 1)); } }
+
 .sticky-inner {
   display: flex;
   align-items: center;
@@ -287,6 +291,8 @@ html.head-morph[data-head-collapsed] .sticky-name { view-transition-name: page-t
 }
 .sticky-inner .controls { display: flex; align-items: center; gap: 0.5rem; }
 .sticky-name { color: var(--fg); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+/* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide */
+.sticky-name span { display: block; line-height: 1.15; }
 
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
@@ -405,6 +411,7 @@ html.head-morph[data-head-collapsed] .sticky-name { view-transition-name: page-t
   body { display: block; min-height: 0; font-size: 9.6pt; line-height: 1.42; }
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
+  main h1 { animation: none !important; transform: none !important; visibility: visible !important; }
   h1 { font-size: 21pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
