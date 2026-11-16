@@ -29,7 +29,7 @@ export default async function ResumePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <SiteNav
         action={
-          <a className="pill" href="/api/pdf" aria-label="Save as PDF">
+          <a className="pill" href="/api/pdf" rel="nofollow" aria-label="Save as PDF">
             {/* the narrowest phones keep only the last word, so the row still fits */}
             <span className="pill-wide">Save as&nbsp;</span>PDF
           </a>

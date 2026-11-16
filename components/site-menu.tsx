@@ -104,7 +104,7 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
             </Link>
           ))}
           {/* a plain link: this one is a file to download, not a page to route to */}
-          <a href="/api/pdf" onClick={hide} style={{ "--i": links.length } as CSSProperties}>
+          <a href="/api/pdf" rel="nofollow" onClick={hide} style={{ "--i": links.length } as CSSProperties}>
             Save as PDF
             <span>The résumé, 2 pages</span>
           </a>

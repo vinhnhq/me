@@ -16,6 +16,9 @@ export async function GET(req: Request): Promise<Response> {
   return new Response(Buffer.from(bytes), {
     headers: {
       "content-type": "application/pdf",
+      // a copy of `/`, not a page of its own: crawlers are told not to list it (robots.txt
+      // also disallows /api/, and the links to it are rel="nofollow")
+      "x-robots-tag": "noindex, nofollow",
       "content-disposition": 'attachment; filename="vinh-nguyen-resume.pdf"',
       "cache-control": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
     },
