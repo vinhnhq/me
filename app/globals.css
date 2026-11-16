@@ -303,18 +303,24 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   .segmented[aria-label="Text size"] { display: none; }
   /* one contact per line, in a column a thumb can run down */
   .contact { flex-direction: column; align-items: flex-start; gap: 0; }
-  /* the dates drop under the title, on one line */
+  td:first-child { width: auto; }
+}
+
+/* Phones and tablets: a job is one column; the dates drop under the title, on one line.
+   Only a desk-wide screen has room for the dates column. */
+@media (max-width: 60rem) {
   .entry { display: block; }
   .entry-when { margin: 0.1rem 0 0.4rem; }
   .entry-when span { display: inline; }
   .entry-when span + span::before { content: " · "; }
+  /* the case study's facts too: one under another */
   .facts { grid-template-columns: 1fr; }
-  td:first-child { width: auto; }
 }
 
 /* Tablets: the five contacts do not fit one row, so three and two, not four and a stray one. */
-@media (min-width: 40.01rem) and (max-width: 56rem) {
-  .contact { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; column-gap: 2rem; }
+@media (min-width: 40.01rem) and (max-width: 60rem) {
+  .page { padding-inline: 2rem; }
+  .contact { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 2rem; margin-top: 1.25rem; }
 }
 
 /*
