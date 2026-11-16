@@ -22,11 +22,15 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
     sign-in): https://k-studio-git-dev-vinhnguyen-projects.vercel.app — owner OK'd showing it.
 - Grab / Ninja Van / Dwarves were three separate jobs, deliberately combined into one entry.
 
+## Deploy
+
+- Live at https://vinhn.dev (domain registered at Cloudflare, DNS-only CNAME to Vercel).
+- GitHub `vinhnhq/me` (private) → Vercel project `vinhnguyen-projects/me`. A push to `main` deploys to production.
+- After a CV change, re-export the PDF before pushing: `SITE_URL=https://vinhn.dev bun run pdf`
+  (site running on :3100, or pass another base URL as the first argument).
+
 ## Open
 
 1. The Grab / Ninja Van / Dwarves years in `content/resume.md` are PLACEHOLDERS — Vinh replaces them.
-2. Confirm GitHub / X handles are `vinhnhq`.
-3. Not committed, no GitHub repo, not deployed. Deploy only on Vinh's go (the page carries phone + email).
-   Then re-export: `SITE_URL=https://<url> bun run pdf` — the PDF's /agents link needs the real host.
-4. Novorésumé (old CV) was partly updated (summary, headline, skills) before its free-plan gate
+2. Novorésumé (old CV) was partly updated (summary, headline, skills) before its free-plan gate
    blocked new entries; this site replaces it.
