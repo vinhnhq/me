@@ -14,13 +14,13 @@ I lead teams and mentor developers, and care about testing, developer experience
 
 ## Technical skills
 
-- **Frontend** — React (RSC), Next.js, Redux, Saga, Zustand, MobX, TanStack, SWR, a11y, Web Vitals
-- **Styling** — Tailwind CSS, shadcn/ui, React Aria, Radix, AntD, Styled Components, Storybook
-- **Testing** — Playwright, Vitest, Testing Library, Cypress, MSW, Jest, Percy, WebdriverIO
-- **Backend** — Node.js, Express, GraphQL, REST, Postgres (Neon), MySQL, migrations
-- **DevOps** — Docker, GitHub Actions, Vercel, Cloudflare R2, AWS (S3, Lambda, EC2, ECS, DynamoDB, CloudFront), Pulumi, Terraform
 - **Languages** — TypeScript, JavaScript, Go, Python
-- **AI & tools** — Claude Code, Cursor, MCP, agent workflows, spec-driven development, Vite, Bun, Webpack, Immer, Stripe API
+- **Frontend** — React (RSC), Next.js (App Router), TanStack, SWR, Zustand, Redux, accessibility, Web Vitals
+- **UI** — Tailwind CSS, shadcn/ui, Radix, React Aria, Storybook
+- **Backend & data** — Node.js, Postgres (Neon), GraphQL, REST, Express, MySQL, Stripe API
+- **Testing** — Playwright, Vitest, Testing Library, MSW, Cypress, Jest
+- **AI-assisted engineering** — Claude Code, Cursor, MCP, agent workflows, spec-driven development
+- **Cloud & tooling** — Vercel, AWS (S3, Lambda, ECS, DynamoDB, CloudFront), Cloudflare R2, Docker, GitHub Actions, Terraform, Pulumi, Vite, Bun
 
 ## Work experience
 
