@@ -14,7 +14,7 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   localStorage. Print and the PDF are always light at the default size.
 - Accent is burgundy `#800020` (Vinh's lucky colour — keep it); on dark it is a lighter red,
   `oklch(0.66 0.18 18)`, because burgundy itself is unreadable on a dark page.
-- Favicon: `app/icon.tsx` / `app/apple-icon.tsx`, white "VN" on dark, like Tung's "TV".
+- Favicon: `app/icon.tsx` (white "VN" on a burgundy disc) and `app/apple-icon.tsx` (same, square).
 - To check on a real iOS Safari: `xcrun simctl openurl booted http://localhost:<port>/` then
   `xcrun simctl io booted screenshot <file>` (Vinh keeps Device Hub open). Add a `?r=N` query if it
   shows stale CSS.

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-// The home-screen icon: the initials, light on dark. Drawn at build time.
+// The home-screen icon: the initials on burgundy. Square: iOS rounds the corners itself.
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
@@ -14,7 +14,7 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#111214",
+          background: "#800020",
           color: "#fff",
           fontSize: 104,
           fontWeight: 600,

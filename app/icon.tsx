@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-// The tab icon: the initials, light on dark. Drawn at build time.
+// The tab icon: the initials on a burgundy disc, which shows on light and dark tab bars alike
+// (the corners stay clear). Drawn at build time.
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
@@ -14,11 +15,12 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#111214",
+          background: "#800020",
+          borderRadius: "50%",
           color: "#fff",
-          fontSize: 19,
-          fontWeight: 600,
-          letterSpacing: -0.5,
+          fontSize: 16,
+          fontWeight: 700,
+          letterSpacing: -0.3,
         }}
       >
         VN
