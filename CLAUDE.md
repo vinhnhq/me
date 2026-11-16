@@ -58,6 +58,10 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   drawer is Vaul (the library under shadcn's Drawer) used directly with plain CSS, because the
   site has no Tailwind. Wider screens have no menu: everything fits in the row (a desktop drawer
   was considered and not built).
+- The drawer lists only Résumé, Blog, case studies and "Save as PDF", then a gap, then theme and
+  text size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left
+  out of the menu but keeps its page. The menu button and the drawer's close button sit in the
+  same spot and share one `open` state, so the bars cross and uncross as one button.
 - On phones the Values label is centred with the three words under it, and phone + email share a line.
 - `bun run audit` compares page width with the SCREEN width: a phone browser widens `innerWidth`
   to fit an overflowing page, so comparing against `innerWidth` passes falsely.

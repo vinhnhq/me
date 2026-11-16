@@ -7,7 +7,7 @@ import { SizeControl, ThemeControl } from "@/components/reader-controls";
 
 export type MenuLink = { readonly href: string; readonly label: string; readonly note?: string };
 
-/** Two bars that cross into an X when `open`. */
+/** Two bars that cross into an X when `open`, and uncross when not: a CSS transition, both ways. */
 function Bars({ open }: { open: boolean }) {
   return (
     <span className="bars" data-open={open} aria-hidden="true">
@@ -35,8 +35,10 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
     // autoFocus: Vaul leaves focus on the page behind unless asked; a keyboard would then tab out of sight
     <Drawer.Root open={open} onOpenChange={setOpen} autoFocus>
       <Drawer.Trigger asChild>
+        {/* It and the drawer's close button sit in the same spot and turn together,
+            so opening and closing read as one button changing, under and over the sheet. */}
         <button type="button" className="menu-button" aria-label="Menu">
-          <Bars open={false} />
+          <Bars open={open} />
         </button>
       </Drawer.Trigger>
       <Drawer.Portal>
@@ -48,7 +50,7 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
             {/* where the menu button was, so the thumb does not have to move to close */}
             <Drawer.Close asChild>
               <button type="button" className="menu-close" aria-label="Close menu">
-                <Bars open />
+                <Bars open={open} />
               </button>
             </Drawer.Close>
             <Drawer.Title className="menu-title">Vinh Nguyen</Drawer.Title>

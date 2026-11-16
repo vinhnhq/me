@@ -17,7 +17,9 @@ export async function SiteNav({ children, action }: { children: ReactNode; actio
   const menu: MenuLink[] = [
     { href: "/", label: "Résumé" },
     { href: "/blog", label: "Blog", note: "Notes on how I work" },
-    ...(await listProjects()).map((p) => ({ href: `/projects/${p.slug}`, label: p.title, note: "Case study" })),
+    ...(await listProjects())
+      .filter((p) => p.inMenu)
+      .map((p) => ({ href: `/projects/${p.slug}`, label: p.title, note: "Case study" })),
   ];
   return (
     <>

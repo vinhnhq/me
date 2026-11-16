@@ -4,6 +4,7 @@ summary: An insurance sales portal used by about 50 sales staff and their custom
 role: Sole engineer, end to end
 when: Jun 2025 – Apr 2026
 stack: Next.js, TypeScript, Postgres
+menu: no
 ---
 
 Bảo Minh Gia Định is an insurance company. I built its sales portal as a freelancer and ran it in production: about 50 sales staff used it to sell insurance contracts, and their customers used it to manage them.

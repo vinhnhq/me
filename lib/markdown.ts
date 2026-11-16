@@ -135,6 +135,8 @@ export type Project = {
   /** a public address to try, when there is one */
   readonly link?: string;
   readonly linkLabel?: string;
+  /** false with `menu: no`: the page exists and the CV links to it, but the menu does not list it */
+  readonly inMenu: boolean;
   readonly html: string;
 };
 
@@ -158,6 +160,7 @@ export async function listProjects(): Promise<Project[]> {
         stack: meta.stack,
         link: meta.link,
         linkLabel: meta.linkLabel,
+        inMenu: meta.menu !== "no",
         html: toHtml(body),
       };
     }),
