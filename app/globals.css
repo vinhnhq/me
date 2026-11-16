@@ -270,6 +270,14 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
       animation-timeline: scroll(root);
       animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
     }
+    /* the page's own top bar bows out as this one comes in, so its pills are
+       never seen through the half-faded bar as a second, ghost set */
+    .actions {
+      animation: bar-out linear both;
+      animation-timeline: scroll(root);
+      /* gone before the new bar is half there */
+      animation-range: calc(var(--head-end, 200px) * 0.15) calc(var(--head-end, 200px) * 0.6);
+    }
     html[data-head-travels] main h1 {
       animation: name-up linear both, name-left linear both;
       animation-timeline: scroll(root), scroll(root);
@@ -279,6 +287,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   }
 }
 @keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bar-out { to { opacity: 0; } }
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
 /* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
