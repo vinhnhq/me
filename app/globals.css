@@ -541,6 +541,12 @@ dialog.menu[data-open="true"] .menu-settings {
 .skip:focus-visible { translate: 0 0; outline: 2px solid var(--accent); outline-offset: 2px; }
 #content { display: block; scroll-margin-top: 5rem; }
 
+/* A picture in a post: the full width of the text, a hairline round it (screens are mostly
+   white, and would otherwise run into the page), its caption small and muted under it. */
+.post figure { margin: 1.75rem 0; }
+.post figure img { display: block; width: 100%; height: auto; border-radius: 0.6rem; border: 1px solid var(--rule); }
+.post figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }

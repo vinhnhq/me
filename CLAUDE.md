@@ -47,6 +47,18 @@ Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, n
 - EXACTLY three comma-separated tags per post; the build fails otherwise.
 - A case study is an ordinary post tagged `case-study`, with `role`, `when`, `stack` (and optional
   `link` + `linkLabel`) added; the post page shows those as a facts block and a button.
+- A picture is `![alt](/blog/<slug>/name-WIDTHxHEIGHT.jpg "Caption")` on a line of its own. It
+  becomes a `<figure>`; the size in the file NAME becomes width/height (no layout shift), so
+  keep that naming. Files live in `public/blog/<slug>/`.
+- The `k-studio` post (rewritten 2026-11-17, modelled on tungv.com's Billy J archive) tells the
+  build in order: business, prototype, real backend, the loop, three platforms. Its facts come
+  from k-studio's `__project__/docs/retro.md`, `scope.md`, `ui-review.md` and the specs. Its
+  screenshots are from the DEV-DEMO data (invented), in English, never from the local database
+  (which holds real imported albums and couples). Left out on purpose: the studio's letterhead
+  (address, phone, email), pay figures next to staff names, and couples' photos. To retake:
+  in `~/github.com/k-studio`,
+  `BETTER_AUTH_URL=http://localhost:3200 APP_URL=http://localhost:3200 bun --env-file=.env.dev.local x next dev -p 3200`,
+  set the `locale=en` cookie, sign in from the picker.
 - `how-i-build-with-ai-agents` and `k-studio` carry numbers from the k-studio repo (first commit
   2026-09-10, 325 commits, ~120k LOC, 823 files, 42 tables, 19 migrations, 32 specs, 14 ADRs,
   89 test files + 18 Playwright suites, ~350 landmines). Refresh them from there if they drift.
