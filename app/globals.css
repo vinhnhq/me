@@ -305,8 +305,8 @@ html[data-head-stuck] .sticky-name { pointer-events: auto; }
    of reach as well as out of sight. */
 html[data-head-stuck] .actions .links,
 html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] { visibility: hidden; }
-/* the narrowest phones: the pill keeps only its last word, so the name fits beside it */
-@media (max-width: 23rem) {
+/* phones: the pill keeps only its last word, so a centred title fits between it and the menu button */
+@media (max-width: 40rem) {
   .pill-wide { display: none; }
 }
 
@@ -317,7 +317,9 @@ html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] 
 main h1 { width: fit-content; position: relative; transform-origin: top left; }
 /* above the bar only while it is the thing travelling into it; a title that
    does not travel (two lines on a phone) must pass UNDER the bar like the rest */
-html[data-head-travels] main h1 { z-index: 11; }
+html[data-head-travels] main h1, html[data-head-fades] main h1 { z-index: 11; }
+/* a title that fades into the bar (it wraps, or the bar must cut it short) is gone once the bar is there */
+html[data-head-fades][data-head-stuck] main h1 { visibility: hidden; }
 html[data-head-travels]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
 html[data-head-stuck] .sticky-bar { visibility: visible; }
 html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
@@ -348,6 +350,25 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 }
 @keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bar-out { to { opacity: 0; } }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* the fading kind: shrinks and drifts towards the bar's title all the way
+       up, and over the last stretch the two cross-fade */
+    html[data-head-fades] main h1 {
+      animation: name-up linear both, name-over linear both, name-out linear both;
+      animation-timeline: scroll(root), scroll(root), scroll(root);
+      animation-range: 0px var(--head-end, 200px), 0px var(--head-end, 200px), calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
+      will-change: scale, translate, opacity;
+    }
+    html[data-head-fades] .sticky-name {
+      animation: bar-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
+    }
+  }
+}
+@keyframes name-over { to { translate: var(--head-dx, 0px) 0px; } }
+@keyframes name-out { to { opacity: 0; } }
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
 /* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
@@ -630,6 +651,19 @@ dialog.menu[data-open="true"] .menu-settings {
 }
 /* everywhere: the bar's name stands clear of the button */
 .sticky-name { margin-left: calc((var(--menu-size) + 1.1rem) / 2 + 0.75rem); }
+/* Phones and tablets: the bar's title is CENTRED, as in an app's navigation
+   bar, between the menu button and the page's action. --bar-side is the room
+   kept clear on EACH side, so the title stays centred whatever is beside it. */
+@media (max-width: 60rem) {
+  .sticky-bar { --bar-side: 9rem; }
+  .sticky-inner { justify-content: center; }
+  .sticky-name { margin-left: 0; max-width: calc(100% - 2 * var(--bar-side)); }
+  /* a page with no action in its row only has the menu button to clear */
+  .actions:not(:has(.pill)) + .sticky-bar { --bar-side: 3.25rem; }
+}
+@media (max-width: 40rem) {
+  .sticky-bar { --bar-side: 4.5rem; }
+}
 
 /* Tablets: wider side margins. */
 @media (min-width: 40.01rem) and (max-width: 60rem) {

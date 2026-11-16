@@ -124,54 +124,6 @@ export async function getResume(): Promise<Resume> {
   };
 }
 
-/** A case study: `content/projects/<slug>.md`, linked from the CV. */
-export type Project = {
-  readonly slug: string;
-  readonly title: string;
-  readonly summary: string;
-  readonly role: string;
-  readonly when: string;
-  readonly stack: string;
-  /** a public address to try, when there is one */
-  readonly link?: string;
-  readonly linkLabel?: string;
-  /** false with `menu: no`: the page exists and the CV links to it, but the menu does not list it */
-  readonly inMenu: boolean;
-  readonly html: string;
-};
-
-/** "Sep 2026 – present" → 9999, "Jun 2025 – Apr 2026" → 2026: the year a project ended. */
-const endYear = (when: string) => (/present/i.test(when) ? 9999 : Number(when.match(/\d{4}/g)?.at(-1) ?? 0));
-
-/** Every case study, the current one first. */
-export async function listProjects(): Promise<Project[]> {
-  const files = (await readdir(path.join(CONTENT, "projects"))).filter((f) => f.endsWith(".md"));
-  const projects = await Promise.all(
-    files.map(async (f) => {
-      const slug = f.slice(0, -3);
-      const source = await readFile(path.join(CONTENT, "projects", f), "utf8");
-      const { meta, body } = parse(`projects/${f}`, source, ["title", "summary", "role", "when", "stack"]);
-      return {
-        slug,
-        title: meta.title,
-        summary: meta.summary,
-        role: meta.role,
-        when: meta.when,
-        stack: meta.stack,
-        link: meta.link,
-        linkLabel: meta.linkLabel,
-        inMenu: meta.menu !== "no",
-        html: toHtml(body),
-      };
-    }),
-  );
-  return projects.sort((a, b) => endYear(b.when) - endYear(a.when));
-}
-
-export async function getProject(slug: string): Promise<Project | undefined> {
-  return (await listProjects()).find((p) => p.slug === slug);
-}
-
 export type Post = {
   readonly slug: string;
   readonly title: string;
@@ -180,10 +132,17 @@ export type Post = {
   readonly description: string;
   /** exactly three, e.g. ["ai-agents", "workflow", "testing"] */
   readonly tags: readonly string[];
+  /** A case study also says who did what, when and with what, and may have something to open. */
+  readonly role?: string;
+  readonly when?: string;
+  readonly stack?: string;
+  readonly link?: string;
+  readonly linkLabel?: string;
   readonly html: string;
 };
 
-/** A post is `content/blog/<slug>.md`: title, date, description, three tags, then the text. */
+/** A post is `content/blog/<slug>.md`: title, date, description, three tags, then the text.
+ *  A case study is a post like any other, with `role`, `when`, `stack` (and `link`) added. */
 function parsePost(slug: string, source: string): Post {
   const { meta, body } = parse(`blog/${slug}.md`, source, ["title", "date", "description", "tags"]);
   const tags = meta.tags
@@ -192,7 +151,19 @@ function parsePost(slug: string, source: string): Post {
     .filter(Boolean);
   // three, every time: enough to place a post, few enough to mean something
   if (tags.length !== 3) throw new Error(`content/blog/${slug}.md needs exactly 3 tags, has ${tags.length}`);
-  return { slug, title: meta.title, date: meta.date, description: meta.description, tags, html: toHtml(body) };
+  return {
+    slug,
+    title: meta.title,
+    date: meta.date,
+    description: meta.description,
+    tags,
+    role: meta.role,
+    when: meta.when,
+    stack: meta.stack,
+    link: meta.link,
+    linkLabel: meta.linkLabel,
+    html: toHtml(body),
+  };
 }
 
 /** Every post, newest first. */

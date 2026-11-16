@@ -34,6 +34,30 @@ export default async function PostPage({ params }: Props) {
         <time dateTime={post.date}>{formatDay(post.date)}</time>
       </p>
       <Tags tags={post.tags} />
+      {/* a case study: who did what, when, with what, and something to open */}
+      {post.role && post.when && post.stack && (
+        <dl className="facts">
+          <div>
+            <dt>My role</dt>
+            <dd>{post.role}</dd>
+          </div>
+          <div>
+            <dt>When</dt>
+            <dd>{post.when}</dd>
+          </div>
+          <div>
+            <dt>Built with</dt>
+            <dd>{post.stack}</dd>
+          </div>
+        </dl>
+      )}
+      {post.link && (
+        <p>
+          <a className="button" href={post.link}>
+            {post.linkLabel ?? "Open it"}
+          </a>
+        </p>
+      )}
       <article dangerouslySetInnerHTML={{ __html: post.html }} />
     </main>
   );

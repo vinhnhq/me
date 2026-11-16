@@ -25,9 +25,11 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   end, so the org may itself contain " · "). Bullets under a `<!-- more -->` line are folded on
   the web ("All N highlights") and printed in full in the PDF (`components/resume-body.tsx`).
   Jobs are ONE column on every screen (Vinh, 2026-11-16: no dates column, not even on desktop).
-- `content/projects/<slug>.md` — case studies (`/projects/<slug>`), linked from CV bullets. Front
-  matter: `title`, `summary`, `role`, `when`, `stack`, optional `link` + `linkLabel`.
-  `bao-minh-portal.md` is thin: it holds only the facts below — Vinh should add detail.
+- The site is TWO places: the CV and a blog that holds everything else (Vinh, 2026-11-16). Case
+  studies are ordinary posts in `content/blog/` with the tag `case-study` and extra front matter
+  (`role`, `when`, `stack`, optional `link` + `linkLabel`) that the post page shows as a facts
+  block. `/projects/<slug>` redirects to `/blog/<slug>`. `bao-minh-portal.md` is thin: it holds
+  only the facts below — Vinh should add detail.
 - Phone rules (taken from k-studio's ui-review): no sideways overflow, 44px targets on any touch
   screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
   `bun run audit [baseUrl]` measures all of it on 320/390/820px × light/dark — run it after UI changes.
@@ -53,16 +55,18 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   preferred it to k-studio's discrete view-transition morph). EVERY page's own `h1` travels into
   the bar (name on the CV, "Blog", a post's or case study's title), provided it is on one line
   and fits; otherwise it scrolls under the bar and the bar shows it cut short. The bar's title
-  scrolls back to the top when pressed. On the CV the big name travels in
+  scrolls back to the top when pressed. A title that wraps or does not fit ("fade" mode) shrinks
+  towards the bar and cross-fades with the bar's title over the last stretch. On phones and
+  tablets the bar's title is CENTRED (and "Save as PDF" reads "PDF" on phones to make room); on
+  a desk it sits beside the menu button. On the CV the big name travels in
   two legs so it never crosses the photo: UP while shrinking (scroll 0 → end), then LEFT along
   the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
   measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on
   `<html>`; the motion is a CSS scroll-driven animation, with a requestAnimationFrame fallback.
 - Phone and tablet header (≤60rem, so iPad and iPad mini upright; Vinh, 2026-11-16) is a menu button on the left and "Save as PDF" on the right, nothing
   else; scrolled, the name lands beside the button. The button (`components/site-menu.tsx`) opens
-  a full-screen menu: Résumé, Blog, case studies, "Save as PDF", then a gap, then theme and text
-  size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left out of
-  the menu but keeps its page. Desk-wide screens (≥60rem, a tablet on its side included) keep
+  a full-screen menu: Résumé, Blog, "Save as PDF", then a gap, then theme and text size; no
+  divider lines. Desk-wide screens (≥60rem, a tablet on its side included) keep
   the full row at the top of the page; once scrolled, the links fade out and the same menu
   button comes in over them (Vinh asked for the menu on desktop too, 2026-11-16).
 - The menu is a native `<dialog>` that fades in over the page, at the SITE'S OWN SIZES (Vinh,

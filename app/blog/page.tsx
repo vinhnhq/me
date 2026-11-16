@@ -6,7 +6,7 @@ import { formatDay, listPosts } from "@/lib/markdown";
 
 export const metadata: Metadata = {
   title: "Blog — Vinh Nguyen",
-  description: "Field notes from shipping real products: what worked, what broke, and what I changed.",
+  description: "Field notes and case studies from shipping real products: what worked, what broke, and what I changed.",
 };
 
 export default async function BlogPage() {
@@ -17,7 +17,7 @@ export default async function BlogPage() {
         <Link href="/">Résumé</Link>
       </SiteNav>
       <h1>Blog</h1>
-      <p className="lede">Field notes from shipping real products.</p>
+      <p className="lede">Field notes and case studies from shipping real products.</p>
       <ul className="posts">
         {posts.map((p) => (
           <li key={p.slug}>

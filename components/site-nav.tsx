@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { SizeControl, ThemeControl } from "@/components/reader-controls";
 import { type MenuLink, SiteMenu } from "@/components/site-menu";
 import { StickyBar } from "@/components/sticky-bar";
-import { listProjects } from "@/lib/markdown";
 
 /**
  * The bar above every page: the page's links on the left; text size, theme
@@ -14,13 +13,11 @@ import { listProjects } from "@/lib/markdown";
  * `SiteMenu` holds the links and the settings. On a desk the menu button comes
  * in when the page is scrolled, in the place of the links.
  */
-export async function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
+export function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
+  // two places only: the CV, and a blog that holds everything else (case studies included)
   const menu: MenuLink[] = [
     { href: "/", label: "Résumé" },
-    { href: "/blog", label: "Blog", note: "Field notes from shipping real products" },
-    ...(await listProjects())
-      .filter((p) => p.inMenu)
-      .map((p) => ({ href: `/projects/${p.slug}`, label: p.title, note: "Case study" })),
+    { href: "/blog", label: "Blog", note: "Field notes and case studies" },
   ];
   return (
     <>

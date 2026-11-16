@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
       // addresses that were public before the blog and the server-drawn PDF
       { source: "/agents", destination: "/blog/how-i-build-with-ai-agents", permanent: true },
       { source: "/vinh-nguyen-resume.pdf", destination: "/api/pdf", permanent: false },
+      // case studies are blog posts now
+      { source: "/projects/:slug", destination: "/blog/:slug", permanent: true },
     ];
   },
 };
