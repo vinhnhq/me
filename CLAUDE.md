@@ -19,6 +19,7 @@ The site is TWO places: the CV, and a blog that holds everything else.
 | `components/site-menu.tsx` | The full-screen menu |
 | `components/reader-controls.tsx`, `lib/themes.ts` | Theme and text-size pills |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page |
+| `app/favicon.ico`, `app/icon.png`, `app/apple-icon.tsx` | The icon: white "VN" on a burgundy disc. STATIC files on purpose: with only a generated `/icon` route there was no `/favicon.ico`, and Vercel's dashboard did not pick the icon up |
 | `app/globals.css` | ALL styling: plain CSS, no Tailwind |
 | `lib/markdown.ts` | Reads and parses everything in `content/` |
 | `scripts/ui-audit.ts` | `bun run audit`: the phone audit |
