@@ -5,8 +5,9 @@ import { Tags } from "@/components/tags";
 import { formatDay, listPosts } from "@/lib/markdown";
 import { shareCard } from "@/lib/site";
 
-const TITLE = "Blog — Vinh Nguyen";
-const DESCRIPTION = "Field notes and case studies from shipping real products: what worked, what broke, and what I changed.";
+const TITLE = "Blog — Field notes and case studies by Vinh Nguyen";
+const DESCRIPTION =
+  "Field notes and case studies from shipping real products with React, Next.js and AI coding agents: what worked, what broke, and what I changed.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 const TITLE = "Vinh Nguyen — Senior Fullstack Engineer";
 const DESCRIPTION =
-  "12 years of React, Next.js and TypeScript. Freelance since 2025, building production apps with AI coding agents.";
+  "Senior fullstack engineer with 12 years of React, Next.js and TypeScript. Freelance since 2025, shipping production apps with AI coding agents. Open to remote.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

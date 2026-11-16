@@ -1,7 +1,7 @@
 ---
 title: K-Studio
 date: 2026-11-16
-description: The operating system for a ~20-person wedding photo studio, shipped by one engineer in about 10 weeks with Claude Code.
+description: The operating system for a ~20-person wedding photo studio: scheduling, cash books and payroll, shipped by one engineer in about 10 weeks with Claude Code.
 tags: case-study, nextjs, ai-agents
 role: Sole engineer: requirements, architecture, build, deploy and support
 when: Sep 2026 – present

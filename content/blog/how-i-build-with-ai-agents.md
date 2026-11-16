@@ -1,7 +1,7 @@
 ---
 title: How I build with AI agents
 date: 2026-11-16
-description: The workflow, guardrails and numbers behind K-Studio, built with Claude Code.
+description: The workflow, guardrails and numbers behind K-Studio: how one engineer ships production software with Claude Code and keeps the tests and the review.
 tags: ai-agents, workflow, testing
 ---
 
