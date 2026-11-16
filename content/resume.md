@@ -8,7 +8,9 @@ github: vinhnhq
 values: Ownership · Adaptability · Mentorship
 ---
 
-Fullstack engineer with 12 years building web products with React, Next.js and TypeScript, at Grab, Ninja Van and MessageMedia (Principal Engineer), and since 2025 as a freelancer shipping production apps end to end. I lead teams and mentor developers, and care about testing, developer experience and functional programming. I work with AI coding agents (Claude Code, Cursor) every day and guard their output with specs, ADRs, typed domain logic and automated UI tests, so speed never costs quality. [How I build with agents](/blog/how-i-build-with-ai-agents)
+Fullstack engineer with 12 years building web products with React, Next.js and TypeScript, at Grab, Ninja Van and MessageMedia (Principal Engineer). Since 2025 I have worked as a freelancer, shipping production apps end to end.
+
+I lead teams and mentor developers, and care about testing, developer experience and functional programming. I work with AI coding agents (Claude Code, Cursor) every day and guard their output with specs, ADRs, typed domain logic and automated UI tests, so speed never costs quality. [How I build with agents](/blog/how-i-build-with-ai-agents)
 
 ## Technical skills
 
@@ -35,7 +37,7 @@ Designed, built and ran production web apps for two businesses, solo and end to 
 
 ### Fullstack Engineer
 
-*BodiData · Jun 2024 – May 2025 · part-time, remote*
+*BodiData · Jun 2024 – May 2025 · full-time, remote*
 
 Size-matching software for retail and uniform businesses, built to reduce apparel returns.
 

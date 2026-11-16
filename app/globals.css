@@ -229,6 +229,7 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 }
 .headline { color: var(--accent); font-size: 1.2rem; margin: 0 0 0.5rem; }
 .summary p { margin: 0; }
+.summary p + p { margin-top: 0.6rem; }
 /* The three words: a small mono label, then the words with dots between them. */
 .values { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.6rem; margin: 0.9rem 0 0; }
 .values-label { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
@@ -475,6 +476,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   .resume-header .intro { gap: 6mm; }
   .photo { width: 30mm; height: 30mm; border-width: 1mm; outline-width: 0.7mm; }
   .headline { font-size: 11.5pt; margin-bottom: 0.3rem; }
+  .summary p + p { margin-top: 0.25rem; }
   .values { margin-top: 0.35rem; }
   .values-label { font-size: 7pt; }
   .contact { margin-top: 0.7rem; font-size: 8.4pt; gap: 0.2rem 1.1rem; }
