@@ -42,7 +42,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   Cached by the CDN for a day. Keep the `outputFileTracingIncludes` in `next.config.ts`.
 - Next.js 16 App Router, plain CSS (`app/globals.css`, light/dark, print = A4 light).
 - Fonts (`next/font/google`): Manrope for text (Vinh's choice, 2026-11-16), Geist Mono for dates,
-  the contact line, pills and code. Neither Google subset has ← → arrows: on Vercel's Linux
+  the contact line, pills and code, AND for page titles, the name and the menu links at weight
+  500 (bold Manrope titles were "too bold"). `--title-*` in globals.css is shared by the big name,
+  the bar's name and the menu's: keep them identical or the travelling name will not land. Neither Google subset has ← → arrows: on Vercel's Linux
   Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
 - Sticky top row: `.actions` (the page's top bar) is `position: sticky`, so the theme pill and
   "Save as PDF" simply stay where they are; the links and the text-size pill fade out (on phones
@@ -95,6 +97,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   so commit locally and push only on Vinh's go (2026-11-16: "don't need to deploy prod", changes are batched).
 
 ## Open
+
+0. Tags are labels only. Vinh wants "click a tag to search/filter posts" LATER (said 2026-11-16) —
+   do not build it until he asks.
 
 1. The Grab / Ninja Van / Dwarves years in `content/resume.md` are PLACEHOLDERS — Vinh replaces them.
 2. Novorésumé (old CV) was partly updated (summary, headline, skills) before its free-plan gate

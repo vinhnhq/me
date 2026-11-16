@@ -94,7 +94,11 @@ body::before {
 
 a { color: var(--accent); text-underline-offset: 2px; }
 
-h1 { font-size: 2.25rem; line-height: 1.15; font-weight: 700; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+/* Page titles and the name are set in the mono face at a medium weight: the
+   engineer's hand, lighter than a bold sans. --title-* is shared by the big
+   name, the bar's name and the menu's, so one scales exactly onto the other. */
+:root { --title-font: var(--font-mono), ui-monospace, monospace; --title-weight: 500; --title-tracking: -0.04em; }
+h1 { font-family: var(--title-font); font-size: 2.1rem; line-height: 1.15; font-weight: var(--title-weight); margin: 0 0 0.35rem; letter-spacing: var(--title-tracking); }
 
 /* Section heading: the words, then a rule running to the edge. */
 h2 {
@@ -398,7 +402,7 @@ dialog.menu {
   height: 100dvh;
   max-height: none;
   margin: 0;
-  padding: 0 1rem 2rem 0;
+  padding: 0 0 1.5rem;
   border: 0;
   background: var(--bg);
   color: var(--fg);
@@ -412,10 +416,15 @@ dialog.menu::backdrop { background: none; }
 /* the page behind does not scroll under the sheet */
 html:has(dialog.menu[open]) { overflow: hidden; }
 .menu-top { display: flex; align-items: center; gap: 0.75rem; height: var(--menu-size); margin: var(--menu-y, 0.75rem) 0 0 var(--menu-x, 1rem); }
-.menu-title { color: var(--fg); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; white-space: nowrap; }
+.menu-title { color: var(--fg); font-family: var(--title-font); font-size: 1.05rem; font-weight: var(--title-weight); letter-spacing: var(--title-tracking); line-height: 1.15; white-space: nowrap; }
 /* a column of its own on a tablet: the settings are not stretched across the screen */
-.menu-links, .menu-settings { margin-left: var(--menu-x, 1rem); max-width: 24rem; }
-.menu-links { display: flex; flex-direction: column; margin-top: 1.5rem; }
+/* Laid out like the page it covers: the same column (--menu-x in from each
+   side), the places to go at the top in large type, and the settings at the
+   foot, where a thumb rests and where they are out of the way of the links. */
+dialog.menu[open] { display: flex; flex-direction: column; }
+.menu-top { flex: none; }
+.menu-links, .menu-settings { margin-inline: var(--menu-x, 1rem); width: min(100vw - 2 * var(--menu-x, 1rem), 48rem); }
+.menu-links { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 2.5rem; }
 .menu-links a, .menu-settings {
   opacity: 0;
   translate: 0 0.6rem;
@@ -432,19 +441,39 @@ dialog.menu[data-open="true"] .menu-settings {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 3.75rem;
-  padding: 0.6rem 0;
+  width: fit-content;
+  min-height: 3.5rem;
+  padding: 0.45rem 0;
   color: var(--fg);
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--title-font);
+  font-size: 1.5rem;
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  line-height: 1.2;
   text-decoration: none;
 }
-.menu-links a span { color: var(--muted); font-size: 0.85rem; font-weight: 400; letter-spacing: 0; }
-/* no rules between things: space does the separating */
-.menu-settings { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2.5rem; }
-.menu-settings > div { display: flex; align-items: center; justify-content: space-between; }
+.menu-links a:hover { color: var(--accent); }
+.menu-links a span { color: var(--muted); font-family: var(--font-sans), sans-serif; font-size: 0.85rem; font-weight: 400; letter-spacing: 0; margin-top: 0.15rem; }
+/* the settings: pushed to the foot; side by side where there is room */
+.menu-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.5rem;
+  margin-top: auto;
+  /* no rule above it: the empty space between is the separator */
+  padding: 2rem 0 0.5rem;
+}
+.menu-settings > div { display: flex; align-items: center; gap: 1rem; }
 .menu-settings > div > span { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+@media (min-width: 40.01rem) {
+  .menu-links { margin-top: 3.5rem; }
+  .menu-links a { font-size: 2rem; min-height: 4.25rem; }
+}
+@media (max-width: 40rem) {
+  /* a phone: one setting per row, label left, control right */
+  .menu-settings { flex-direction: column; flex-wrap: nowrap; }
+  .menu-settings > div { justify-content: space-between; }
+}
 @media (prefers-reduced-motion: reduce) {
   .bars span, dialog.menu, .menu-links a, .menu-settings { transition: none; }
 }
@@ -458,7 +487,7 @@ dialog.menu[data-open="true"] .menu-settings {
   margin: 0 auto;
   padding: 0 1rem;
 }
-.sticky-name { color: var(--fg); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+.sticky-name { color: var(--fg); font-family: var(--title-font); font-weight: var(--title-weight); font-size: 1.05rem; letter-spacing: var(--title-tracking); text-decoration: none; white-space: nowrap; }
 /* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide */
 .sticky-name span { display: block; line-height: 1.15; }
 
@@ -528,7 +557,7 @@ dialog.menu[data-open="true"] .menu-settings {
 }
 
 @media (max-width: 40rem) {
-  h1 { font-size: 1.85rem; }
+  h1 { font-size: 1.7rem; }
   .resume-header .intro { flex-direction: column; align-items: center; gap: 1rem; }
   .resume-header .intro h1, .headline { text-align: center; }
   .resume-header .intro h1 { margin-inline: auto; }
@@ -617,7 +646,7 @@ dialog.menu[data-open="true"] .menu-settings {
   .no-print { display: none; }
   body::before { display: none; }
   main h1 { animation: none !important; scale: none !important; translate: none !important; visibility: visible !important; }
-  h1 { font-size: 21pt; }
+  h1 { font-size: 19pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
   /* paper: stacked, every bullet, no fold */
