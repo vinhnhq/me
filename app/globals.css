@@ -300,9 +300,10 @@ html[data-head-stuck] .sticky-name { pointer-events: auto; }
    place) and the text size. They fade with the scroll, and at the end are out
    of reach as well as out of sight. */
 html[data-head-stuck] .actions .links,
-html[data-head-stuck] .actions .segmented[aria-label="Text size"] { visibility: hidden; }
+html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] { visibility: hidden; }
 @media (max-width: 40rem) {
-  html[data-head-stuck] .actions .pill { visibility: hidden; }
+  html[data-head-stuck] .actions .pill,
+  html[data-head-stuck] .actions > .controls > .segmented { visibility: hidden; }
 }
 
 /* On the CV the big name travels into the bar in two legs (up while shrinking,
@@ -325,7 +326,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
     }
     /* gone before the name needs the room, and before the strip is half there */
     .actions .links,
-    .actions .segmented[aria-label="Text size"],
+    .actions > .controls > .segmented[aria-label="Text size"],
     .actions .pill {
       animation: bar-out linear both;
       animation-timeline: scroll(root);
@@ -345,9 +346,95 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 @media (min-width: 40.01rem) {
   .actions .pill { animation: none !important; }
 }
+/* on a phone the theme pill leaves too, and the menu button comes in over it */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) and (max-width: 40rem) {
+    .actions > .controls > .segmented {
+      animation: bar-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc(var(--head-end, 200px) * 0.15) calc(var(--head-end, 200px) * 0.6);
+    }
+    .menu-button {
+      visibility: visible;
+      animation: bar-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
+    }
+    html:not([data-head-stuck]) .menu-button { pointer-events: none; }
+  }
+}
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
 /* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
+
+/*
+  The phone's menu (components/site-menu.tsx). The button sits over the right
+  end of the top row and comes in as the row becomes the bar; the theme pill it
+  replaces goes out. Wider screens never show it: everything fits in the row.
+*/
+.actions .controls { position: relative; }
+.menu-button, .menu-close {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+.menu-button { display: none; }
+.bars { position: relative; display: block; width: 1.1rem; height: 0.55rem; }
+.bars span { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 1px; background: currentColor; }
+.bars span:first-child { top: 0; }
+.bars span:last-child { bottom: 0; }
+/* the two bars meet in the middle and cross */
+.bars[data-open="true"] span:first-child { animation: bar-cross-a 0.28s cubic-bezier(0.32, 0, 0.15, 1) both; }
+.bars[data-open="true"] span:last-child { animation: bar-cross-b 0.28s cubic-bezier(0.32, 0, 0.15, 1) both; }
+@keyframes bar-cross-a { to { top: calc(50% - 0.75px); rotate: 45deg; } }
+@keyframes bar-cross-b { to { bottom: calc(50% - 0.75px); rotate: -45deg; } }
+
+dialog.menu {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0 1rem 2rem;
+  border: 0;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-y: auto;
+}
+dialog.menu[open] { animation: menu-in 0.22s ease-out both; }
+@keyframes menu-in { from { opacity: 0; translate: 0 -0.5rem; } }
+/* the page behind does not scroll under the sheet */
+html:has(dialog.menu[open]) { overflow: hidden; }
+.menu-top { display: flex; align-items: center; justify-content: space-between; height: calc(2.75rem + 8px + 1rem); }
+.menu-top .sticky-name { opacity: 1; }
+.menu-links { display: flex; flex-direction: column; margin-top: 1rem; }
+.menu-links a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 3.75rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+  color: var(--fg);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.menu-links a span { color: var(--muted); font-size: 0.85rem; font-weight: 400; letter-spacing: 0; }
+.menu-settings { display: flex; flex-direction: column; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.menu-settings > div { display: flex; align-items: center; justify-content: space-between; }
+.menu-settings > div > span { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  dialog.menu[open], .bars span { animation-duration: 0.01s !important; }
+}
 
 .sticky-inner {
   display: flex;
@@ -431,12 +518,15 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   .resume-header .intro h1 { margin-inline: auto; }
   .photo { width: 7.5rem; height: 7.5rem; }
   /* the bar stays one row: a phone has its own text-size setting and pinch */
-  .segmented[aria-label="Text size"] { display: none; }
+  .actions > .controls > .segmented[aria-label="Text size"] { display: none; }
   /* one contact per line, in a column a thumb can run down */
   .contact { flex-direction: column; align-items: flex-start; gap: 0; }
   /* no room for the name beside both pills: "Save as PDF" leaves with the links,
      and sits first so the theme stays put at the edge when it does */
   .actions .pill { order: -1; }
+  /* over the right end of the row: the theme pill fades out from under it */
+  .menu-button { display: grid; position: absolute; right: 0; top: 50%; translate: 0 -50%; opacity: 0; visibility: hidden; }
+  html[data-head-stuck] .menu-button { opacity: 1; visibility: visible; }
   td:first-child { width: auto; }
 }
 

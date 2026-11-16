@@ -138,9 +138,13 @@ export type Project = {
   readonly html: string;
 };
 
+/** "Sep 2026 – present" → 9999, "Jun 2025 – Apr 2026" → 2026: the year a project ended. */
+const endYear = (when: string) => (/present/i.test(when) ? 9999 : Number(when.match(/\d{4}/g)?.at(-1) ?? 0));
+
+/** Every case study, the current one first. */
 export async function listProjects(): Promise<Project[]> {
   const files = (await readdir(path.join(CONTENT, "projects"))).filter((f) => f.endsWith(".md"));
-  return Promise.all(
+  const projects = await Promise.all(
     files.map(async (f) => {
       const slug = f.slice(0, -3);
       const source = await readFile(path.join(CONTENT, "projects", f), "utf8");
@@ -158,6 +162,7 @@ export async function listProjects(): Promise<Project[]> {
       };
     }),
   );
+  return projects.sort((a, b) => endYear(b.when) - endYear(a.when));
 }
 
 export async function getProject(slug: string): Promise<Project | undefined> {
