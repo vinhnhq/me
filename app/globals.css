@@ -1,0 +1,96 @@
+:root {
+  --bg: #fbfaf8;
+  --fg: #1f2328;
+  --muted: #5b636d;
+  --accent: #b4432f;
+  --rule: #e6e2dc;
+  --chip: #f1eee9;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111214;
+    --fg: #e7e5e2;
+    --muted: #a0a6ad;
+    --accent: #f08a72;
+    --rule: #2a2c30;
+    --chip: #1c1e21;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1rem 5rem;
+}
+
+a { color: var(--accent); text-underline-offset: 2px; }
+
+h1 { font-size: 2.25rem; line-height: 1.15; font-weight: 600; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
+h3 + p em { color: var(--muted); font-style: normal; font-size: 0.9rem; }
+
+p { margin: 0.5rem 0; }
+ul { padding-left: 1.1rem; margin: 0.5rem 0; }
+li { margin: 0.3rem 0; }
+li::marker { color: var(--accent); }
+strong { font-weight: 600; }
+
+.resume article > p:nth-of-type(1) { font-size: 1.1rem; color: var(--muted); margin-top: 0; }
+.resume article > p:nth-of-type(2) { font-size: 0.9rem; color: var(--muted); }
+
+code { font-size: 0.9em; background: var(--chip); padding: 0.1em 0.35em; border-radius: 4px; }
+
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
+thead { display: none; }
+td { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
+
+.actions { display: flex; gap: 1.25rem; justify-content: flex-end; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+@media (max-width: 40rem) {
+  .page { padding-top: 1.5rem; }
+  h1 { font-size: 1.85rem; }
+  .actions { justify-content: flex-start; }
+}
+
+/* PDF: A4, light, tighter. Links stay clickable in the PDF. */
+@page { size: A4; margin: 14mm 15mm; }
+
+@media print {
+  :root {
+    --bg: #fff; --fg: #1f2328; --muted: #555d66; --accent: #b4432f; --rule: #e3dfd9; --chip: #f3f1ee;
+    color-scheme: light;
+  }
+  body { font-size: 10pt; line-height: 1.45; }
+  .page { max-width: none; padding: 0; }
+  .no-print { display: none; }
+  h1 { font-size: 22pt; }
+  h2 { margin: 1.2rem 0 0.6rem; }
+  h3 { margin: 0.9rem 0 0; break-after: avoid; }
+  li { margin: 0.15rem 0; break-inside: avoid; }
+  a { text-decoration: none; }
+}
