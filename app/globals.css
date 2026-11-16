@@ -180,6 +180,11 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .segmented button[aria-checked="true"] { background: var(--fg); color: var(--bg); }
 .segmented button:focus-visible, .pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Theme change (reader-controls.tsx): the script draws the circle, so the
+   browser's own cross-fade between the two snapshots is switched off. */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
 /* The same pill as a single action. */
 .pill {
   display: inline-flex;

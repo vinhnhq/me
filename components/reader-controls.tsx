@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode, useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { SIZE_KEY, type SizeId, THEME_KEY, type ThemeId } from "@/lib/themes";
 
 type Option<T extends string> = { readonly id: T; readonly label: string; readonly icon: ReactNode };
@@ -16,7 +17,8 @@ function Segmented<T extends string>({
   options: readonly Option<T>[];
   /** null until mounted: the server cannot see the browser's choice */
   value: T | null;
-  onChange: (id: T) => void;
+  /** the pressed button comes along: the theme change grows out of it */
+  onChange: (id: T, from: HTMLElement) => void;
 }) {
   return (
     <div className="segmented" role="radiogroup" aria-label={label}>
@@ -28,7 +30,7 @@ function Segmented<T extends string>({
           aria-checked={value === o.id}
           aria-label={o.label}
           title={o.label}
-          onClick={() => onChange(o.id)}
+          onClick={(e) => onChange(o.id, e.currentTarget)}
         >
           {o.icon}
         </button>
@@ -95,6 +97,8 @@ const SIZE_OPTIONS: readonly Option<SizeId>[] = [
   { id: "l", label: "Large text", icon: letter(16) },
 ];
 
+const systemTheme = (): ThemeId => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
 function store(key: string, value: string | null) {
   try {
     if (value === null) localStorage.removeItem(key);
@@ -115,11 +119,39 @@ export function ReaderControls() {
     setSize((d.size as SizeId | undefined) ?? "m");
   }, []);
 
-  function chooseTheme(id: ThemeChoice) {
-    if (id === "system") delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = id;
-    store(THEME_KEY, id === "system" ? null : id);
-    setTheme(id);
+  function chooseTheme(id: ThemeChoice, from: HTMLElement) {
+    const root = document.documentElement;
+    const apply = () => {
+      if (id === "system") delete root.dataset.theme;
+      else root.dataset.theme = id;
+      store(THEME_KEY, id === "system" ? null : id);
+      setTheme(id);
+    };
+
+    // Circular reveal: the new theme opens as a circle growing from the pressed
+    // button. Skipped when nothing would change colour (light → "device" on a
+    // light device), for reduced motion, and where View Transitions are missing.
+    const isDark = (theme: string | undefined) => (theme ?? systemTheme()) === "dark";
+    const changes = isDark(root.dataset.theme) !== isDark(id === "system" ? undefined : id);
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!changes || still || !document.startViewTransition) return apply();
+
+    const box = from.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    // far enough to reach the farthest corner of the screen
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    root.classList.add("theme-transition");
+    const transition = document.startViewTransition(() => flushSync(apply));
+    transition.ready
+      .then(() =>
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 380, easing: "cubic-bezier(0.32, 0, 0.15, 1)", pseudoElement: "::view-transition-new(root)" },
+        ),
+      )
+      .catch(() => {});
+    transition.finished.finally(() => root.classList.remove("theme-transition"));
   }
 
   function chooseSize(id: SizeId) {
