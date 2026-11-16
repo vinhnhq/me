@@ -61,6 +61,29 @@ body {
   font: 400 1rem/1.6 var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+/*
+  Graph paper behind the top of every page (K-Studio's `.paper-grid`): a 28px
+  grid drawn once in CSS, at 5% of the text colour so one alpha reads in light
+  and in dark, and masked to fade out before its edges. No script, no canvas.
+*/
+body { position: relative; }
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 40rem;
+  z-index: -1;
+  pointer-events: none;
+  --paper-line: color-mix(in oklab, var(--fg) 5%, transparent);
+  background-image:
+    linear-gradient(to right, var(--paper-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--paper-line) 1px, transparent 1px);
+  background-size: 1.75rem 1.75rem;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 0%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 100% at 50% 0%, #000 35%, transparent 100%);
+}
+
 .page {
   flex: 1;
   width: 100%;
@@ -459,6 +482,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   body { display: block; min-height: 0; font-size: 9.6pt; line-height: 1.42; }
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
+  body::before { display: none; }
   main h1 { animation: none !important; scale: none !important; translate: none !important; visibility: visible !important; }
   h1 { font-size: 21pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }

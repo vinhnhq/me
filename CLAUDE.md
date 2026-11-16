@@ -55,7 +55,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - Values line under the summary comes from `values:` in `resume.md`'s front matter
   ("Ownership · Adaptability · Mentorship", chosen by Vinh 2026-11-16).
 - Contact line: plain mono text; only GitHub has a mark. No X/Twitter (removed 2026-11-16). The
-  location reads "Ho Chi Minh City, Viet Nam · Remote": Vinh is looking for a remote position.
+  location reads "Ho Chi Minh City, Viet Nam · Open to remote": Vinh is looking for a remote position.
+- Background: faint graph paper behind the top of every page (`body::before`, k-studio's
+  `.paper-grid` recipe: 28px grid at 5% of `--fg`, radial mask). Not printed.
 - Wave footer on every page (`components/wave-footer.tsx` + `.waves` in globals.css): CSS-only,
   scroll-driven, modelled on Vinh's friend Tung's site (tungv.com). Hidden in print.
 - Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.
