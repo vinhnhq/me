@@ -314,7 +314,10 @@ html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] 
    then left along the bar, clear of the photo) and stands in for the bar's own
    name until it lands; then the two change places. Its box hugs its text, as
    the small one's does, so one scales exactly onto the other. */
-.resume-header h1 { width: fit-content; position: relative; z-index: 11; transform-origin: top left; }
+main h1 { width: fit-content; position: relative; transform-origin: top left; }
+/* above the bar only while it is the thing travelling into it; a title that
+   does not travel (two lines on a phone) must pass UNDER the bar like the rest */
+html[data-head-travels] main h1 { z-index: 11; }
 html[data-head-travels]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
 html[data-head-stuck] .sticky-bar { visibility: visible; }
 html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
@@ -424,18 +427,17 @@ dialog.menu::backdrop { background: none; }
 html:has(dialog.menu[open]) { overflow: hidden; }
 .menu-close {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 3.5rem;
-  height: 3.5rem;
+  top: 1.25rem;
+  right: 1.25rem;
+  /* the menu button's own size: the menu is not a louder place than the page */
+  width: var(--menu-size);
+  height: var(--menu-size);
   transform: translate(var(--from-x, 0px), var(--from-y, 0px)) scale(var(--from-scale, 1));
   transition: transform 0.36s cubic-bezier(0.32, 0, 0.15, 1);
 }
 dialog.menu[data-open="true"] .menu-close { transform: none; }
-/* the bars grow with the button */
-.menu-close .bars { scale: 1.5; }
 @media (max-width: 40rem) {
-  .menu-close { top: 1rem; right: 1rem; }
+  .menu-close { top: 0.75rem; right: 0.5rem; }
 }
 
 /* Laid out like the page it covers: the same column (--menu-x in from each
@@ -444,7 +446,7 @@ dialog.menu[data-open="true"] .menu-close { transform: none; }
 dialog.menu[open] { display: flex; flex-direction: column; }
 .menu-links, .menu-settings { margin-inline: var(--menu-x, 1rem); width: min(100vw - 2 * var(--menu-x, 1rem), 48rem); }
 /* starts below the close button's row */
-.menu-links { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 5.5rem; }
+.menu-links { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 4.5rem; }
 .menu-links a, .menu-settings {
   opacity: 0;
   translate: 0 0.6rem;
@@ -466,7 +468,7 @@ dialog.menu[data-open="true"] .menu-settings {
   padding: 0.45rem 0;
   color: var(--fg);
   font-family: var(--title-font);
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: var(--title-weight);
   letter-spacing: var(--title-tracking);
   line-height: 1.2;
@@ -486,8 +488,7 @@ dialog.menu[data-open="true"] .menu-settings {
 .menu-settings > div { display: flex; align-items: center; gap: 1rem; }
 .menu-settings > div > span { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 @media (min-width: 40.01rem) {
-  .menu-links { margin-top: 6.5rem; }
-  .menu-links a { font-size: 2rem; min-height: 4.25rem; }
+  .menu-links { margin-top: 5.5rem; }
 }
 @media (max-width: 40rem) {
   /* a phone: one setting per row, label left, control right */
@@ -508,8 +509,14 @@ dialog.menu[data-open="true"] .menu-settings {
   padding: 0 1rem;
 }
 .sticky-name { color: var(--fg); font-family: var(--title-font); font-weight: var(--title-weight); font-size: 1.05rem; letter-spacing: var(--title-tracking); text-decoration: none; white-space: nowrap; }
-/* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide */
-.sticky-name span { display: block; line-height: 1.15; }
+/* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide;
+   a title too long for the bar is cut short with an ellipsis (and then does not travel) */
+/* --bar-reserve: the room the row's own controls take at the right end */
+:root { --bar-reserve: 15rem; }
+@media (max-width: 60rem) { :root { --bar-reserve: 8.5rem; } }
+@media (max-width: 23rem) { :root { --bar-reserve: 4.5rem; } }
+.sticky-name { display: block; min-width: 0; max-width: calc(100% - (var(--menu-size) + 1.1rem) / 2 - 0.75rem - var(--bar-reserve)); }
+.sticky-name span { display: block; min-width: 0; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }

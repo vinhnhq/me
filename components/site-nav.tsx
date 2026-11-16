@@ -8,7 +8,7 @@ import { listProjects } from "@/lib/markdown";
  * The bar above every page: the page's links on the left; text size, theme
  * and the page's own action (the CV's "Save as PDF") on the right. The row is
  * sticky: scrolled, the theme and the action stay where they are, the rest
- * fades, and `StickyBar` puts a strip behind them and the name on the left.
+ * fades, and `StickyBar` puts a strip behind them and the page's title on the left.
  *
  * On a phone or tablet the row is only a menu button and the page's action;
  * `SiteMenu` holds the links and the settings. On a desk the menu button comes
@@ -34,7 +34,7 @@ export async function SiteNav({ children, action }: { children: ReactNode; actio
           {action}
         </span>
       </nav>
-      <StickyBar name="Vinh Nguyen" />
+      <StickyBar />
     </>
   );
 }

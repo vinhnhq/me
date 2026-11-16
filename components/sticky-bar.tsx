@@ -1,18 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 
 /**
- * The ground and the name of the bar the page's top row becomes once it is
+ * The ground and the title of the bar the page's top row becomes once it is
  * scrolled: the row itself (`.actions`, theme and "Save as PDF") is sticky and
- * simply stays; this draws the strip behind it and holds the name on its left.
+ * simply stays; this draws the strip behind it and holds, on its left, the
+ * page's OWN title: "Vinh Nguyen" on the CV, "Blog" on the blog, a post's
+ * title on the post. Pressing it goes back to the top of the page.
  *
  * The hand-over is CONTINUOUS and tied to the scroll, the way tungv.com does
- * it. On the CV the big name is not swapped for a small one; it travels there,
- * in two legs, so that it never crosses the photo on its left:
+ * it. The page's big title is not swapped for a small one; it travels there,
+ * in two legs (on the CV, so that it never crosses the photo on its left):
  *
  *   leg 1, UP     scroll 0 → end          the name rides up with the page,
  *                                         shrinking to the bar's size; the bar
@@ -31,19 +32,28 @@ const clamp = (n: number) => Math.min(1, Math.max(0, n));
  * during iOS momentum scrolling. Browsers without scroll timelines get the
  * same motion from a requestAnimationFrame loop here.
  */
-export function StickyBar({ name }: { name: string }) {
+export function StickyBar() {
   const bar = useRef<HTMLDivElement>(null);
   const slot = useRef<HTMLSpanElement>(null);
+  // the page's own heading, read once it is on screen
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
+    setTitle(document.querySelector("main h1")?.textContent?.trim() ?? "");
+  }, []);
+
+  useEffect(() => {
+    if (!title) return;
     const root = document.documentElement;
     const heading = document.querySelector<HTMLElement>("main h1");
     const barEl = bar.current;
     const slotEl = slot.current;
     if (!heading || !barEl || !slotEl) return;
 
-    // the name travels only when the heading IS the name; "Blog" just scrolls under the bar
-    const isName = heading.textContent?.trim() === name;
+    // The title travels when one can land on the other: a heading on ONE line,
+    // and a bar wide enough to show all of it. A long post title on a phone wraps
+    // to two lines; it then simply scrolls under the bar, and the bar shows it cut short.
+    let fits = false;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
     const native = CSS.supports("animation-timeline: scroll()");
     let end = 1;
@@ -59,7 +69,7 @@ export function StickyBar({ name }: { name: string }) {
       const y = window.scrollY;
       const up = clamp(y / end);
       const left = clamp((y - end) / slide);
-      const travels = isName && !still.matches;
+      const travels = fits && !still.matches;
       if (!native) {
         // scale and translate are separate properties: translate is in page pixels, unscaled
         heading.style.scale = travels ? String(1 + (scale - 1) * up) : "";
@@ -73,7 +83,7 @@ export function StickyBar({ name }: { name: string }) {
         isStuck = stuckNow;
         root.toggleAttribute("data-head-stuck", stuckNow);
       }
-      // without a travelling name there is no second leg to wait for
+      // without a travelling title there is no second leg to wait for
       const swappedNow = travels ? left >= 1 : stuckNow;
       if (swappedNow !== isSwapped) {
         isSwapped = swappedNow;
@@ -88,6 +98,8 @@ export function StickyBar({ name }: { name: string }) {
       heading.style.translate = "";
       const from = heading.getBoundingClientRect();
       const to = slotEl.getBoundingClientRect();
+      const oneLine = from.height < parseFloat(getComputedStyle(heading).lineHeight) * 1.5;
+      fits = oneLine && slotEl.scrollWidth <= slotEl.clientWidth + 1;
       heading.style.animation = "";
       end = Math.max(1, from.top + window.scrollY - to.top);
       dx = to.left - from.left;
@@ -99,7 +111,7 @@ export function StickyBar({ name }: { name: string }) {
       root.style.setProperty("--head-slide", `${slide}px`);
       root.style.setProperty("--head-dx", `${dx}px`);
       root.style.setProperty("--head-scale", String(scale));
-      root.toggleAttribute("data-head-travels", isName && !still.matches);
+      root.toggleAttribute("data-head-travels", fits && !still.matches);
       update();
     };
 
@@ -123,16 +135,24 @@ export function StickyBar({ name }: { name: string }) {
       heading.style.translate = "";
       for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels"]) root.removeAttribute(attr);
     };
-  }, [name]);
+  }, [title]);
 
   return (
-    // not `inert`: the name is a link home, reachable once it is shown (CSS hides it until then)
     <div ref={bar} className="sticky-bar no-print">
       <div className="sticky-inner">
-        <Link className="sticky-name" href="/">
-          {/* the box the big name lands on: measured, so it hugs the text */}
-          <span ref={slot}>{name}</span>
-        </Link>
+        <a
+          className="sticky-name"
+          href="#top"
+          aria-label={`${title}: back to the top`}
+          onClick={(e) => {
+            e.preventDefault();
+            const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            window.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
+          }}
+        >
+          {/* the box the big title lands on: measured, so it hugs the text */}
+          <span ref={slot}>{title}</span>
+        </a>
       </div>
     </div>
   );

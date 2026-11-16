@@ -50,7 +50,10 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   "Save as PDF" simply stay where they are; the links and the text-size pill fade out (on phones
   "Save as PDF" too). `components/sticky-bar.tsx` draws the strip behind the row and holds the
   name on its left. The hand-over is CONTINUOUS and tied to the scroll, as on tungv.com (Vinh
-  preferred it to k-studio's discrete view-transition morph). On the CV the big name travels in
+  preferred it to k-studio's discrete view-transition morph). EVERY page's own `h1` travels into
+  the bar (name on the CV, "Blog", a post's or case study's title), provided it is on one line
+  and fits; otherwise it scrolls under the bar and the bar shows it cut short. The bar's title
+  scrolls back to the top when pressed. On the CV the big name travels in
   two legs so it never crosses the photo: UP while shrinking (scroll 0 → end), then LEFT along
   the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
   measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on
@@ -62,10 +65,11 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   the menu but keeps its page. Desk-wide screens (≥60rem, a tablet on its side included) keep
   the full row at the top of the page; once scrolled, the links fade out and the same menu
   button comes in over them (Vinh asked for the menu on desktop too, 2026-11-16).
-- The menu is a native `<dialog>` that fades in over the page. Its close button is large and in
-  the top right corner (no name shown in the menu), and it TRAVELS there from the menu button:
+- The menu is a native `<dialog>` that fades in over the page, at the SITE'S OWN SIZES (Vinh,
+  2026-11-16: not larger than the page). Its close button is in the top right corner, the same
+  size as the menu button (no name shown in the menu), and it TRAVELS there from the menu button:
   on open its start pose (`--from-x/-y/-scale`) is measured so it begins exactly on the menu
-  button, then it moves and grows while the bars cross; closing reverses it. Do not swap the
+  button, then it moves while the bars cross; closing reverses it. Do not swap the
   menu for Vaul / shadcn's Drawer: on iOS Vaul pins `<body>` with `position: fixed`, which zeroes
   `scrollY`, and the header is driven by `scrollY` (the page looked like it jumped to the top
   when the menu opened; tried 2026-11-16).
