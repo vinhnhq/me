@@ -46,7 +46,8 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - Sticky bar (`components/sticky-bar.tsx`): the hand-over from the page's `h1` is CONTINUOUS and
   tied to the scroll, as on tungv.com (Vinh preferred it to k-studio's discrete view-transition
   morph, which he found less smooth). On the CV the big name shrinks and slides until it lands
-  exactly on the bar's name, then the two swap. The component measures `--head-end/-dx/-scale`;
+  exactly on the bar's name, then the two swap. Two legs, so it never crosses the photo: UP while
+  shrinking (scroll 0 → end), then LEFT along the bar (end → end + slide). The component measures `--head-end/-end2/-slide/-dx/-scale`;
   the motion is a CSS scroll-driven animation (off the main thread), with a requestAnimationFrame
   fallback. No backdrop blur. Theme/size state lives on `<html>` and is shared between both bars
   through a `reader-settings` event.

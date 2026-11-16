@@ -254,30 +254,34 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 }
 .sticky-bar[data-stuck="true"] { opacity: 1; pointer-events: auto; }
 
-/* On the CV the big name travels into the bar and stands in for the bar's own
+/* On the CV the big name travels into the bar in two legs (up while shrinking,
+   then left along the bar, clear of the photo) and stands in for the bar's own
    name until it lands; then the two change places. Its box hugs its text, as
    the small one's does, so one scales exactly onto the other. */
 .resume-header h1 { width: fit-content; position: relative; z-index: 11; transform-origin: top left; }
-html[data-head-travels] .sticky-bar:not([data-stuck="true"]) .sticky-name { opacity: 0; }
+html[data-head-travels]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
 html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* fully there by the time the name arrives in its row */
     .sticky-bar {
       animation: bar-in linear both;
       animation-timeline: scroll(root);
-      animation-range: calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
+      animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
     }
     html[data-head-travels] main h1 {
-      animation: name-travel linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0px var(--head-end, 200px);
-      will-change: transform;
+      animation: name-up linear both, name-left linear both;
+      animation-timeline: scroll(root), scroll(root);
+      animation-range: 0px var(--head-end, 200px), var(--head-end, 200px) var(--head-end2, 300px);
+      will-change: scale, translate;
     }
   }
 }
 @keyframes bar-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes name-travel { to { transform: translateX(var(--head-dx, 0px)) scale(var(--head-scale, 1)); } }
+@keyframes name-up { to { scale: var(--head-scale, 1); } }
+/* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
+@keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
 
 .sticky-inner {
   display: flex;
@@ -411,7 +415,7 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   body { display: block; min-height: 0; font-size: 9.6pt; line-height: 1.42; }
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
-  main h1 { animation: none !important; transform: none !important; visibility: visible !important; }
+  main h1 { animation: none !important; scale: none !important; translate: none !important; visibility: visible !important; }
   h1 { font-size: 21pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
