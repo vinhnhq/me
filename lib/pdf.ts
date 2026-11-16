@@ -41,10 +41,6 @@ export async function renderResumePdf(origin: string): Promise<Uint8Array> {
         a.href = new URL(a.getAttribute("href")!, site).toString();
       }
     }, SITE_URL);
-    // The web folds the lesser bullets away; paper carries all of them.
-    await page.evaluate(() => {
-      for (const d of document.querySelectorAll("details")) d.open = true;
-    });
     await page.evaluate(() => document.fonts.ready);
     // margins come from @page in globals.css
     const pdf = await page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true });

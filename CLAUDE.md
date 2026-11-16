@@ -35,8 +35,8 @@ Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, n
 - The paragraphs before the first `##` are the summary (two paragraphs: who and where; how I work).
 - A job is `### Title` + an italic `*Org · Dates · Where*` line. It is read from the END, so the
   org may itself contain " · " (three employers in one entry).
-- Bullets under a `<!-- more -->` line are folded on the web ("All N highlights") and printed in
-  full in the PDF.
+- Every bullet is shown, on the web and in the PDF. There was a "All N highlights" fold
+  (`<!-- more -->`); Vinh had it removed on 2026-11-16. Do not bring it back.
 - Keep ← → arrows and other unusual symbols OUT of this file: neither font's Google subset has
   them, and on Vercel's Linux Chromium a missing glyph has no fallback, so it prints as a box.
 - The PDF must stay 2 pages. Check after any content change (see Verifying).
@@ -135,7 +135,7 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 - Cached by the CDN for a day; a new deployment starts with an empty cache.
 - Keep `outputFileTracingIncludes` and `serverExternalPackages` in `next.config.ts`, or the
   function 500s on Vercel (`playwright-core` reads its own files at load).
-- Print and the PDF are always light, at the default text size, with every folded bullet shown.
+- Print and the PDF are always light, at the default text size.
 
 ## Verifying
 

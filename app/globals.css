@@ -130,20 +130,6 @@ h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 .entry-when span:first-child { color: var(--fg); }
 .entry-when span + span::before { content: " · "; }
 
-/* The folded bullets. */
-.more summary {
-  display: inline-block;
-  cursor: pointer;
-  color: var(--accent);
-  font-size: 0.9rem;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  list-style: none;
-}
-.more summary::-webkit-details-marker { display: none; }
-.more summary::after { content: " +"; }
-.more[open] summary::after { content: " −"; }
-
 /* Case study. */
 .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.25rem; }
 .facts { display: grid; gap: 1rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--rule); }
@@ -693,7 +679,6 @@ dialog.menu[data-open="true"] .menu-settings {
   .actions .links a,
   .sticky-name,
   .contact a,
-  .more summary,
   .posts a {
     display: inline-flex;
     align-items: center;
@@ -722,14 +707,11 @@ dialog.menu[data-open="true"] .menu-settings {
   h1 { font-size: 19pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
-  /* paper: stacked, every bullet, no fold */
+  /* paper: stacked */
   .entry { margin-top: 0.8rem; }
   .entry-when { font-family: inherit; font-size: 8.6pt; margin: 0; }
   .entry-when span, .entry-when span:first-child { color: var(--muted); }
-  .more summary { display: none; }
-  .more::details-content { content-visibility: visible; display: block; }
   .entry-text > ul:last-child { margin-bottom: 0; }
-  .more ul { margin-top: 0; }
   li { margin: 0.12rem 0; break-inside: avoid; }
   a { text-decoration: none; }
   .resume-header .intro { gap: 6mm; }

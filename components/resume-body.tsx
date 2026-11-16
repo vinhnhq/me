@@ -12,13 +12,6 @@ function EntryRow({ entry: e }: { entry: Entry }) {
         {e.where && <span>{e.where}</span>}
       </p>
       <div className="entry-text" dangerouslySetInnerHTML={{ __html: e.html }} />
-      {e.moreHtml && (
-        // folded on the web; the print sheet and the PDF route open it
-        <details className="more">
-          <summary>All {e.count} highlights</summary>
-          <div dangerouslySetInnerHTML={{ __html: e.moreHtml }} />
-        </details>
-      )}
     </div>
   );
 }

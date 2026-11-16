@@ -37,12 +37,8 @@ export type Entry = {
   readonly when: string;
   /** "full-time, Ho Chi Minh City" — absent on a degree */
   readonly where?: string;
-  /** what is always shown: the intro line and the bullets above `<!-- more -->` */
+  /** the intro line and every bullet */
   readonly html: string;
-  /** the bullets under `<!-- more -->`: folded on the web, printed in the PDF */
-  readonly moreHtml?: string;
-  /** every bullet, shown or folded */
-  readonly count: number;
 };
 
 export type Section = {
@@ -67,8 +63,6 @@ export type Resume = {
   readonly sections: readonly Section[];
 };
 
-const MORE = "<!-- more -->";
-
 function parseEntry(block: string): Entry {
   const [titleLine, ...rest] = block.split("\n");
   const title = titleLine.trim();
@@ -81,15 +75,12 @@ function parseEntry(block: string): Entry {
   const where = parts.length > 2 ? parts.pop() : undefined;
   const when = parts.pop()!;
   const text = rest.slice(metaAt + 1).join("\n");
-  const [shown, more] = text.split(MORE);
   return {
     title,
     org: parts.join(" · "),
     when,
     where,
-    html: toHtml(shown),
-    moreHtml: more?.trim() ? toHtml(more) : undefined,
-    count: (text.match(/^- /gm) ?? []).length,
+    html: toHtml(text),
   };
 }
 
