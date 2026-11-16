@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Drawer } from "vaul";
+import { type CSSProperties, type MouseEvent, useRef, useState } from "react";
 import { SizeControl, ThemeControl } from "@/components/reader-controls";
 
 export type MenuLink = { readonly href: string; readonly label: string; readonly note?: string };
@@ -17,69 +16,96 @@ function Bars({ open }: { open: boolean }) {
   );
 }
 
+/** how long the menu takes to fade away; the dialog is closed when it has */
+const LEAVE_MS = 240;
+
 /**
- * The phone's menu. Once the page is scrolled, the top row is the name with a
- * menu button on its left; the button opens a full-screen drawer with the
- * pages, "Save as PDF", the theme and the text size.
+ * The phone's menu: a full-screen sheet with the pages, "Save as PDF", the
+ * theme and the text size, behind a menu button at the left of the top row.
  *
- * The drawer is Vaul, the library under shadcn/ui's Drawer, used directly and
- * styled in globals.css: this site has no Tailwind for shadcn's own wrapper to
- * sit on. It brings the sheet that follows the finger, drag-down to close,
- * focus trapping, Escape, and the page behind made inert.
+ * The sheet does not slide in from anywhere. Its own top row is laid exactly
+ * over the page's (the close button on the menu button, to the pixel, wherever
+ * the page is scrolled), and the sheet fades in around it while the two bars
+ * cross into an X. So what the eye follows is ONE button turning, in place,
+ * and the page giving way to the menu under it; closing runs it backwards.
+ *
+ * A native <dialog> opened with showModal(): the browser traps focus, closes
+ * on Escape and makes the page inert. (Vaul, shadcn's drawer, was tried: on
+ * iOS it pins <body> with `position: fixed` to lock scrolling, which zeroes
+ * `scrollY`, and this page's header is driven by `scrollY`, so opening the
+ * menu threw the header back to its top-of-page state.)
  */
 export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
+  const sheet = useRef<HTMLDialogElement>(null);
+  const leaving = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
+
+  function show(e: MouseEvent<HTMLButtonElement>) {
+    const d = sheet.current;
+    if (!d) return;
+    clearTimeout(leaving.current);
+    // the close button goes exactly where this button is right now
+    const at = e.currentTarget.getBoundingClientRect();
+    d.style.setProperty("--menu-y", `${at.top}px`);
+    d.style.setProperty("--menu-x", `${at.left}px`);
+    d.showModal();
+    // one frame later, so the sheet is painted in its "closed" look first and the change is a transition
+    requestAnimationFrame(() => setOpen(true));
+  }
+
+  function hide() {
+    setOpen(false);
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    leaving.current = setTimeout(() => sheet.current?.close(), still ? 0 : LEAVE_MS);
+  }
 
   return (
-    // autoFocus: Vaul leaves focus on the page behind unless asked; a keyboard would then tab out of sight
-    <Drawer.Root open={open} onOpenChange={setOpen} autoFocus>
-      <Drawer.Trigger asChild>
-        {/* It and the drawer's close button sit in the same spot and turn together,
-            so opening and closing read as one button changing, under and over the sheet. */}
-        <button type="button" className="menu-button" aria-label="Menu">
-          <Bars open={open} />
-        </button>
-      </Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Overlay className="menu-overlay" />
-        {/* no description: the title says all there is to say */}
-        <Drawer.Content className="menu" aria-describedby={undefined}>
-          <Drawer.Handle className="menu-handle" />
-          <div className="menu-top">
-            {/* where the menu button was, so the thumb does not have to move to close */}
-            <Drawer.Close asChild>
-              <button type="button" className="menu-close" aria-label="Close menu">
-                <Bars open={open} />
-              </button>
-            </Drawer.Close>
-            <Drawer.Title className="menu-title">Vinh Nguyen</Drawer.Title>
+    <>
+      {/* It and the sheet's close button are in the same spot and turn together. */}
+      <button type="button" className="menu-button" aria-label="Menu" aria-haspopup="dialog" onClick={show}>
+        <Bars open={open} />
+      </button>
+      <dialog
+        ref={sheet}
+        className="menu"
+        aria-label="Menu"
+        data-open={open}
+        // Escape: leave the same way as the button, not in one frame
+        onCancel={(e) => {
+          e.preventDefault();
+          hide();
+        }}
+      >
+        <div className="menu-top">
+          <button type="button" className="menu-close" aria-label="Close menu" onClick={hide}>
+            <Bars open={open} />
+          </button>
+          <span className="menu-title">Vinh Nguyen</span>
+        </div>
+        <nav className="menu-links" aria-label="Pages">
+          {links.map((l, i) => (
+            <Link key={l.href} href={l.href} onClick={hide} style={{ "--i": i } as CSSProperties}>
+              {l.label}
+              {l.note && <span>{l.note}</span>}
+            </Link>
+          ))}
+          {/* a plain link: this one is a file to download, not a page to route to */}
+          <a href="/api/pdf" onClick={hide} style={{ "--i": links.length } as CSSProperties}>
+            Save as PDF
+            <span>The résumé, 2 pages</span>
+          </a>
+        </nav>
+        <div className="menu-settings" style={{ "--i": links.length + 1 } as CSSProperties}>
+          <div>
+            <span>Theme</span>
+            <ThemeControl />
           </div>
-          <nav className="menu-links" aria-label="Pages">
-            {links.map((l) => (
-              <Link key={l.href} href={l.href} onClick={close}>
-                {l.label}
-                {l.note && <span>{l.note}</span>}
-              </Link>
-            ))}
-            {/* a plain link: this one is a file to download, not a page to route to */}
-            <a href="/api/pdf" onClick={close}>
-              Save as PDF
-              <span>The résumé, 2 pages</span>
-            </a>
-          </nav>
-          <div className="menu-settings">
-            <div>
-              <span>Theme</span>
-              <ThemeControl />
-            </div>
-            <div>
-              <span>Text size</span>
-              <SizeControl />
-            </div>
+          <div>
+            <span>Text size</span>
+            <SizeControl />
           </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+        </div>
+      </dialog>
+    </>
   );
 }

@@ -54,14 +54,15 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   `<html>`; the motion is a CSS scroll-driven animation, with a requestAnimationFrame fallback.
 - Phone header (≤40rem) is a menu button on the left and "Save as PDF" on the right, nothing
   else; scrolled, the name lands beside the button. The button (`components/site-menu.tsx`) opens
-  a full-screen drawer with the pages, case studies, "Save as PDF", theme and text size. The
-  drawer is Vaul (the library under shadcn's Drawer) used directly with plain CSS, because the
-  site has no Tailwind. Wider screens have no menu: everything fits in the row (a desktop drawer
-  was considered and not built).
-- The drawer lists only Résumé, Blog, case studies and "Save as PDF", then a gap, then theme and
-  text size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left
-  out of the menu but keeps its page. The menu button and the drawer's close button sit in the
-  same spot and share one `open` state, so the bars cross and uncross as one button.
+  a full-screen menu: Résumé, Blog, case studies, "Save as PDF", then a gap, then theme and text
+  size; no divider lines. A project with `menu: no` in its front matter (Bảo Minh) is left out of
+  the menu but keeps its page. Wider screens have no menu (a desktop drawer was considered and
+  not built).
+- The menu is a native `<dialog>` that FADES IN IN PLACE: its top row is laid exactly over the
+  page's (button position measured on open), and both buttons share one `open` state, so the bars
+  are seen to cross into an X where they stand. Do not swap it for Vaul / shadcn's Drawer: on iOS
+  Vaul pins `<body>` with `position: fixed`, which zeroes `scrollY`, and the header is driven by
+  `scrollY` (the page looked like it jumped to the top when the menu opened; tried 2026-11-16).
 - On phones the Values label is centred with the three words under it, and phone + email share a line.
 - `bun run audit` compares page width with the SCREEN width: a phone browser widens `innerWidth`
   to fit an overflowing page, so comparing against `innerWidth` passes falsely.
