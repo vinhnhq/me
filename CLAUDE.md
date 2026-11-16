@@ -51,13 +51,18 @@ Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, n
   becomes a `<figure>`; the size in the file NAME becomes width/height (no layout shift), so
   keep that naming. Files live in `public/blog/<slug>/`.
 - The `k-studio` post (rewritten 2026-11-17, modelled on tungv.com's Billy J archive) tells the
-  two sides by picture (the internal app, the couple's portal), opening on the sign-in page
-  because the internal app is behind sign-in and has no public address, then how it was built,
+  three parts by picture: the public landing page (www.k-studio.photo, repo
+  `~/github.com/k-studio-landing`), the internal app (behind sign-in, no public address) and
+  the couple's portal with the album review; then how it was built (hand-drawn wireframes with
+  the studio, then a prototype),
   the loop, and lessons. The portal shots are contract KS112026-0019 on dev (NOT 0004, whose
   contact phone is Vinh's own). Its facts come
   from k-studio's `__project__/docs/retro.md`, `scope.md`, `ui-review.md` and the specs. Its
   screenshots are from the DEV-DEMO data (invented), in English, never from the local database
-  (which holds real imported albums and couples). Left out on purpose: the studio's letterhead
+  (which holds real imported albums and couples). Names, phones and contract codes on the portal are blurred, and so
+  are the album's photographs (`/gallery-lab` scenarios 2 and 6, `img { filter: blur(9px) }`):
+  they are a real couple's photos, and Vinh asked for sensitive data to be blurred. Left out
+  on purpose: the studio's letterhead
   (address, phone, email), pay figures next to staff names, and couples' photos. To retake:
   in `~/github.com/k-studio`,
   `BETTER_AUTH_URL=http://localhost:3200 APP_URL=http://localhost:3200 bun --env-file=.env.dev.local x next dev -p 3200`,
@@ -85,7 +90,7 @@ All dated 2026-11-16.
   he has not claimed.
 - **No link to the K-Studio demo in the blog posts** (2026-11-17): "just a topic and photos are
   enough to explain". The post has screenshots instead. Do not add the link back. The CV's
-  K-Studio bullet still has a "Live demo" link; Vinh has not yet said whether that one goes too.
+  "Live demo" link was removed too ("yes remove all link").
 - **No Bảo Minh case-study page.** He dropped it (too like K-Studio, and K-Studio is the better
   one). It lives only as a bullet on the CV. Do not re-create it.
 - **Menu and close buttons are bare icons**, "like Apple": no ring, no fill. The round area is

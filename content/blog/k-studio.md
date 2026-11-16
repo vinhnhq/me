@@ -10,9 +10,9 @@ stack: Next.js (App Router), React 19, TypeScript, Postgres on Neon, Kysely, bet
 
 K-Studio is a wedding photo studio in Nha Trang with about 20 people. Before this project it ran on three things kept by hand: an Excel cash book, a shoot schedule in a Zalo chat, and a payroll sheet computed at the end of each period. I replaced all three with one web app that the studio now uses every day. It went from first commit to daily use in about 10 weeks, with an AI agent (Claude Code) writing most of the lines.
 
-It has two sides: an internal app for the staff, and a portal for each couple. The internal app is behind sign-in, so there is nothing public to open. The screens below stand in for it, and every one shows invented data.
+It has three parts: a public landing page, an internal app for the staff, and a portal for each couple. The internal app is behind sign-in, so there is nothing public to open. The screens below stand in for it; they show invented data, and anything that could name a person is blurred.
 
-![The K-Studio sign-in page: the studio's mark, fields for email or phone and a password, and switches for Vietnamese or English and for the light or dark theme.](/blog/k-studio/sign-in-1600x700.jpg "The front door. Staff sign in with an email or phone number; language and theme can be changed before signing in.")
+![The K-Studio landing page: the studio's name over three wedding photographs, with buttons to book a consultation and see the portfolio, and a choice of four languages.](/blog/k-studio/landing-1600x1000.jpg "The public landing page at k-studio.photo, in Vietnamese, English, Russian and Korean.")
 
 ## In numbers
 
@@ -45,12 +45,18 @@ Each couple gets a private link, with no account to create. It shows where their
 
 ![Three phone screens of the couple's portal: the progress of the contract from deposit to delivery, the shoot days and the studio contact with a brief to fill in, and the photo selection with a consent switch and a feedback box.](/blog/k-studio/portal-1600x1040.jpg "The couple's portal on a phone: progress, details and brief, then photo selection and feedback.")
 
-The photo proofing gallery stores its files on Cloudflare R2 and replaced a paid SaaS.
+### Album review
+
+After the shoot the couple opens their album from the same link. They heart the photos they like, tick the ones included in their package until the count is full, and seal the pick. The studio retouches those and sends them back as numbered rounds; the couple writes notes on any photo, the studio answers, and the next round follows. It replaced a paid proofing service, and the files are stored on Cloudflare R2.
+
+![The couple's album while picking: a wall of photographs, some marked with a heart or a tick, a counter reading 12 of 20, and a button to seal the picks.](/blog/k-studio/gallery-pick-1600x1000.jpg "Picking. Hearts are favourites, ticks count against the package, and the pick is sealed once. The photographs are blurred here.")
+
+![The first round of retouched photos: a wall of photographs, three of them carrying a count of notes, with a link to Google Drive and a button to send the notes.](/blog/k-studio/gallery-edited-1600x1000.jpg "Round 1 of the retouched photos, with the couple's notes counted on each one.")
 
 ## How it was built
 
 1. **Business first.** I talked to the owner and read what the studio already used: the real payroll sheet, cash book and price list. That gave a short scope (four lines of business, the life of one contract, twelve areas to build) and a glossary. In this studio *show* means a paid shoot and *chốt sổ* means closing the day's cash book; pinning those words down stopped a whole class of plausible-looking mistakes, by me and by the agent.
-2. **The wireframe was a working prototype.** With an agent, a clickable prototype costs about what a drawing used to. The first commit was the real screens on invented data, at an address the owner could open on his own phone. A week later he clicked through one whole wedding and came back with eleven asks, all before the real backend was built.
+2. **Hand-drawn wireframes, then a working prototype.** The wireframes were drawings by hand, made with the studio to agree on the idea and nothing more. With an agent a clickable prototype is cheap, so the first commit was the real screens on invented data, at an address the owner could open on his own phone. A week later he clicked through one whole wedding and came back with eleven asks, all before the real backend was built.
 3. **Then the real system, under the screens he had agreed.** The prototype kept honest in-memory state, so the first database was a transcription, not a design. Every business rule became a pure function with a unit test; repositories come in an in-memory kind for fast tests and a Postgres kind tested against a real database; server actions decide nothing.
 
 ## The loop that keeps speed from costing quality
