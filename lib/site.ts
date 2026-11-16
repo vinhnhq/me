@@ -2,6 +2,13 @@
 export const SITE_URL = "https://vinhn.dev";
 
 /**
+ * Vinh's X handle. It is NOT shown on the résumé (his choice, 2026-11-17): it only
+ * attributes shared links (`twitter:site` / `twitter:creator`) and ties the
+ * site to the account in the structured data (`sameAs`).
+ */
+export const X_HANDLE = "vinhnhq";
+
+/**
  * What a link to a page shows when it is pasted into LinkedIn, Zalo, Slack…
  * A page's `openGraph` REPLACES the layout's (Next does not merge them), so
  * every page builds its own from this.

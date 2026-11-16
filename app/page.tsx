@@ -3,7 +3,7 @@ import { ResumeBody } from "@/components/resume-body";
 import { ResumeHeader } from "@/components/resume-header";
 import { SiteNav } from "@/components/site-nav";
 import { getResume } from "@/lib/markdown";
-import { SITE_URL, jsonLd } from "@/lib/site";
+import { SITE_URL, X_HANDLE, jsonLd } from "@/lib/site";
 
 export default async function ResumePage() {
   const resume = await getResume();
@@ -21,7 +21,7 @@ export default async function ResumePage() {
       image: `${SITE_URL}/vinh-nguyen.jpg`,
       email: `mailto:${resume.email}`,
       address: { "@type": "PostalAddress", addressLocality: "Ho Chi Minh City", addressCountry: "VN" },
-      sameAs: [`https://github.com/${resume.github}`],
+      sameAs: [`https://github.com/${resume.github}`, `https://x.com/${X_HANDLE}`],
     },
   };
   return (

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
 import { WaveFooter } from "@/components/wave-footer";
-import { SITE_URL, shareCard } from "@/lib/site";
+import { SITE_URL, X_HANDLE, shareCard } from "@/lib/site";
 import { SETTINGS_BOOT } from "@/lib/themes";
 import "./globals.css";
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   creator: "Vinh Nguyen",
   alternates: { canonical: "/" },
   openGraph: { type: "profile", firstName: "Vinh", lastName: "Nguyen", ...shareCard(TITLE, DESCRIPTION, "/") },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", site: `@${X_HANDLE}`, creator: `@${X_HANDLE}` },
 };
 
 // The phone browser's toolbar takes the page's own ground (--bg in globals.css), light or dark.

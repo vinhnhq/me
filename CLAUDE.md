@@ -158,9 +158,12 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
   every crawler, AI ones included: for a job search, being read is the point. In `next dev`,
   `/llms-full.txt` once 500'd on a stale module while the build was fine; restart dev if so.
 - Checkers used: opengraph.xyz, opengraph.to (92 before the theme colour, 32px icon and
-  manifest were added), LinkedIn Post Inspector. Deliberately NOT done: `twitter:site` (he has
-  no X account on the site), an SVG favicon (it would replace the approved icon's drawing), and
-  opengraph.xyz's "no call-to-action" warning (its own detector; the pill is on the card).
+  manifest were added), LinkedIn Post Inspector. Deliberately NOT done: opengraph.xyz's "no
+  call-to-action" warning (its own detector; the pill is on the card).
+- X: the handle (`X_HANDLE` in `lib/site.ts`) is in `twitter:site`/`twitter:creator` and the
+  JSON-LD `sameAs` ONLY. Vinh does not want it listed on the résumé (2026-11-17), so it is not
+  in the header, the PDF or the llms files.
+- `app/icon2.svg` is the icon as a drawing (strokes, no font), matched by eye to `icon.png`.
 - Never tested with a real screen reader (VoiceOver).
 
 ## PDF
