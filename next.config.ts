@@ -20,6 +20,21 @@ const nextConfig: NextConfig = {
       { source: "/projects/k-studio", destination: "/blog/k-studio", permanent: true },
     ];
   },
+  async rewrites() {
+    return {
+      // LinkedIn shows a share card as a small thumbnail beside the title: its
+      // crawler gets the photo-only card (app/og-photo.png) in place of /og.png.
+      beforeFiles: [
+        {
+          source: "/og.png",
+          has: [{ type: "header", key: "user-agent", value: ".*LinkedInBot.*" }],
+          destination: "/og-photo.png",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
 };
 
 export default nextConfig;

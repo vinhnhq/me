@@ -146,7 +146,11 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
   `openGraph` replaces the layout's; Next does not merge them). The image is `/og.png`
   (`app/og.png/route.tsx`, 1200×630): solid burgundy, the photo SMALL and round, name and
   headline in words. Vinh did not want his photo filling the card (2026-11-16). Few elements, all
-  large, plus a "View my résumé" pill: LinkedIn shows the card as a ~200px thumbnail.
+  large, plus a "Read my résumé" pill. LinkedIn is the exception: it shows a card as a ~200px
+  thumbnail beside the title, so LinkedInBot is rewritten (`next.config.ts`) from `/og.png` to
+  `/og-photo.png`, the photo alone on burgundy. Check with
+  `curl -A LinkedInBot https://vinhn.dev/og.png`; opengraph.xyz cannot show it (it does not
+  fetch as LinkedInBot), LinkedIn's Post Inspector can.
   `app/sitemap.ts` and `app/robots.ts` make `/sitemap.xml` and `/robots.txt`.
 - For AI agents and crawlers: `/llms.txt` (index, llmstxt.org) and `/llms-full.txt` (the CV and
   every post as one markdown file), both written from `content/` at build; schema.org JSON-LD

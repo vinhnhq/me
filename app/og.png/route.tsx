@@ -48,7 +48,7 @@ export async function GET(): Promise<Response> {
         {/* the call to action: what pressing the card does, and where it goes */}
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
           <div style={{ display: "flex", padding: "20px 44px", borderRadius: 60, background: "#fff", color: "#800020", fontSize: 44, fontWeight: 700 }}>
-            View my résumé
+            Read my résumé
           </div>
           <div style={{ display: "flex", fontSize: 44 }}>vinhn.dev</div>
         </div>
