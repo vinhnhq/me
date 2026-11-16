@@ -39,6 +39,14 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
           <h1>{r.name}</h1>
           <p className="headline">{r.headline}</p>
           <div className="summary" dangerouslySetInnerHTML={{ __html: r.summaryHtml }} />
+          {r.values.length > 0 && (
+            <p className="values">
+              <span className="values-label">Values</span>
+              {r.values.map((v) => (
+                <strong key={v}>{v}</strong>
+              ))}
+            </p>
+          )}
         </div>
       </div>
       {/* Plain text, as on a business card; only the two handles need a mark to tell them apart. */}

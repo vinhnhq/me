@@ -6,6 +6,7 @@ phone: +84 762 701 292
 location: Ho Chi Minh City, Viet Nam
 github: vinhnhq
 x: vinhnhq
+values: Ownership · Adaptability · Mentorship
 ---
 
 Fullstack engineer with 12 years building web products with React, Next.js and TypeScript, at Grab, Ninja Van and MessageMedia (Principal Engineer), and since 2025 as a freelancer shipping production apps end to end. I lead teams and mentor developers, and care about testing, developer experience and functional programming. I work with AI coding agents (Claude Code, Cursor) every day and guard their output with specs, ADRs, typed domain logic and automated UI tests, so speed never costs quality. [How I build with agents](/blog/how-i-build-with-ai-agents)

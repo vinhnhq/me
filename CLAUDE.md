@@ -43,9 +43,14 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - Fonts (`next/font/google`): Manrope for text (Vinh's choice, 2026-11-16), Geist Mono for dates,
   the contact line, pills and code. Neither Google subset has ← → arrows: on Vercel's Linux
   Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
-- Sticky bar (`components/sticky-bar.tsx`): slides in once the page's `h1` has scrolled away —
-  name (link home), theme, and the page's action. Theme/size state lives on `<html>` and is shared
-  between both bars through a `reader-settings` event (`components/reader-controls.tsx`).
+- Sticky bar (`components/sticky-bar.tsx`): takes over as the page's `h1` reaches the top — name
+  (link home), theme, the page's action. Built like k-studio's `collapsing-page-head.tsx`: a
+  discrete flip at a scroll threshold (with hysteresis) drawn as a view transition; on the CV the
+  big name morphs into the bar's name (`page-title`), the bar fades (`page-bar`), the page itself
+  is opted out of capture. No CSS transition on the bar, no backdrop blur. Theme/size state lives
+  on `<html>` and is shared between both bars through a `reader-settings` event.
+- Values line under the summary comes from `values:` in `resume.md`'s front matter
+  ("Ownership · Adaptability · Mentorship", chosen by Vinh 2026-11-16).
 - Contact line: plain mono text, no icons except the X and GitHub marks (same handle on both).
 - Wave footer on every page (`components/wave-footer.tsx` + `.waves` in globals.css): CSS-only,
   scroll-driven, modelled on Vinh's friend Tung's site (tungv.com). Hidden in print.

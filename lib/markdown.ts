@@ -61,6 +61,8 @@ export type Resume = {
   readonly location: string;
   readonly github: string;
   readonly x: string;
+  /** "A · B · C": the three words under the summary; optional */
+  readonly values: readonly string[];
   /** The paragraphs before the first `##`: they sit in the header, beside the photo. */
   readonly summaryHtml: string;
   readonly sections: readonly Section[];
@@ -118,6 +120,7 @@ export async function getResume(): Promise<Resume> {
     location: meta.location,
     github: meta.github,
     x: meta.x,
+    values: (meta.values ?? "").split("·").map((v) => v.trim()).filter(Boolean),
     summaryHtml: toHtml(summary),
     sections: sections.map(parseSection),
   };
