@@ -84,15 +84,15 @@ const THEME_OPTIONS: readonly Option<ThemeChoice>[] = [
 ];
 
 const letter = (px: number) => (
-  <span aria-hidden="true" style={{ fontSize: px, fontWeight: 700, lineHeight: 1 }}>
+  <span className="size-letter" aria-hidden="true" style={{ fontSize: px }}>
     A
   </span>
 );
 
 const SIZE_OPTIONS: readonly Option<SizeId>[] = [
-  { id: "s", label: "Small text", icon: letter(11) },
+  { id: "s", label: "Small text", icon: letter(12) },
   { id: "m", label: "Medium text", icon: letter(14) },
-  { id: "l", label: "Large text", icon: letter(17) },
+  { id: "l", label: "Large text", icon: letter(16) },
 ];
 
 function store(key: string, value: string | null) {

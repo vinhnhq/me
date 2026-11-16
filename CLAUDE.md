@@ -18,6 +18,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - To check on a real iOS Safari: `xcrun simctl openurl booted http://localhost:<port>/` then
   `xcrun simctl io booted screenshot <file>` (Vinh keeps Device Hub open). Add a `?r=N` query if it
   shows stale CSS.
+- Text size: medium (the default) is 17px, small 16px, large 19px (`html[data-size]`).
+- A full-page Playwright screenshot drops touch emulation (k-studio's landmine, met again here):
+  judge touch layouts from viewport screenshots or the simulators, never from `fullPage: true`.
 - In `resume.md`, a job is `### Title` + an italic `*Org · Dates · Where*` line (read from the
   end, so the org may itself contain " · "). Bullets under a `<!-- more -->` line are folded on
   the web ("All N highlights") and printed in full in the PDF (`components/resume-body.tsx`).
