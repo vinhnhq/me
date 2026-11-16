@@ -1,10 +1,8 @@
 import type { Entry, Section } from "@/lib/markdown";
 
-/** A job or a degree: dates in a narrow left column on a wide screen, stacked on a phone and on paper. */
+/** A job or a degree: title, the dates on one line, then the text. */
 function EntryRow({ entry: e }: { entry: Entry }) {
   return (
-    // Source order is the phone's and the paper's: title, dates, text. The wide
-    // layout lifts the dates into a left column with grid placement alone.
     <div className="entry">
       <h3>
         {e.title} <span className="entry-org">· {e.org}</span>

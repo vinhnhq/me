@@ -24,6 +24,7 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - In `resume.md`, a job is `### Title` + an italic `*Org · Dates · Where*` line (read from the
   end, so the org may itself contain " · "). Bullets under a `<!-- more -->` line are folded on
   the web ("All N highlights") and printed in full in the PDF (`components/resume-body.tsx`).
+  Jobs are ONE column on every screen (Vinh, 2026-11-16: no dates column, not even on desktop).
 - `content/projects/<slug>.md` — case studies (`/projects/<slug>`), linked from CV bullets. Front
   matter: `title`, `summary`, `role`, `when`, `stack`, optional `link` + `linkLabel`.
   `bao-minh-portal.md` is thin: it holds only the facts below — Vinh should add detail.

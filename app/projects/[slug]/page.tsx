@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: Props) {
           <dt>When</dt>
           <dd>{project.when}</dd>
         </div>
-        <div className="wide">
+        <div>
           <dt>Built with</dt>
           <dd>{project.stack}</dd>
         </div>

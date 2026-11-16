@@ -88,22 +88,20 @@ h2::after { content: ""; flex: 1; height: 2px; background: var(--rule); }
 
 h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 
-/* A job or degree: dates in a narrow column, the rest beside it. */
-.entry { display: grid; grid-template-columns: 10.5rem 1fr; column-gap: 1.5rem; margin-top: 1.75rem; }
-.entry > * { grid-column: 2; }
-.entry > .entry-when { grid-column: 1; grid-row: 1 / span 3; }
+/* A job or degree, one column on every screen: title, the dates on one line, then the text. */
+.entry { margin-top: 1.75rem; }
 .entry h3 { margin-top: 0; }
 .entry-text > :first-child { margin-top: 0.35rem; }
 .entry-org { color: var(--muted); font-weight: 400; }
 .entry-when {
-  margin: 0.15rem 0 0;
+  margin: 0.1rem 0 0.4rem;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.8rem;
   line-height: 1.5;
   color: var(--muted);
 }
-.entry-when span { display: block; }
 .entry-when span:first-child { color: var(--fg); }
+.entry-when span + span::before { content: " · "; }
 
 /* The folded bullets. */
 .more summary {
@@ -121,8 +119,7 @@ h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 
 /* Case study. */
 .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.25rem; }
-.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--rule); }
-.facts .wide { grid-column: 1 / -1; }
+.facts { display: grid; gap: 1rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--rule); }
 .facts dt { font-size: 0.8rem; color: var(--muted); }
 .facts dd { margin: 0; }
 .button {
@@ -306,17 +303,6 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   td:first-child { width: auto; }
 }
 
-/* Phones and tablets: a job is one column; the dates drop under the title, on one line.
-   Only a desk-wide screen has room for the dates column. */
-@media (max-width: 60rem) {
-  .entry { display: block; }
-  .entry-when { margin: 0.1rem 0 0.4rem; }
-  .entry-when span { display: inline; }
-  .entry-when span + span::before { content: " · "; }
-  /* the case study's facts too: one under another */
-  .facts { grid-template-columns: 1fr; }
-}
-
 /* Tablets: the five contacts do not fit one row, so three and two, not four and a stray one. */
 @media (min-width: 40.01rem) and (max-width: 60rem) {
   .page { padding-inline: 2rem; }
@@ -362,11 +348,9 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
   /* paper: stacked, every bullet, no fold */
-  .entry { display: block; margin-top: 0.8rem; }
+  .entry { margin-top: 0.8rem; }
   .entry-when { font-family: inherit; font-size: 8.6pt; margin: 0; }
-  .entry-when span { display: inline; color: var(--muted); }
-  .entry-when span:first-child { color: var(--muted); }
-  .entry-when span + span::before { content: " · "; }
+  .entry-when span, .entry-when span:first-child { color: var(--muted); }
   .more summary { display: none; }
   .more::details-content { content-visibility: visible; display: block; }
   .entry-text > ul:last-child { margin-bottom: 0; }
