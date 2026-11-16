@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Manrope } from "next/font/google";
 import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL } from "@/lib/site";
 import { SETTINGS_BOOT } from "@/lib/themes";
 import "./globals.css";
 
-// Geist, Vercel's own face. Latin only: the site is in English.
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Manrope for reading, Geist Mono for dates, labels and code. Latin and Vietnamese:
+// the site is in English, with a few Vietnamese names.
+const manrope = Manrope({ variable: "--font-sans", subsets: ["latin", "vietnamese"] });
+const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // the boot script sets data-theme and data-size before React hydrates: that mismatch is expected
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOT }} />
       </head>

@@ -40,8 +40,13 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   k-studio approach: `@sparticuz/chromium` on Vercel, local Playwright Chromium elsewhere).
   Cached by the CDN for a day. Keep the `outputFileTracingIncludes` in `next.config.ts`.
 - Next.js 16 App Router, plain CSS (`app/globals.css`, light/dark, print = A4 light).
-- Font is Geist via `next/font/google`. Its Google subsets have no ← → arrows: on Vercel's Linux
+- Fonts (`next/font/google`): Manrope for text (Vinh's choice, 2026-11-16), Geist Mono for dates,
+  the contact line, pills and code. Neither Google subset has ← → arrows: on Vercel's Linux
   Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
+- Sticky bar (`components/sticky-bar.tsx`): slides in once the page's `h1` has scrolled away —
+  name (link home), theme, and the page's action. Theme/size state lives on `<html>` and is shared
+  between both bars through a `reader-settings` event (`components/reader-controls.tsx`).
+- Contact line: plain mono text, no icons except the X and GitHub marks (same handle on both).
 - Wave footer on every page (`components/wave-footer.tsx` + `.waves` in globals.css): CSS-only,
   scroll-driven, modelled on Vinh's friend Tung's site (tungv.com). Hidden in print.
 - Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.

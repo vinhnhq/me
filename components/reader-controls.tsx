@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
 import { SIZE_KEY, type SizeId, THEME_KEY, type ThemeId } from "@/lib/themes";
 
@@ -108,16 +108,27 @@ function store(key: string, value: string | null) {
   }
 }
 
-/** Text size and theme. Both are kept in this browser only. */
-export function ReaderControls() {
-  const [theme, setTheme] = useState<ThemeChoice | null>(null);
-  const [size, setSize] = useState<SizeId | null>(null);
+/*
+  The choices live on <html> (data-theme, data-size), not in React state: the
+  page shows these controls twice (the top bar and the sticky bar), and both
+  must show the same thing. A change is announced with an event; every control
+  re-reads <html>.
+*/
+const CHANGED = "reader-settings";
+const announce = () => window.dispatchEvent(new Event(CHANGED));
 
-  useEffect(() => {
-    const d = document.documentElement.dataset;
-    setTheme((d.theme as ThemeId | undefined) ?? "system");
-    setSize((d.size as SizeId | undefined) ?? "m");
-  }, []);
+function subscribe(onChange: () => void) {
+  window.addEventListener(CHANGED, onChange);
+  return () => window.removeEventListener(CHANGED, onChange);
+}
+const readTheme = (): ThemeChoice => (document.documentElement.dataset.theme as ThemeId | undefined) ?? "system";
+const readSize = (): SizeId => (document.documentElement.dataset.size as SizeId | undefined) ?? "m";
+// the server cannot see the browser's choice: nothing is marked until hydration
+const unknown = () => null;
+
+/** Light / dark / follow the device. Kept in this browser only. */
+export function ThemeControl() {
+  const theme = useSyncExternalStore(subscribe, readTheme, unknown);
 
   function chooseTheme(id: ThemeChoice, from: HTMLElement) {
     const root = document.documentElement;
@@ -125,7 +136,7 @@ export function ReaderControls() {
       if (id === "system") delete root.dataset.theme;
       else root.dataset.theme = id;
       store(THEME_KEY, id === "system" ? null : id);
-      setTheme(id);
+      announce();
     };
 
     // Circular reveal: the new theme opens as a circle growing from the pressed
@@ -154,16 +165,18 @@ export function ReaderControls() {
     transition.finished.finally(() => root.classList.remove("theme-transition"));
   }
 
+  return <Segmented label="Theme" options={THEME_OPTIONS} value={theme} onChange={chooseTheme} />;
+}
+
+/** Small / medium / large text. Kept in this browser only. */
+export function SizeControl() {
+  const size = useSyncExternalStore(subscribe, readSize, unknown);
+
   function chooseSize(id: SizeId) {
     document.documentElement.dataset.size = id;
     store(SIZE_KEY, id);
-    setSize(id);
+    announce();
   }
 
-  return (
-    <>
-      <Segmented label="Text size" options={SIZE_OPTIONS} value={size} onChange={chooseSize} />
-      <Segmented label="Theme" options={THEME_OPTIONS} value={theme} onChange={chooseTheme} />
-    </>
-  );
+  return <Segmented label="Text size" options={SIZE_OPTIONS} value={size} onChange={chooseSize} />;
 }

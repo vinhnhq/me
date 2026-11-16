@@ -10,30 +10,12 @@ const stroke = {
 } as const;
 
 const Icon = ({ children, solid }: { children: ReactNode; solid?: boolean }) => (
-  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" {...(solid ? { fill: "currentColor" } : stroke)}>
+  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" {...(solid ? { fill: "currentColor" } : stroke)}>
     {children}
   </svg>
 );
 
 const icons = {
-  email: (
-    <Icon>
-      <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
-      <path d="m3.5 7 8.5 6 8.5-6" />
-    </Icon>
-  ),
-  phone: (
-    <Icon>
-      <rect x="6.5" y="2.5" width="11" height="19" rx="2.5" />
-      <path d="M11 18h2" />
-    </Icon>
-  ),
-  location: (
-    <Icon>
-      <path d="M12 21.5s-7-6.2-7-11.5a7 7 0 0 1 14 0c0 5.3-7 11.5-7 11.5Z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </Icon>
-  ),
   x: (
     <Icon solid>
       <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
@@ -46,7 +28,7 @@ const icons = {
   ),
 };
 
-/** Photo on the left, name / headline / summary beside it, then the contact row. */
+/** Photo on the left, name / headline / summary beside it, then the contact line. */
 export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
     <header className="resume-header">
@@ -59,26 +41,26 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
           <div className="summary" dangerouslySetInnerHTML={{ __html: r.summaryHtml }} />
         </div>
       </div>
+      {/* Plain text, as on a business card; only the two handles need a mark to tell them apart. */}
       <ul className="contact">
+        <li>{r.location}</li>
         <li>
-          {icons.email}
-          <a href={`mailto:${r.email}`}>{r.email}</a>
-        </li>
-        <li>
-          {icons.phone}
           <a href={`tel:${r.phone.replace(/\s/g, "")}`}>{r.phone}</a>
         </li>
         <li>
-          {icons.location}
-          <span>{r.location}</span>
+          <a href={`mailto:${r.email}`}>{r.email}</a>
         </li>
         <li>
           {icons.x}
-          <a href={`https://x.com/${r.x}`}>{r.x}</a>
+          <a href={`https://x.com/${r.x}`} aria-label={`X: ${r.x}`}>
+            {r.x}
+          </a>
         </li>
         <li>
           {icons.github}
-          <a href={`https://github.com/${r.github}`}>{r.github}</a>
+          <a href={`https://github.com/${r.github}`} aria-label={`GitHub: ${r.github}`}>
+            {r.github}
+          </a>
         </li>
       </ul>
     </header>
