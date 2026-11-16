@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  // every page is his: LinkedIn and others read <meta name="author">
+  authors: [{ name: "Vinh Nguyen", url: SITE_URL }],
+  creator: "Vinh Nguyen",
   alternates: { canonical: "/" },
   openGraph: { type: "profile", firstName: "Vinh", lastName: "Nguyen", ...shareCard(TITLE, DESCRIPTION, "/") },
   twitter: { card: "summary_large_image" },
