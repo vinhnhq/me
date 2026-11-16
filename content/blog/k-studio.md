@@ -6,13 +6,15 @@ tags: case-study, nextjs, ai-agents
 role: Sole engineer: requirements, architecture, build, deploy and support
 when: Sep 2026 – present
 stack: Next.js (App Router), React 19, TypeScript, Postgres on Neon, Kysely, better-auth, Cloudflare R2, Vercel, Playwright, Vitest
+link: https://www.k-studio.photo/en
+linkLabel: Visit the landing page
 ---
 
 K-Studio is a wedding photo studio in Nha Trang with about 20 people. Before this project it ran on three things kept by hand: an Excel cash book, a shoot schedule in a Zalo chat, and a payroll sheet computed at the end of each period. I replaced all three with one web app that the studio now uses every day. It went from first commit to daily use in about 10 weeks, with an AI agent (Claude Code) writing most of the lines.
 
-It has three parts: a public landing page, an internal app for the staff, and a portal for each couple. The internal app is behind sign-in, so there is nothing public to open. The screens below stand in for it; they show invented data, and anything that could name a person is blurred.
+It has three parts: a public [landing page](https://www.k-studio.photo/en) that anyone can visit, an internal app for the staff, and a portal for each couple. The internal app is behind sign-in, so there is nothing public to open. The screens below stand in for it; they show invented data, and anything that could name a person is blurred.
 
-![The K-Studio landing page: the studio's name over three wedding photographs, with buttons to book a consultation and see the portfolio, and a choice of four languages.](/blog/k-studio/landing-1600x1000.jpg "The public landing page at k-studio.photo, in Vietnamese, English, Russian and Korean.")
+![The K-Studio landing page: the studio's name over three wedding photographs, with buttons to book a consultation and see the portfolio, and a choice of four languages.](/blog/k-studio/landing-1600x1000.jpg "The public landing page, in Vietnamese, English, Russian and Korean.")
 
 ## In numbers
 

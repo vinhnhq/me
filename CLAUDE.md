@@ -90,7 +90,8 @@ All dated 2026-11-16.
   he has not claimed.
 - **No link to the K-Studio demo in the blog posts** (2026-11-17): "just a topic and photos are
   enough to explain". The post has screenshots instead. Do not add the link back. The CV's
-  "Live demo" link was removed too ("yes remove all link").
+  "Live demo" link was removed too ("yes remove all link"). The post DOES link the public landing
+  page (https://www.k-studio.photo/en), inline and as its button: Vinh asked for that.
 - **No Bảo Minh case-study page.** He dropped it (too like K-Studio, and K-Studio is the better
   one). It lives only as a bullet on the CV. Do not re-create it.
 - **Menu and close buttons are bare icons**, "like Apple": no ring, no fill. The round area is
