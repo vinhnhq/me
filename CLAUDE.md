@@ -23,6 +23,8 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - Next.js 16 App Router, plain CSS (`app/globals.css`, light/dark, print = A4 light).
 - Font is Geist via `next/font/google`. Its Google subsets have no ← → arrows: on Vercel's Linux
   Chromium a missing glyph has no fallback font, so keep such symbols out of `resume.md`.
+- Wave footer on every page (`components/wave-footer.tsx` + `.waves` in globals.css): CSS-only,
+  scroll-driven, modelled on Vinh's friend Tung's site (tungv.com). Hidden in print.
 - Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.
 
 ## Facts behind the CV
@@ -38,7 +40,8 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 ## Deploy
 
 - Live at https://vinhn.dev (domain registered at Cloudflare, DNS-only CNAME to Vercel).
-- GitHub `vinhnhq/me` (private) → Vercel project `vinhnguyen-projects/me`. A push to `main` deploys to production.
+- GitHub `vinhnhq/me` (private) → Vercel project `vinhnguyen-projects/me`. A push to `main` deploys to production,
+  so commit locally and push only on Vinh's go (2026-11-16: "don't need to deploy prod", changes are batched).
 
 ## Open
 

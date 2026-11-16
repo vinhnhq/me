@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL } from "@/lib/site";
 import { THEME_BOOT } from "@/lib/themes";
 import "./globals.css";
@@ -22,7 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <WaveFooter />
+      </body>
     </html>
   );
 }

@@ -49,7 +49,7 @@ body {
 .page {
   max-width: 50rem;
   margin: 0 auto;
-  padding: 1.5rem 1rem 5rem;
+  padding: 1.5rem 1rem 2rem;
 }
 
 a { color: var(--accent); text-underline-offset: 2px; }
@@ -141,6 +141,61 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .posts a { font-weight: 600; font-size: 1.05rem; }
 .posts time { display: block; color: var(--muted); font-size: 0.85rem; }
 .posts p { color: var(--muted); margin: 0.25rem 0 0; }
+
+/*
+  Wave footer (components/wave-footer.tsx). `.waves` is the scroll timeline:
+  the lines go from faint, flat and out of step to settled while it enters
+  the screen, and finish just as the page runs out.
+*/
+.waves {
+  view-timeline-name: --waves;
+  overflow: hidden;
+  padding: 2rem 0 3rem;
+}
+.waves-band {
+  position: relative;
+  opacity: 0.75;
+  /* the lines dissolve towards both edges */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
+}
+.wave {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-size: var(--tile) 100%;
+  mask-size: var(--tile) 100%;
+  /* 50%: the period's centre, where the line crosses the middle, sits mid-screen */
+  -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .wave {
+      animation: wave-settle linear both;
+      animation-timeline: --waves;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes wave-settle {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+    -webkit-mask-position: calc(50% + var(--shift)) 50%;
+    mask-position: calc(50% + var(--shift)) 50%;
+  }
+  40% { opacity: 1; }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    -webkit-mask-position: 50% 50%;
+    mask-position: 50% 50%;
+  }
+}
 
 @media (max-width: 40rem) {
   h1 { font-size: 1.85rem; }
