@@ -357,6 +357,9 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
 */
 /* as tall as the pills beside it; a full 44px on touch (set further down) */
 :root { --menu-size: calc(1.75rem + 8px); }
+/* Bare icons, the way Apple draws them: no ring and no fill, but the full
+   round area around the bars is still the button, so the target stays 44px.
+   A pointer hovering over it sees the area; a keyboard sees a focus ring. */
 .menu-button, .menu-close {
   display: grid;
   place-items: center;
@@ -364,11 +367,14 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
   width: var(--menu-size);
   height: var(--menu-size);
   padding: 0;
-  border: 1px solid var(--rule);
+  border: 0;
   border-radius: 50%;
-  background: var(--bg);
+  background: none;
   color: var(--fg);
   cursor: pointer;
+}
+@media (hover: hover) {
+  .menu-button:hover, .menu-close:hover { background: var(--chip); }
 }
 /* no grey flash box on tap: the turning bars are the feedback */
 .menu-button, .menu-close, .segmented button, .pill { -webkit-tap-highlight-color: transparent; }
@@ -427,7 +433,7 @@ html:has(dialog.menu[open]) { overflow: hidden; }
 }
 dialog.menu[data-open="true"] .menu-close { transform: none; }
 /* the bars grow with the button */
-.menu-close .bars { scale: 1.35; }
+.menu-close .bars { scale: 1.5; }
 @media (max-width: 40rem) {
   .menu-close { top: 1rem; right: 1rem; }
 }
@@ -595,6 +601,9 @@ dialog.menu[data-open="true"] .menu-settings {
   .actions > .controls > .segmented { display: none; }
   .menu-button { display: grid; }
 }
+/* With no ring to show its edge, the icon is nudged left so the BARS, not the
+   invisible circle, line up with the page's text column. */
+.menu-button { margin-left: calc((1.1rem - var(--menu-size)) / 2); }
 /* A desk: the full row at the top of the page; scrolled, the links fade out and
    the menu button comes in over them, as the row becomes the bar. */
 @media (min-width: 60.01rem) {
@@ -613,7 +622,7 @@ dialog.menu[data-open="true"] .menu-settings {
   }
 }
 /* everywhere: the bar's name stands clear of the button */
-.sticky-name { margin-left: calc(var(--menu-size) + 0.75rem); }
+.sticky-name { margin-left: calc((var(--menu-size) + 1.1rem) / 2 + 0.75rem); }
 
 /* Tablets: wider side margins. */
 @media (min-width: 40.01rem) and (max-width: 60rem) {

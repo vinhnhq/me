@@ -47,8 +47,10 @@ export function SiteMenu({ links }: { links: readonly MenuLink[] }) {
     if (!d) return;
     clearTimeout(leaving.current);
     const from = e.currentTarget.getBoundingClientRect();
-    // the links keep the page's own left edge
-    d.style.setProperty("--menu-x", `${from.left}px`);
+    // the links keep the page's own left edge: where the BARS start (the button's
+    // round area is invisible and reaches further left than what is drawn)
+    const bars = e.currentTarget.querySelector(".bars")?.getBoundingClientRect() ?? from;
+    d.style.setProperty("--menu-x", `${bars.left}px`);
     d.showModal();
     // The close button starts ON the menu button: measure how far its corner is
     // from there and how much bigger it is, and hand that to the CSS as its

@@ -69,6 +69,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   menu for Vaul / shadcn's Drawer: on iOS Vaul pins `<body>` with `position: fixed`, which zeroes
   `scrollY`, and the header is driven by `scrollY` (the page looked like it jumped to the top
   when the menu opened; tried 2026-11-16).
+- The menu and close buttons are BARE icons (no ring, no fill; Vinh, 2026-11-16, "like Apple"):
+  the round area is still the 44px target, shown only on hover and keyboard focus. The menu
+  button has a negative left margin so its bars, not its invisible circle, sit on the text column.
 - On phones the Values label is centred with the three words under it, and phone + email share a line.
 - `bun run audit` compares page width with the SCREEN width: a phone browser widens `innerWidth`
   to fit an overflowing page, so comparing against `innerWidth` passes falsely.
