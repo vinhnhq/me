@@ -5,7 +5,12 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 
 ## Shape
 
-- `content/resume.md` — the CV, the single source. Home page `/` and the PDF render it.
+- `content/resume.md` — the CV, the single source. Home page `/` and the PDF render it. Its front
+  matter (name, headline, email, phone, location, github, x) and the paragraphs before the first
+  `##` feed the header (`components/resume-header.tsx`); the rest is the body.
+- Themes: paper, slate, sage, night, midnight (`lib/themes.ts` + `[data-theme]` blocks in
+  `app/globals.css`; add a theme in both, plus its picker dot). The choice is kept in localStorage;
+  with none the page follows the system. Print and the PDF are always paper.
 - `content/blog/<slug>.md` — blog posts (`/blog`, `/blog/<slug>`), web only. Front matter is
   `title`, `date`, `description` (plain `key: value`, parsed by hand in `lib/markdown.ts`).
   The first post, `how-i-build-with-ai-agents`, carries numbers from the k-studio repo (first

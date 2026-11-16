@@ -1,17 +1,18 @@
 import Link from "next/link";
-import { renderContent } from "@/lib/markdown";
+import { ResumeHeader } from "@/components/resume-header";
+import { SiteNav } from "@/components/site-nav";
+import { getResume } from "@/lib/markdown";
 
 export default async function ResumePage() {
-  const html = await renderContent("resume.md");
+  const resume = await getResume();
   return (
     <main className="page resume" data-resume>
-      <nav className="actions no-print">
+      <SiteNav>
         <Link href="/blog">Blog</Link>
         <a href="/api/pdf">Download PDF</a>
-      </nav>
-      {/* eslint-disable-next-line @next/next/no-img-element -- one small local file; the PDF prints it as is */}
-      <img className="photo" src="/vinh-nguyen.jpg" alt="Vinh Nguyen" width={112} height={112} />
-      <article dangerouslySetInnerHTML={{ __html: html }} />
+      </SiteNav>
+      <ResumeHeader resume={resume} />
+      <article dangerouslySetInnerHTML={{ __html: resume.bodyHtml }} />
     </main>
   );
 }

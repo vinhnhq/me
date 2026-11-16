@@ -1,4 +1,9 @@
-:root {
+/*
+  Themes. Each sets the same six colours; `lib/themes.ts` lists them for the
+  picker. With no `data-theme` the page follows the system: paper, or night.
+*/
+:root,
+:root[data-theme="paper"] {
   --bg: #fbfaf8;
   --fg: #1f2328;
   --muted: #5b636d;
@@ -8,8 +13,48 @@
   color-scheme: light;
 }
 
+:root[data-theme="slate"] {
+  --bg: #f8fafc;
+  --fg: #1e293b;
+  --muted: #5a6779;
+  --accent: #2563eb;
+  --rule: #dfe5ec;
+  --chip: #edf1f6;
+  color-scheme: light;
+}
+
+:root[data-theme="sage"] {
+  --bg: #f7f9f4;
+  --fg: #1f2a24;
+  --muted: #58665d;
+  --accent: #2f7d57;
+  --rule: #dde4d8;
+  --chip: #ebf0e6;
+  color-scheme: light;
+}
+
+:root[data-theme="night"] {
+  --bg: #111214;
+  --fg: #e7e5e2;
+  --muted: #a0a6ad;
+  --accent: #f08a72;
+  --rule: #2a2c30;
+  --chip: #1c1e21;
+  color-scheme: dark;
+}
+
+:root[data-theme="midnight"] {
+  --bg: #0d1424;
+  --fg: #e3e9f4;
+  --muted: #98a5ba;
+  --accent: #7cc4ff;
+  --rule: #223049;
+  --chip: #16203a;
+  color-scheme: dark;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --bg: #111214;
     --fg: #e7e5e2;
     --muted: #a0a6ad;
@@ -32,24 +77,28 @@ body {
 }
 
 .page {
-  max-width: 46rem;
+  max-width: 50rem;
   margin: 0 auto;
-  padding: 3rem 1rem 5rem;
+  padding: 1.5rem 1rem 5rem;
 }
 
 a { color: var(--accent); text-underline-offset: 2px; }
 
-h1 { font-size: 2.25rem; line-height: 1.15; font-weight: 600; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+h1 { font-size: 2.25rem; line-height: 1.15; font-weight: 700; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+
+/* Section heading: the words, then a rule running to the edge. */
 h2 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
   margin: 2.5rem 0 1rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--rule);
 }
+h2::after { content: ""; flex: 1; height: 2px; background: var(--rule); }
+
 h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 h3 + p em { color: var(--muted); font-style: normal; font-size: 0.9rem; }
 
@@ -59,9 +108,6 @@ li { margin: 0.3rem 0; }
 li::marker { color: var(--accent); }
 strong { font-weight: 600; }
 
-.resume article > p:nth-of-type(1) { font-size: 1.1rem; color: var(--muted); margin-top: 0; }
-.resume article > p:nth-of-type(2) { font-size: 0.9rem; color: var(--muted); }
-
 code { font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 0.9em; background: var(--chip); padding: 0.1em 0.35em; border-radius: 4px; }
 
 table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
@@ -69,17 +115,59 @@ thead { display: none; }
 td { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 
-/* The photo sits beside the name; the heading and contact lines wrap around it. */
+/* Top bar: theme dots left, links right. */
+.actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: 0.9rem; margin-bottom: 2rem; }
+.actions .links { display: flex; gap: 1.25rem; }
+
+.themes { display: flex; gap: 0.5rem; }
+.theme-dot {
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  outline: 1px solid var(--rule);
+  cursor: pointer;
+}
+.theme-dot[aria-pressed="true"] { outline: 2px solid var(--fg); }
+.theme-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* each dot is half the theme's page colour, half its accent */
+.theme-dot[data-swatch="paper"] { background: linear-gradient(135deg, #fbfaf8 50%, #b4432f 50%); }
+.theme-dot[data-swatch="slate"] { background: linear-gradient(135deg, #f8fafc 50%, #2563eb 50%); }
+.theme-dot[data-swatch="sage"] { background: linear-gradient(135deg, #f7f9f4 50%, #2f7d57 50%); }
+.theme-dot[data-swatch="night"] { background: linear-gradient(135deg, #111214 50%, #f08a72 50%); }
+.theme-dot[data-swatch="midnight"] { background: linear-gradient(135deg, #0d1424 50%, #7cc4ff 50%); }
+
+/* Résumé header: photo left, name / headline / summary right, contact row under both. */
+.resume-header .intro { display: flex; gap: 2rem; align-items: flex-start; }
 .photo {
-  float: right;
-  width: 7rem;
-  height: 7rem;
-  margin: 0 0 0.75rem 1.5rem;
+  flex: none;
+  width: 9.5rem;
+  height: 9.5rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid var(--rule);
+  /* the ring: accent, with a gap of page colour between it and the picture */
+  border: 4px solid var(--bg);
+  outline: 3px solid var(--accent);
+  margin: 3px;
 }
-.resume article > h2 { clear: both; }
+.headline { color: var(--accent); font-size: 1.2rem; margin: 0 0 0.5rem; }
+.summary p { margin: 0; }
+
+.contact {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.15rem;
+  padding: 0;
+  margin: 1.75rem 0 0;
+  font-size: 0.92rem;
+}
+.contact li { display: flex; align-items: center; gap: 0.45rem; margin: 0; }
+.contact svg { color: var(--accent); flex: none; }
+.contact a { color: inherit; text-decoration: none; }
+.contact a:hover { text-decoration: underline; }
 
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
@@ -88,30 +176,33 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .posts time { display: block; color: var(--muted); font-size: 0.85rem; }
 .posts p { color: var(--muted); margin: 0.25rem 0 0; }
 
-.actions { display: flex; gap: 1.25rem; justify-content: flex-end; font-size: 0.9rem; margin-bottom: 1.5rem; }
-
 @media (max-width: 40rem) {
-  .page { padding-top: 1.5rem; }
   h1 { font-size: 1.85rem; }
-  .actions { justify-content: flex-start; }
-  .photo { width: 5rem; height: 5rem; margin-left: 1rem; }
+  .resume-header .intro { flex-direction: column; align-items: center; gap: 1rem; }
+  .resume-header .intro h1, .headline { text-align: center; }
+  .photo { width: 7.5rem; height: 7.5rem; }
+  .contact { justify-content: flex-start; }
 }
 
-/* PDF: A4, light, tighter. Links stay clickable in the PDF. */
-@page { size: A4; margin: 14mm 15mm; }
+/* PDF: A4, always the paper theme, tighter. Links stay clickable in the PDF. */
+@page { size: A4; margin: 13mm 15mm; }
 
 @media print {
-  :root {
+  :root, :root[data-theme] {
     --bg: #fff; --fg: #1f2328; --muted: #555d66; --accent: #b4432f; --rule: #e3dfd9; --chip: #f3f1ee;
     color-scheme: light;
   }
-  body { font-size: 10pt; line-height: 1.45; }
+  body { font-size: 9.6pt; line-height: 1.42; }
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
-  h1 { font-size: 22pt; }
-  .photo { width: 26mm; height: 26mm; }
-  h2 { margin: 1.2rem 0 0.6rem; }
-  h3 { margin: 0.9rem 0 0; break-after: avoid; }
-  li { margin: 0.15rem 0; break-inside: avoid; }
+  h1 { font-size: 21pt; }
+  h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
+  h3 { margin: 0.8rem 0 0; break-after: avoid; }
+  li { margin: 0.12rem 0; break-inside: avoid; }
   a { text-decoration: none; }
+  .resume-header .intro { gap: 6mm; }
+  .photo { width: 30mm; height: 30mm; border-width: 1mm; outline-width: 0.7mm; }
+  .headline { font-size: 11.5pt; margin-bottom: 0.3rem; }
+  .contact { margin-top: 0.9rem; font-size: 9pt; gap: 0.3rem 1.1rem; }
+  .contact svg { width: 12pt; height: 12pt; }
 }

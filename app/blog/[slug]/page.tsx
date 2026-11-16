@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 import { notFound } from "next/navigation";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
 
@@ -23,10 +24,10 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
   return (
     <main className="page post">
-      <nav className="actions">
+      <SiteNav>
         <Link href="/">Résumé</Link>
         <Link href="/blog">Blog</Link>
-      </nav>
+      </SiteNav>
       <h1>{post.title}</h1>
       <p className="lede">
         <time dateTime={post.date}>{formatDay(post.date)}</time>

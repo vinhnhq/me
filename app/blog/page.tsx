@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 import { formatDay, listPosts } from "@/lib/markdown";
 
 export const metadata: Metadata = {
@@ -11,9 +12,9 @@ export default async function BlogPage() {
   const posts = await listPosts();
   return (
     <main className="page blog">
-      <nav className="actions">
+      <SiteNav>
         <Link href="/">Résumé</Link>
-      </nav>
+      </SiteNav>
       <h1>Blog</h1>
       <p className="lede">Notes on how I work.</p>
       <ul className="posts">
