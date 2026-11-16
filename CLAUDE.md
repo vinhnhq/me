@@ -28,8 +28,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
 - The site is TWO places: the CV and a blog that holds everything else (Vinh, 2026-11-16). Case
   studies are ordinary posts in `content/blog/` with the tag `case-study` and extra front matter
   (`role`, `when`, `stack`, optional `link` + `linkLabel`) that the post page shows as a facts
-  block. `/projects/<slug>` redirects to `/blog/<slug>`. `bao-minh-portal.md` is thin: it holds
-  only the facts below — Vinh should add detail.
+  block. `/projects/<slug>` redirects to `/blog/<slug>`. `bao-minh-portal.md` has `listed: no`:
+  its page exists and the CV links to it, but the blog list leaves it out (Vinh, 2026-11-16: it is
+  too like K-Studio, and K-Studio is the better one). It is also thin: only the facts below.
 - Phone rules (taken from k-studio's ui-review): no sideways overflow, 44px targets on any touch
   screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
   `bun run audit [baseUrl]` measures all of it on 320/390/820px × light/dark — run it after UI changes.
@@ -58,7 +59,9 @@ Built 2026-11-16 in a session started from `~/github.com/k-studio`.
   scrolls back to the top when pressed. A title that wraps or does not fit ("fade" mode) shrinks
   towards the bar and cross-fades with the bar's title over the last stretch. On phones and
   tablets the bar's title is CENTRED (and "Save as PDF" reads "PDF" on phones to make room); on
-  a desk it sits beside the menu button. On the CV the big name travels in
+  a desk it sits beside the menu button. A landing title takes ONE leg (across while it rises) whenever its place in the bar is
+  to its right, which is every page except the desktop CV; going up first ran it over the menu
+  button. On the desktop CV the big name travels in
   two legs so it never crosses the photo: UP while shrinking (scroll 0 → end), then LEFT along
   the bar (end → end + slide), landing exactly on the bar's name; then the two swap. The component
   measures `--head-end/-end2/-slide/-dx/-scale` and sets `data-head-stuck/-collapsed/-travels` on

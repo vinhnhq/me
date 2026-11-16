@@ -57,6 +57,12 @@ export function StickyBar() {
     //          short: one cannot land on the other, so it shrinks towards the
     //          bar and fades out over the last stretch as the bar's fades in.
     let mode: "land" | "fade" = "land";
+    // A landing title takes one of two paths. With something in the way on its
+    // left (the CV's photo) it goes UP first and then LEFT along the bar: two
+    // legs. Anywhere else its place in the bar is to its right, past the menu
+    // button, and going up first would run it straight over that button; so it
+    // moves across WHILE it rises, one leg, and arrives already clear.
+    let legs: 1 | 2 = 1;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
     const native = CSS.supports("animation-timeline: scroll()");
     let end = 1;
@@ -73,7 +79,8 @@ export function StickyBar() {
       const up = clamp(y / end);
       const left = clamp((y - end) / slide);
       const moving = !still.matches;
-      const travels = moving && mode === "land";
+      const travels = moving && mode === "land" && legs === 2;
+      const direct = moving && mode === "land" && legs === 1;
       const fades = moving && mode === "fade";
       if (!native) {
         // scale and translate are separate properties: translate is in page pixels, unscaled
@@ -81,7 +88,7 @@ export function StickyBar() {
         heading.style.scale = moving ? String(1 + (scale - 1) * up) : "";
         // while it slides left it also moves DOWN the page by as much as the page
         // has scrolled since `end`: on screen, it stays in the bar's row
-        heading.style.translate = travels ? `${dx * left}px ${slide * left}px` : fades ? `${dx * up}px 0px` : "";
+        heading.style.translate = travels ? `${dx * left}px ${slide * left}px` : fades || direct ? `${dx * up}px 0px` : "";
         heading.style.opacity = fades ? String(1 - late) : "";
         slotEl.parentElement!.style.opacity = fades ? String(late) : "";
         barEl.style.opacity = String(still.matches ? Math.floor(up) : clamp((up - 0.5) / 0.5));
@@ -114,9 +121,9 @@ export function StickyBar() {
       if (mode === "land") {
         dx = to.left - from.left;
         scale = to.width / from.width;
-        // the further it has to go sideways, the longer the scroll it gets to do it in;
-        // nothing to slide (a centred name under a centred bar title): no second leg
-        slide = Math.abs(dx) < 2 ? 1 : Math.min(140, Math.max(40, Math.abs(dx) * 0.6));
+        // two legs: the further it has to go sideways, the longer the scroll it gets to do it in
+        legs = dx < -2 ? 2 : 1;
+        slide = legs === 2 ? Math.min(140, Math.max(40, Math.abs(dx) * 0.6)) : 1;
       } else {
         // down to the bar's type size, and across so the shrunken block is centred on the bar's title
         scale = parseFloat(getComputedStyle(slotEl).fontSize) / parseFloat(type.fontSize);
@@ -128,7 +135,8 @@ export function StickyBar() {
       root.style.setProperty("--head-slide", `${slide}px`);
       root.style.setProperty("--head-dx", `${dx}px`);
       root.style.setProperty("--head-scale", String(scale));
-      root.toggleAttribute("data-head-travels", mode === "land" && !still.matches);
+      root.toggleAttribute("data-head-travels", mode === "land" && legs === 2 && !still.matches);
+      root.toggleAttribute("data-head-direct", mode === "land" && legs === 1 && !still.matches);
       root.toggleAttribute("data-head-fades", mode === "fade" && !still.matches);
       update();
     };
@@ -152,7 +160,7 @@ export function StickyBar() {
       heading.style.scale = "";
       heading.style.translate = "";
       heading.style.opacity = "";
-      for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels", "data-head-fades"]) root.removeAttribute(attr);
+      for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels", "data-head-direct", "data-head-fades"]) root.removeAttribute(attr);
     };
   }, [title]);
 

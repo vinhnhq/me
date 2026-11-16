@@ -317,12 +317,14 @@ html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] 
 main h1 { width: fit-content; position: relative; transform-origin: top left; }
 /* above the bar only while it is the thing travelling into it; a title that
    does not travel (two lines on a phone) must pass UNDER the bar like the rest */
-html[data-head-travels] main h1, html[data-head-fades] main h1 { z-index: 11; }
+html[data-head-travels] main h1, html[data-head-direct] main h1, html[data-head-fades] main h1 { z-index: 11; }
 /* a title that fades into the bar (it wraps, or the bar must cut it short) is gone once the bar is there */
 html[data-head-fades][data-head-stuck] main h1 { visibility: hidden; }
-html[data-head-travels]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
+html[data-head-travels]:not([data-head-collapsed]) .sticky-name,
+html[data-head-direct]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
 html[data-head-stuck] .sticky-bar { visibility: visible; }
-html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
+html[data-head-travels][data-head-collapsed] main h1,
+html[data-head-direct][data-head-collapsed] main h1 { visibility: hidden; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -359,6 +361,13 @@ html[data-head-travels][data-head-collapsed] main h1 { visibility: hidden; }
       animation-timeline: scroll(root), scroll(root), scroll(root);
       animation-range: 0px var(--head-end, 200px), 0px var(--head-end, 200px), calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
       will-change: scale, translate, opacity;
+    }
+    /* the direct kind: across WHILE it rises, so it never runs over the menu button */
+    html[data-head-direct] main h1 {
+      animation: name-up linear both, name-over linear both;
+      animation-timeline: scroll(root), scroll(root);
+      animation-range: 0px var(--head-end, 200px), 0px var(--head-end, 200px);
+      will-change: scale, translate;
     }
     html[data-head-fades] .sticky-name {
       animation: bar-in linear both;

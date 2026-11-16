@@ -138,6 +138,8 @@ export type Post = {
   readonly stack?: string;
   readonly link?: string;
   readonly linkLabel?: string;
+  /** false with `listed: no`: the page exists and can be linked to, but the blog list leaves it out */
+  readonly listed: boolean;
   readonly html: string;
 };
 
@@ -162,6 +164,7 @@ function parsePost(slug: string, source: string): Post {
     stack: meta.stack,
     link: meta.link,
     linkLabel: meta.linkLabel,
+    listed: meta.listed !== "no",
     html: toHtml(body),
   };
 }
