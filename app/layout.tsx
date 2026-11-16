@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
 import { WaveFooter } from "@/components/wave-footer";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, shareCard } from "@/lib/site";
 import { SETTINGS_BOOT } from "@/lib/themes";
 import "./globals.css";
 
@@ -10,11 +10,17 @@ import "./globals.css";
 const manrope = Manrope({ variable: "--font-sans", subsets: ["latin", "vietnamese"] });
 const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
+const TITLE = "Vinh Nguyen — Senior Fullstack Engineer";
+const DESCRIPTION =
+  "12 years of React, Next.js and TypeScript. Freelance since 2025, building production apps with AI coding agents.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Vinh Nguyen — Senior Fullstack Engineer",
-  description:
-    "12 years of React, Next.js and TypeScript. Freelance since 2025, building production apps with AI coding agents.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { type: "profile", firstName: "Vinh", lastName: "Nguyen", ...shareCard(TITLE, DESCRIPTION, "/") },
+  twitter: { card: "summary" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

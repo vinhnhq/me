@@ -304,13 +304,14 @@ main h1 { width: fit-content; position: relative; transform-origin: top left; }
 /* above the bar only while it is the thing travelling into it; a title that
    does not travel (two lines on a phone) must pass UNDER the bar like the rest */
 html[data-head-travels] main h1, html[data-head-direct] main h1, html[data-head-fades] main h1 { z-index: 11; }
-/* a title that fades into the bar (it wraps, or the bar must cut it short) is gone once the bar is there */
-html[data-head-fades][data-head-stuck] main h1 { visibility: hidden; }
+/* a title that fades into the bar (it wraps, or the bar must cut it short) is gone once the bar is there.
+   Gone from SIGHT only (opacity, not visibility): a screen reader must still find the page's h1. */
+html[data-head-fades][data-head-stuck] main h1 { opacity: 0; pointer-events: none; }
 html[data-head-travels]:not([data-head-collapsed]) .sticky-name,
 html[data-head-direct]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
 html[data-head-stuck] .sticky-bar { visibility: visible; }
 html[data-head-travels][data-head-collapsed] main h1,
-html[data-head-direct][data-head-collapsed] main h1 { visibility: hidden; }
+html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events: none; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -534,9 +535,17 @@ dialog.menu[data-open="true"] .menu-settings {
 .sticky-name { display: block; min-width: 0; max-width: calc(100% - (var(--menu-size) + 1.1rem) / 2 - 0.75rem - var(--bar-reserve)); }
 .sticky-name span { display: block; min-width: 0; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* Keyboard: the first Tab stop on every page jumps past the row to the text. Out of sight until focused. */
+.skip { display: inline-flex; align-items: center; min-height: 2.75rem; position: fixed; top: 0.5rem; left: 0.5rem; z-index: 30; padding: 0 0.9rem; border-radius: 999px; background: var(--fg); color: var(--bg); font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; translate: 0 -200%; }
+.skip:focus-visible { translate: 0 0; outline: 2px solid var(--accent); outline-offset: 2px; }
+#content { display: block; scroll-margin-top: 5rem; }
+
 .lede { color: var(--muted); margin-top: 0; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
+/* a post's title is a heading (for a screen reader's list of headings) that looks like the link it holds */
+.posts h2 { display: block; margin: 0; font: inherit; letter-spacing: 0; text-transform: none; }
+.posts h2::after { content: none; }
 .posts a { display: inline-block; font-weight: 600; font-size: 1.05rem; }
 .posts time { display: block; color: var(--muted); font-size: 0.85rem; }
 .posts p { color: var(--muted); margin: 0.25rem 0 0; }
@@ -703,7 +712,7 @@ dialog.menu[data-open="true"] .menu-settings {
   .page { max-width: none; padding: 0; }
   .no-print { display: none; }
   body::before { display: none; }
-  main h1 { animation: none !important; scale: none !important; translate: none !important; visibility: visible !important; }
+  main h1 { animation: none !important; scale: none !important; translate: none !important; opacity: 1 !important; }
   h1 { font-size: 19pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }

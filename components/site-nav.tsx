@@ -21,7 +21,10 @@ export function SiteNav({ children, action }: { children: ReactNode; action?: Re
   ];
   return (
     <>
-      <nav className="actions no-print">
+      <a className="skip no-print" href="#content">
+        Skip to content
+      </a>
+      <nav className="actions no-print" aria-label="Site">
         {/* phones and tablets: always; a desk: once scrolled, where the links were */}
         <SiteMenu links={menu} />
         <span className="links">{children}</span>
@@ -32,6 +35,8 @@ export function SiteNav({ children, action }: { children: ReactNode; action?: Re
         </span>
       </nav>
       <StickyBar />
+      {/* where "Skip to content" lands: the page's own text starts right after this */}
+      <span id="content" tabIndex={-1} />
     </>
   );
 }

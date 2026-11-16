@@ -3,10 +3,16 @@ import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
 import { Tags } from "@/components/tags";
 import { formatDay, listPosts } from "@/lib/markdown";
+import { shareCard } from "@/lib/site";
+
+const TITLE = "Blog — Vinh Nguyen";
+const DESCRIPTION = "Field notes and case studies from shipping real products: what worked, what broke, and what I changed.";
 
 export const metadata: Metadata = {
-  title: "Blog — Vinh Nguyen",
-  description: "Field notes and case studies from shipping real products: what worked, what broke, and what I changed.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/blog" },
+  openGraph: { type: "website", ...shareCard(TITLE, DESCRIPTION, "/blog") },
 };
 
 export default async function BlogPage() {
@@ -21,7 +27,9 @@ export default async function BlogPage() {
       <ul className="posts">
         {posts.map((p) => (
           <li key={p.slug}>
-            <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+            <h2>
+              <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+            </h2>
             <time dateTime={p.date}>{formatDay(p.date)}</time>
             <p>{p.description}</p>
             <Tags tags={p.tags} />

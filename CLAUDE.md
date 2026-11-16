@@ -128,6 +128,25 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 - **Stale tabs in the simulators.** Safari there does not reliably pick up dev changes; several
   "it's not working" reports were old code. Open a fresh tab with a new `?r=N` query.
 
+## Accessibility and search (checked 2026-11-16)
+
+- Lighthouse on the live site: 100 for accessibility, best practices and SEO on all four pages,
+  mobile and desktop; performance 99-100 (one mobile run of 82 was noise). Re-run with
+  `bunx lighthouse https://vinhn.dev/ --chrome-flags="--headless=new"`.
+- What Lighthouse cannot see, and the code now does:
+  - "Skip to content" is the first Tab stop on every page (`site-nav.tsx`, `.skip`, `#content`).
+  - What is INVISIBLE is `inert`: the bar's title before the bar is there, and on a desk the menu
+    button until the page is scrolled (`sticky-bar.tsx`, `reach()`).
+  - The page's `h1`, once it has become the bar's title, is hidden with `opacity`, NOT
+    `visibility`: a screen reader must still find it.
+  - Post titles in the blog list are `h2`s.
+  - The menu is a native `<dialog>`: focus goes to its close button, stays inside, Escape closes,
+    focus returns to the menu button.
+- Sharing: every page sets its own `openGraph` through `shareCard()` in `lib/site.ts` (a page's
+  `openGraph` replaces the layout's; Next does not merge them). The image is the photo.
+  `app/sitemap.ts` and `app/robots.ts` make `/sitemap.xml` and `/robots.txt`.
+- Never tested with a real screen reader (VoiceOver).
+
 ## PDF
 
 - `/api/pdf` draws the CV as a 2-page A4 PDF with Chromium from the live `/` (`lib/pdf.ts`, the

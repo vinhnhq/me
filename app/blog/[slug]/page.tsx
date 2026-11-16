@@ -4,6 +4,7 @@ import { SiteNav } from "@/components/site-nav";
 import { notFound } from "next/navigation";
 import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
+import { shareCard } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -17,7 +18,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost((await params).slug);
   if (!post) return {};
-  return { title: `${post.title} — Vinh Nguyen`, description: post.description };
+  const title = `${post.title} — Vinh Nguyen`;
+  const path = `/blog/${post.slug}`;
+  return {
+    title,
+    description: post.description,
+    alternates: { canonical: path },
+    openGraph: { type: "article", publishedTime: post.date, authors: ["Vinh Nguyen"], tags: [...post.tags], ...shareCard(title, post.description, path) },
+  };
 }
 
 export default async function PostPage({ params }: Props) {

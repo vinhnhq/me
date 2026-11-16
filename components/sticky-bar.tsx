@@ -72,6 +72,16 @@ export function StickyBar() {
     let isStuck = false;
     let isSwapped = false;
     let frame = 0;
+    // What cannot be seen must not be reachable either, by Tab or by a screen
+    // reader: the bar's title before the bar is there, and on a desk the menu
+    // button, which only comes in with the bar.
+    const nameEl = slotEl.parentElement!;
+    const menuButton = document.querySelector<HTMLElement>(".actions > .menu-button");
+    const wide = window.matchMedia("(min-width: 60.01rem)");
+    const reach = () => {
+      nameEl.inert = !isStuck;
+      if (menuButton) menuButton.inert = wide.matches && !isStuck;
+    };
 
     const update = () => {
       frame = 0;
@@ -97,6 +107,7 @@ export function StickyBar() {
       if (stuckNow !== isStuck) {
         isStuck = stuckNow;
         root.toggleAttribute("data-head-stuck", stuckNow);
+        reach();
       }
       // without a travelling title there is no second leg to wait for
       const swappedNow = travels ? left >= 1 : stuckNow;
@@ -139,6 +150,7 @@ export function StickyBar() {
       root.toggleAttribute("data-head-direct", mode === "land" && legs === 1 && !still.matches);
       root.toggleAttribute("data-head-fades", mode === "fade" && !still.matches);
       update();
+      reach(); // the width may have changed, and with it whether the menu button is always there
     };
 
     const onScroll = () => {
@@ -160,6 +172,8 @@ export function StickyBar() {
       heading.style.scale = "";
       heading.style.translate = "";
       heading.style.opacity = "";
+      nameEl.inert = false;
+      if (menuButton) menuButton.inert = false;
       for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels", "data-head-direct", "data-head-fades"]) root.removeAttribute(attr);
     };
   }, [title]);
