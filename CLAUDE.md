@@ -80,6 +80,8 @@ All dated 2026-11-16.
 - **Skills:** Saga, MobX, AntD, Styled Components, WebdriverIO, Percy, Webpack, Immer, EC2,
   Python and Pulumi were removed as dated or not defensible in an interview. Do not add skills
   he has not claimed.
+- **No link to the K-Studio demo anywhere on the site** (2026-11-17): "just a topic and photos
+  are enough to explain". The post has screenshots instead. Do not add the link back.
 - **No Bảo Minh case-study page.** He dropped it (too like K-Studio, and K-Studio is the better
   one). It lives only as a bullet on the CV. Do not re-create it.
 - **Menu and close buttons are bare icons**, "like Apple": no ring, no fill. The round area is

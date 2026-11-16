@@ -5,9 +5,7 @@ description: The workflow, guardrails and numbers behind K-Studio: how one engin
 tags: ai-agents, workflow, testing
 ---
 
-I build production software with AI coding agents, mostly Claude Code. The agent writes most of the lines. I own the scope, the decisions, the review and what reaches production. This page explains how that works, using one real project you can open and click through.
-
-**[Open the K-Studio demo →](https://k-studio-git-dev-vinhnguyen-projects.vercel.app)** It has invented data and one-tap sign-in, so you can try any role: admin, sales, photographer or couple.
+I build production software with AI coding agents, mostly Claude Code. The agent writes most of the lines. I own the scope, the decisions, the review and what reaches production. This page explains how that works, using one real project.
 
 ## The project
 

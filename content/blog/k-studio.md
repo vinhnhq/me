@@ -6,15 +6,13 @@ tags: case-study, nextjs, ai-agents
 role: Sole engineer: requirements, architecture, build, deploy and support
 when: Sep 2026 – present
 stack: Next.js (App Router), React 19, TypeScript, Postgres on Neon, Kysely, better-auth, Cloudflare R2, Vercel, Playwright, Vitest
-link: https://k-studio-git-dev-vinhnguyen-projects.vercel.app
-linkLabel: Open the live demo
 ---
 
 K-Studio is a wedding photo studio in Nha Trang with about 20 people. Before this project it ran on three things kept by hand: an Excel cash book, a shoot schedule in a Zalo chat, and a payroll sheet computed at the end of each period. I replaced all three with one web app that the studio now uses every day.
 
 This page is how it was built, in the order it happened: understand the business, show a working prototype within days, agree the screens with the owner, and only then build the real system underneath. An AI agent (Claude Code) wrote most of the lines. I owned the scope, the decisions, the review and what reached production.
 
-The demo holds invented data and has one-tap sign-in, so you can try any role: admin, sales, photographer or couple. Every screen on this page is from that demo.
+Every screen on this page shows invented data.
 
 ![The K-Studio home screen on a desktop: a greeting, check-in and the morning checklist, a list of contracts that need crew assigned, and the week's calendar.](/blog/k-studio/home-1600x1000.jpg "The home screen. It opens on what needs doing today, not on a dashboard of totals.")
 
