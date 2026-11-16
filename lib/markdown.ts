@@ -61,6 +61,8 @@ export type Resume = {
   /** The paragraphs before the first `##`: they sit in the header, beside the photo. */
   readonly summaryHtml: string;
   readonly sections: readonly Section[];
+  /** the file's own text under the front matter, for readers that want markdown (`/llms-full.txt`) */
+  readonly markdown: string;
 };
 
 function parseEntry(block: string): Entry {
@@ -112,6 +114,7 @@ export async function getResume(): Promise<Resume> {
     values: (meta.values ?? "").split("·").map((v) => v.trim()).filter(Boolean),
     summaryHtml: toHtml(summary),
     sections: sections.map(parseSection),
+    markdown: body.trim(),
   };
 }
 
@@ -130,6 +133,8 @@ export type Post = {
   readonly link?: string;
   readonly linkLabel?: string;
   readonly html: string;
+  /** the file's own text under the front matter (`/llms-full.txt`) */
+  readonly markdown: string;
 };
 
 /** A post is `content/blog/<slug>.md`: title, date, description, three tags, then the text.
@@ -154,6 +159,7 @@ function parsePost(slug: string, source: string): Post {
     link: meta.link,
     linkLabel: meta.linkLabel,
     html: toHtml(body),
+    markdown: body.trim(),
   };
 }
 

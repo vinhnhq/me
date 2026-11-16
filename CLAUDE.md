@@ -145,6 +145,11 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 - Sharing: every page sets its own `openGraph` through `shareCard()` in `lib/site.ts` (a page's
   `openGraph` replaces the layout's; Next does not merge them). The image is the photo.
   `app/sitemap.ts` and `app/robots.ts` make `/sitemap.xml` and `/robots.txt`.
+- For AI agents and crawlers: `/llms.txt` (index, llmstxt.org) and `/llms-full.txt` (the CV and
+  every post as one markdown file), both written from `content/` at build; schema.org JSON-LD
+  on the CV (`ProfilePage` + `Person`) and on each post (`BlogPosting`). `robots.txt` allows
+  every crawler, AI ones included: for a job search, being read is the point. In `next dev`,
+  `/llms-full.txt` once 500'd on a stale module while the build was fine; restart dev if so.
 - Never tested with a real screen reader (VoiceOver).
 
 ## PDF

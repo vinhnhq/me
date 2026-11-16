@@ -4,7 +4,7 @@ import { SiteNav } from "@/components/site-nav";
 import { notFound } from "next/navigation";
 import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
-import { shareCard } from "@/lib/site";
+import { SITE_URL, jsonLd, shareCard } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,8 +31,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostPage({ params }: Props) {
   const post = await getPost((await params).slug);
   if (!post) notFound();
+  const author = { "@type": "Person", name: "Vinh Nguyen", url: SITE_URL };
+  const article = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    keywords: post.tags.join(", "),
+    url: `${SITE_URL}/blog/${post.slug}`,
+    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    image: `${SITE_URL}/vinh-nguyen.jpg`,
+    author,
+    publisher: author,
+  };
   return (
     <main className="page post">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(article) }} />
       <SiteNav>
         <Link href="/">Résumé</Link>
         <Link href="/blog">Blog</Link>
