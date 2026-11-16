@@ -8,103 +8,73 @@ when: Sep 2026 – present
 stack: Next.js (App Router), React 19, TypeScript, Postgres on Neon, Kysely, better-auth, Cloudflare R2, Vercel, Playwright, Vitest
 ---
 
-K-Studio is a wedding photo studio in Nha Trang with about 20 people. Before this project it ran on three things kept by hand: an Excel cash book, a shoot schedule in a Zalo chat, and a payroll sheet computed at the end of each period. I replaced all three with one web app that the studio now uses every day.
+K-Studio is a wedding photo studio in Nha Trang with about 20 people. Before this project it ran on three things kept by hand: an Excel cash book, a shoot schedule in a Zalo chat, and a payroll sheet computed at the end of each period. I replaced all three with one web app that the studio now uses every day. It went from first commit to daily use in about 10 weeks, with an AI agent (Claude Code) writing most of the lines.
 
-This page is how it was built, in the order it happened: understand the business, show a working prototype within days, agree the screens with the owner, and only then build the real system underneath. An AI agent (Claude Code) wrote most of the lines. I owned the scope, the decisions, the review and what reached production.
+It has two sides: an internal app for the staff, and a portal for each couple. The internal app is behind sign-in, so there is nothing public to open. The screens below stand in for it, and every one shows invented data.
 
-Every screen on this page shows invented data.
-
-![The K-Studio home screen on a desktop: a greeting, check-in and the morning checklist, a list of contracts that need crew assigned, and the week's calendar.](/blog/k-studio/home-1600x1000.jpg "The home screen. It opens on what needs doing today, not on a dashboard of totals.")
+![The K-Studio sign-in page: the studio's mark, fields for email or phone and a password, and switches for Vietnamese or English and for the light or dark theme.](/blog/k-studio/sign-in-1600x700.jpg "The front door. Staff sign in with an email or phone number; language and theme can be changed before signing in.")
 
 ## In numbers
 
-| | |
-|---|---|
-| First commit to daily production use | about 10 weeks (Sep to Nov 2026) |
-| First commit to a prototype the owner could click | the same day |
-| Commits | 325 |
-| TypeScript in `src/` | ~120,000 lines, 823 files |
-| Database | Postgres, 42 tables, 19 migrations |
-| Specs / ADRs | 32 versioned specs, 14 architecture decision records |
-| Tests | 89 unit/integration test files, 18 Playwright suites |
-| Screens | phone, tablet and desktop, each in light and dark, in Vietnamese and English |
+- **About 10 weeks** from first commit to daily production use (Sep to Nov 2026).
+- **The same day** from first commit to a prototype the owner could click.
+- **325 commits**, ~120,000 lines of TypeScript in 823 files.
+- **42 tables and 19 migrations** in Postgres.
+- **32 versioned specs and 14 architecture decision records.**
+- **89 unit and integration test files and 18 Playwright suites.**
+- **Three platforms, two themes, two languages:** phone, tablet and desktop, in light and dark, in Vietnamese and English.
 
-## 1. Start with the business, not the screens
+## The internal app
 
-I began by talking to the owner and reading what the studio already used: the real payroll sheet, the real cash book, the real price list and the shared schedule. Later, before restructuring the data model, I went back to the two live sheets and counted them by script instead of skimming them.
+One contract runs through the whole studio: sales sign it, the shoot is scheduled and the crew assigned, photographers check in on the day, and the books and the payroll are derived from what was recorded. Admins, sales and photographers each see their own projection of that contract.
 
-That reading produced a short scope document: the four lines of business (photography, video, gown rental and make-up), the life of one contract from enquiry to delivered photos, and twelve areas to build. It also produced a glossary. In this studio *show* means a paid shoot, *chốt sổ* means closing the day's cash book, and *ca* means a shift. Pinning those words down early stopped a whole class of plausible-looking mistakes, by me and by the agent.
+![The K-Studio home screen on a desktop: a greeting, check-in and the morning checklist, a list of contracts that need crew assigned, and the week's calendar.](/blog/k-studio/home-1600x1000.jpg "The home screen. It opens on what needs doing today, not on a dashboard of totals.")
 
-Reading the source documents first is the reason the screens survived contact with real data. A layout that looks good on invented data is the most common trap when the screens come first.
-
-## 2. The wireframe was a working prototype
-
-There was no separate wireframe file. With an agent, a clickable prototype costs about what a drawing used to, so the first commit was the prototype: the real screens on invented data, deployed to a preview address the owner could open on his own phone.
-
-- **A catalogue page came before the pages.** One page that shows every part the app is built from. Each new screen had a home the same day, and the catalogue caught a sideways overflow at phone width that a desktop check never would.
-- **The owner reviewed in rounds, on his phone.** Two bugs existed only on his iPhone and were invisible in a desktop browser's device mode. A round on a real device before each preview became a rule.
-- **A correction made twice became a rule.** "Reduce the bold" came three times before it became "weight 400 everywhere" in a decision record, applied across the whole product. The second time a correction repeats, write the rule; it is cheaper than a third round.
-- **One wedding, start to finish.** A week in, the owner could click through a whole contract. He walked through one wedding and came back with eleven asks. None was large, and all of them arrived before the real backend was built.
-
-## 3. Then the real system, under the screens the owner agreed
-
-Because the prototype kept honest in-memory state, the first database was a transcription, not a design: the stores became tables almost column for column, and the invented data became the seed.
-
-The real backend was then built one slice at a time, while the screens kept reading the same shapes:
-
-- **Rules are pure functions.** Every business rule lives in a domain layer, one function per rule, each with a unit test. A rule that isn't a pure function with a test is in the wrong place.
-- **Repositories come in two kinds.** An in-memory one for fast tests, and a Postgres one that is tested against a real database.
-- **Server actions decide nothing.** They set up the request, call the rule and map the outcome.
-
-![The income and spending report for a month: cash and bank funds side by side with opening balance, income, spending, transfers and closing balance, then summary cards and a table of every line.](/blog/k-studio/books-1600x1000.jpg "The books for a month: cash and bank side by side. A cash deposit into the bank is a fund transfer, not revenue.")
-
-What it covers now:
-
-- **Contracts and invoices.** Each contract with its instalments, invoice and receipts, all available as server-rendered PDFs.
+- **Contracts and invoices.** Each contract with its instalments, invoice and receipts, all drawn as PDFs on the server.
 - **Scheduling and crew.** Shoots, who works on each one, and check-in on the day.
-- **Two money books.** Cash and bank, closed daily.
+- **Two money books.** Cash and bank, closed daily. A cash deposit into the bank is a fund transfer, not revenue.
 - **Payroll.** Crew pay derived from the work recorded, in periods that freeze once paid.
-- **Photo proofing.** A gallery where couples pick and comment on their photos, stored on Cloudflare R2. It replaced a paid SaaS.
-- **Four kinds of user.** Admins, sales, photographers and couples each see their own projection of the same contract.
 
-![A service contract as the customer sees it: name and contract number, a table of services with quantity, unit price and amount, and buttons for the contract, invoice, receipts and PDF download.](/blog/k-studio/contract-paper-1730x1330.jpg "The contract as paper, in English. The same page prints the invoice and every receipt, and the PDF is drawn on the server.")
+![The income and spending report for a month: cash and bank funds side by side with opening balance, income, spending, transfers and closing balance, then summary cards and a table of every line.](/blog/k-studio/books-1600x1000.jpg "The books for a month, cash and bank side by side.")
 
-## 4. The loop that keeps speed from costing quality
+![A service contract as paper: name and contract number, a table of services with quantity, unit price and amount, and buttons for the contract, invoice, receipts and PDF download.](/blog/k-studio/contract-paper-1730x1330.jpg "The contract as paper. The same page prints the invoice and every receipt.")
 
-Speed is easy with an agent. The work is making sure fast doesn't mean wrong. Every change goes through the same six steps: spec, plan, build, test, review, release.
+## The customer portal
 
-- **The gates are passed, not just run.** Type-aware lint, `tsc`, unit tests on the in-memory repositories, a Postgres suite on a scratch database, and a Playwright suite.
+Each couple gets a private link, with no account to create. It shows where their contract stands in their own words (deposit, shoot, photo selection, retouching, delivery), their shoot days and their contact at the studio. They send wishes and references before the shoot, pick and comment on their photos after it, and decide whether the studio may show their photos to other couples. They never see the studio's internal notes.
+
+![Three phone screens of the couple's portal: the progress of the contract from deposit to delivery, the shoot days and the studio contact with a brief to fill in, and the photo selection with a consent switch and a feedback box.](/blog/k-studio/portal-1600x1040.jpg "The couple's portal on a phone: progress, details and brief, then photo selection and feedback.")
+
+The photo proofing gallery stores its files on Cloudflare R2 and replaced a paid SaaS.
+
+## How it was built
+
+1. **Business first.** I talked to the owner and read what the studio already used: the real payroll sheet, cash book and price list. That gave a short scope (four lines of business, the life of one contract, twelve areas to build) and a glossary. In this studio *show* means a paid shoot and *chốt sổ* means closing the day's cash book; pinning those words down stopped a whole class of plausible-looking mistakes, by me and by the agent.
+2. **The wireframe was a working prototype.** With an agent, a clickable prototype costs about what a drawing used to. The first commit was the real screens on invented data, at an address the owner could open on his own phone. A week later he clicked through one whole wedding and came back with eleven asks, all before the real backend was built.
+3. **Then the real system, under the screens he had agreed.** The prototype kept honest in-memory state, so the first database was a transcription, not a design. Every business rule became a pure function with a unit test; repositories come in an in-memory kind for fast tests and a Postgres kind tested against a real database; server actions decide nothing.
+
+## The loop that keeps speed from costing quality
+
+Speed is easy with an agent. The work is making sure fast doesn't mean wrong. Every change goes through the same six steps (spec, plan, build, test, review, release), and machines do most of the checking:
+
+- **Gates the agent has to pass, not just run.** Type-aware lint, `tsc`, unit tests, a Postgres suite on a scratch database, and Playwright.
 - **Every page is photographed.** The Playwright suite opens every page in light and dark, asserts it and saves a screenshot. Three blank pages once passed type-checking, lint and the build; they would not pass now.
-- **Pitfalls are recorded.** About 350 "landmines", each with what broke, how it was found and what proves the fix. The agent reads an area's section before changing code in it.
-- **Decisions are written down.** Anything that settles a question for good becomes an architecture decision record, so neither a person nor an agent re-opens it by accident.
-- **The studio sees it before production does.** Work moves from a feature branch to a `dev` copy with its own database and storage, where the staff click through it on invented data, and only then to `main`. Production migrations are a deliberate manual step, never something the agent runs on its own.
+- **An accessibility audit that fails the run.** Text contrast below 4.5:1, a touch target under 44×44 pixels, a form field under 16px on touch, text under 12px, a page that scrolls sideways, or any console error. The audit tests itself first: if it misses two texts planted to fail, it reports itself blind.
+- **Pitfalls are recorded.** About 350 "landmines", each with what broke and what proves the fix. The agent reads an area's section before changing code in it.
+- **The studio sees it before production does.** Work moves from a feature branch to a `dev` copy with its own database and storage, where the staff click through it, and only then to `main`.
+
+![Three phone screens side by side: the home screen with tasks that need action, the cash book with the cash and bank funds for the day, and the weekly schedule with shift registration.](/blog/k-studio/phones-1600x1040.jpg "The internal app on a phone: home, the cash book and the schedule.")
+
+![Three tablet screens side by side: the home screen, the list of contracts as cards in two columns, and the income and spending report.](/blog/k-studio/tablets-1600x900.jpg "On a tablet. An iPad is a touch screen, so the 44-pixel rule applies there too.")
+
+![The income and spending report in the dark theme, on true black with cards one step lighter.](/blog/k-studio/books-dark-1600x1000.jpg "The same report in the dark theme.")
 
 The process in full is in [How I build with AI agents](/blog/how-i-build-with-ai-agents).
 
-## 5. Phone, tablet and desktop, checked by a script
-
-The studio uses it on phones, tablets and desktop computers. The app supports exactly those three, each in a light and a dark theme, and a review covers all six.
-
-![Three phone screens side by side: the home screen with tasks that need action, the cash book with the cash and bank funds for the day, and the weekly schedule with shift registration.](/blog/k-studio/phones-1600x1040.jpg "On a phone: home, the cash book and the schedule. The bar at the foot replaces the desktop's side menu.")
-
-An audit script opens each page on its own platform and fails the run when:
-
-- text contrast is below 4.5:1 against what is really behind it;
-- a control's touch target is under 44×44 pixels on any touch screen;
-- a form field is under 16px on touch (iOS would zoom the page);
-- visible text is under 12px;
-- the page scrolls sideways, or the browser console shows an error.
-
-The audit tests itself first. Two texts that must fail are put on a real page, and if the audit does not catch both it stops and reports itself blind. That is not decoration: a checker that cannot read a colour passes everything.
-
-![Three tablet screens side by side: the home screen, the list of contracts as cards in two columns, and the income and spending report.](/blog/k-studio/tablets-1600x900.jpg "On a tablet: the same parts, laid out for the width. An iPad is a touch screen, so the 44-pixel rule applies there too.")
-
-![The income and spending report in the dark theme, on true black with cards one step lighter.](/blog/k-studio/books-dark-1600x1000.jpg "The same report in the dark theme. Colours come from tokens, so a fix to one theme is one line, not one per component.")
-
 ## What it taught me
 
-- **Read the source documents before designing.** The real sheets are the specification.
-- **Build one detail page early.** A list page is cheap. A detail page is where the data model shows its shape: the contract page forced a source, notes and a history into the model.
-- **Hidden is not blocked.** A photographer who typed the address of the overview page still saw revenue. Hiding a link in the menu is half the job; the page and the action must refuse too.
-- **The expensive bugs are silent.** Three of the four worst ones did not crash and turned no test red. One was a date that slipped back a day at UTC+7, wrong only in Vietnam. That class of bug is what the landmines file exists to stop.
-- **Run it for real after every step.** Those bugs only showed up in the browser, never while reading the code.
+- **Read the source documents before designing.** A layout that looks good on invented data is the most common trap when the screens come first. The real sheets are the specification.
+- **Clicking beats reading.** The owner's eleven asks came from clicking through a wedding on his phone, not from reading a document.
+- **A correction made twice is a rule.** "Reduce the bold" came three times before it became "weight 400 everywhere" in a decision record. Write the rule the second time.
+- **Hidden is not blocked.** A photographer who typed the address of the overview page still saw revenue. Hiding a link is half the job; the page and the action must refuse too.
+- **The expensive bugs are silent.** Three of the four worst ones did not crash and turned no test red. One was a date that slipped back a day at UTC+7, wrong only in Vietnam.

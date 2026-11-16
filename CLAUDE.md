@@ -51,7 +51,10 @@ Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, n
   becomes a `<figure>`; the size in the file NAME becomes width/height (no layout shift), so
   keep that naming. Files live in `public/blog/<slug>/`.
 - The `k-studio` post (rewritten 2026-11-17, modelled on tungv.com's Billy J archive) tells the
-  build in order: business, prototype, real backend, the loop, three platforms. Its facts come
+  two sides by picture (the internal app, the couple's portal), opening on the sign-in page
+  because the internal app is behind sign-in and has no public address, then how it was built,
+  the loop, and lessons. The portal shots are contract KS112026-0019 on dev (NOT 0004, whose
+  contact phone is Vinh's own). Its facts come
   from k-studio's `__project__/docs/retro.md`, `scope.md`, `ui-review.md` and the specs. Its
   screenshots are from the DEV-DEMO data (invented), in English, never from the local database
   (which holds real imported albums and couples). Left out on purpose: the studio's letterhead
