@@ -247,7 +247,8 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 .values { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.6rem; margin: 0.9rem 0 0; }
 .values-label { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
 .values strong { font-weight: 700; }
-.values strong + strong::before { content: "·"; color: var(--muted); font-weight: 400; margin-right: 0.6rem; }
+/* the dot is drawn, not read: the second line gives it an empty spoken text where that is supported */
+.values strong + strong::before { content: "·"; content: "·" / ""; color: var(--muted); font-weight: 400; margin-right: 0.6rem; }
 
 .contact {
   list-style: none;
