@@ -173,6 +173,9 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem 1rem;
+  /* as tall as the bar's row whatever is in it: on a page with no pill the menu
+     button sat 4px above the bar's title */
+  min-height: var(--menu-size);
   font-size: 0.9rem;
   margin-bottom: 2rem;
   /* the strip behind is the only thing here to press through to */
@@ -550,10 +553,30 @@ dialog.menu[data-open="true"] .menu-settings {
 .lede { color: var(--muted); margin-top: 0; }
 /* the home page: who this is, one step larger than the lede under it */
 .intro { margin: 0.5rem 0 0.75rem; font-size: 1.05rem; }
-/* Ko-fi's floating button is theirs; it is only kept off paper */
-@media print { [id^="kofi-widget-overlay"] { display: none !important; } }
-/* it is drawn once on <body>, so it would follow a visitor from the blog to the CV: not there */
-body:has([data-resume]) [id^="kofi-widget-overlay"] { display: none !important; }
+/* The Ko-fi cup (components/support.tsx): small, round, bottom right, and only
+   once the reader is at the end of the page. 44px, like every other target. */
+.kofi {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  opacity: 0;
+  translate: 0 0.5rem;
+  transition: opacity 240ms ease-out, translate 240ms ease-out, border-color 160ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.kofi[data-shown="true"] { opacity: 1; translate: 0 0; }
+.kofi:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) { .kofi:hover { border-color: var(--accent); } }
+@media (prefers-reduced-motion: reduce) { .kofi { translate: none; transition: none; } }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
 /* a post's title is a heading (for a screen reader's list of headings) that looks like the link it holds */
@@ -696,6 +719,7 @@ body:has([data-resume]) [id^="kofi-widget-overlay"] { display: none !important; 
   :root { --menu-size: 2.75rem; }
   .segmented button { width: 2.75rem; height: 2.75rem; }
   .sticky-inner { height: calc(2.75rem + 8px + 1rem); }
+  .actions { min-height: calc(2.75rem + 8px); }
   .pill { height: calc(2.75rem + 8px); }
   .actions .links { gap: 0.5rem; }
   .actions .links a,

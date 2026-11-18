@@ -82,10 +82,11 @@ All dated 2026-11-16 unless they say otherwise.
 - **The blog list is the root** (2026-11-18): a visitor lands on the posts and goes from there to
   a post or to the résumé at `/resume`. The PDF is drawn from `/resume`. Each page sets its own
   canonical and share card; the layout's are only a fallback.
-- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_NAME` in `lib/site.ts`), as Ko-fi's own
-  floating "Support me" button (`components/support.tsx`, script loaded lazily) on the blog list
-  and on each post, and as a line in `/llms.txt`. Vinh chose the widget over a plain link. NOT on
-  the CV or the PDF (he agreed): CSS hides it when `[data-resume]` is on the page, and in print.
+- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_URL` in `lib/site.ts`), as ONE small round
+  cup button (44px, bottom right) on the blog list and on each post (`components/support.tsx`),
+  and a line in `/llms.txt`. It shows only when the reader reaches the END of the page. Ko-fi's
+  own floating widget was live for an hour and dropped: Vinh found it too big and annoying,
+  always on screen. Do not bring it back. NOT on the CV or the PDF (he agreed).
 - **The root opens with his name** (2026-11-18): `h1` "Vinh Nguyen", one line of introduction
   with a link to the résumé, then the blog's lede and the posts. Vinh does not want the résumé
   link pushed everywhere: visitors meet the blog, and he hands out `/resume` when asked.
@@ -150,6 +151,9 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 
 ## Things that were tried and broke
 
+- **A top row with no pill was shorter than the bar's row** (2026-11-18): on a phone the menu
+  button sat 4px above the bar's title on the blog pages. `.actions` now has a `min-height`
+  equal to the bar's row. Keep the two in step.
 - **Vaul / shadcn's Drawer for the menu.** On iOS, Vaul locks scrolling by pinning `<body>` with
   `position: fixed`, which zeroes `scrollY`. The header is driven by `scrollY`, so opening the
   menu threw the header back to its top-of-page state (it looked like a jump to the top).

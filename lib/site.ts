@@ -8,7 +8,7 @@ export const SITE_URL = "https://vinhn.dev";
  */
 export const X_HANDLE = "vinhnhq";
 
-/** Vinh's Ko-fi page: its floating "Support me" button on the blog list and on each post. Never on the CV. */
+/** Vinh's Ko-fi page: a small cup button at the end of the blog list and of each post. Never on the CV. */
 export const KOFI_NAME = "vinhn";
 export const KOFI_URL = `https://ko-fi.com/${KOFI_NAME}`;
 
