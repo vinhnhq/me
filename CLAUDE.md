@@ -82,11 +82,13 @@ All dated 2026-11-16 unless they say otherwise.
 - **The blog list is the root** (2026-11-18): a visitor lands on the posts and goes from there to
   a post or to the résumé at `/resume`. The PDF is drawn from `/resume`. Each page sets its own
   canonical and share card; the layout's are only a fallback.
-- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_URL` in `lib/site.ts`), as a plain link
-  under the blog list and under each post (`components/support.tsx`), and in `/llms.txt`. NOT on
-  the CV or the PDF (my choice: a tip line does not belong on a job application; Vinh has not
-  objected). Not Ko-fi's widget: it loads a third-party script.
-
+- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_NAME` in `lib/site.ts`), as Ko-fi's own
+  floating "Support me" button (`components/support.tsx`, script loaded lazily) on the blog list
+  and on each post, and as a line in `/llms.txt`. Vinh chose the widget over a plain link. NOT on
+  the CV or the PDF (he agreed): CSS hides it when `[data-resume]` is on the page, and in print.
+- **The root opens with his name** (2026-11-18): `h1` "Vinh Nguyen", one line of introduction
+  with a link to the résumé, then the blog's lede and the posts. Vinh does not want the résumé
+  link pushed everywhere: visitors meet the blog, and he hands out `/resume` when asked.
 - **Accent is burgundy `#800020`**, his lucky colour. On dark it is `oklch(0.66 0.18 18)`, because
   burgundy itself is unreadable on a dark page. Light and dark themes only.
 - **Fonts:** Manrope for text; Geist Mono for dates, the contact line, pills, code, AND page

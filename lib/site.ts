@@ -8,8 +8,9 @@ export const SITE_URL = "https://vinhn.dev";
  */
 export const X_HANDLE = "vinhnhq";
 
-/** Vinh's Ko-fi page: the "buy me a coffee" link under the blog list and under each post. Never on the CV. */
-export const KOFI_URL = "https://ko-fi.com/vinhn";
+/** Vinh's Ko-fi page: its floating "Support me" button on the blog list and on each post. Never on the CV. */
+export const KOFI_NAME = "vinhn";
+export const KOFI_URL = `https://ko-fi.com/${KOFI_NAME}`;
 
 /**
  * What a link to a page shows when it is pasted into LinkedIn, Zalo, Slack…

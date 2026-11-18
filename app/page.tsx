@@ -24,7 +24,11 @@ export default async function BlogPage() {
       <SiteNav>
         <Link href="/resume">Résumé</Link>
       </SiteNav>
-      <h1>Blog</h1>
+      <h1>Vinh Nguyen</h1>
+      <p className="intro">
+        Senior fullstack engineer in Ho Chi Minh City, building with React, Next.js, TypeScript and AI coding agents.
+        Open to remote roles and contracts: here is my <Link href="/resume">résumé</Link>.
+      </p>
       <p className="lede">Field notes and case studies from shipping real products.</p>
       <ul className="posts">
         {posts.map((p) => (

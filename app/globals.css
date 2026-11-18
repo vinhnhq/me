@@ -548,8 +548,12 @@ dialog.menu[data-open="true"] .menu-settings {
 .post figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
 
 .lede { color: var(--muted); margin-top: 0; }
-/* the Ko-fi line under the blog list and under a post: quiet, set apart by a rule */
-.support { margin: 2.5rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.95rem; }
+/* the home page: who this is, one step larger than the lede under it */
+.intro { margin: 0.5rem 0 0.75rem; font-size: 1.05rem; }
+/* Ko-fi's floating button is theirs; it is only kept off paper */
+@media print { [id^="kofi-widget-overlay"] { display: none !important; } }
+/* it is drawn once on <body>, so it would follow a visitor from the blog to the CV: not there */
+body:has([data-resume]) [id^="kofi-widget-overlay"] { display: none !important; }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
 /* a post's title is a heading (for a screen reader's list of headings) that looks like the link it holds */

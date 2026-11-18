@@ -1,17 +1,35 @@
-import { KOFI_URL } from "@/lib/site";
+"use client";
+
+import Script from "next/script";
+import { KOFI_NAME } from "@/lib/site";
+
+declare global {
+  interface Window {
+    kofiWidgetOverlay?: { draw: (name: string, options: Record<string, string>) => void };
+  }
+}
 
 /**
- * The Ko-fi line. A plain link, not Ko-fi's widget: their script would add a
- * third-party request and a floating button to every page.
+ * Ko-fi's own floating button ("Support me", bottom left), on the blog list
+ * and on each post; never on the CV. Vinh chose the widget over a plain link
+ * (2026-11-18). Its script is loaded when the browser is idle, after the page
+ * itself, so it does not slow the first paint.
  */
 export function Support() {
   return (
-    <p className="support no-print">
-      If this was useful, you can{" "}
-      <a href={KOFI_URL} target="_blank" rel="noopener noreferrer">
-        buy me a coffee on Ko-fi
-      </a>
-      .
-    </p>
+    <Script
+      src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"
+      strategy="lazyOnload"
+      onReady={() => {
+        // client-side navigation mounts this again: draw the button only once
+        if (document.querySelector('[id^="kofi-widget-overlay"]')) return;
+        window.kofiWidgetOverlay?.draw(KOFI_NAME, {
+          type: "floating-chat",
+          "floating-chat.donateButton.text": "Support me",
+          "floating-chat.donateButton.background-color": "#800020",
+          "floating-chat.donateButton.text-color": "#fff",
+        });
+      }}
+    />
   );
 }
