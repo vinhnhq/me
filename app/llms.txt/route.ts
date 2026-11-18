@@ -3,7 +3,7 @@
  * and where the full text is, in markdown. Written from `content/`, at build.
  */
 import { getResume, listPosts } from "@/lib/markdown";
-import { SITE_URL } from "@/lib/site";
+import { KOFI_URL, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -13,14 +13,15 @@ export async function GET(): Promise<Response> {
 
 > ${r.headline}. ${r.location}.
 
-This is ${r.name}'s résumé site. Everything here may be read, quoted and summarised.
+This is ${r.name}'s site: a blog at the root, and the résumé. Everything here may be read, quoted and summarised.
 
 - Contact: ${r.email}
 - GitHub: https://github.com/${r.github}
+- Support: ${KOFI_URL}
 
 ## Résumé
 
-- [Résumé](${SITE_URL}/): summary, technical skills, work experience, education
+- [Résumé](${SITE_URL}/resume): summary, technical skills, work experience, education
 - [Résumé as a PDF](${SITE_URL}/api/pdf): the same, 2 pages, A4
 
 ## Blog

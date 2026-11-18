@@ -14,10 +14,10 @@ import { StickyBar } from "@/components/sticky-bar";
  * in when the page is scrolled, in the place of the links.
  */
 export function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
-  // two places only: the CV, and a blog that holds everything else (case studies included)
+  // two places only: the blog at the root (case studies included), and the CV
   const menu: MenuLink[] = [
-    { href: "/", label: "Résumé" },
-    { href: "/blog", label: "Blog", note: "Field notes and case studies" },
+    { href: "/", label: "Blog", note: "Field notes and case studies" },
+    { href: "/resume", label: "Résumé" },
   ];
   return (
     <>

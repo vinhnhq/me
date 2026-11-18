@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   // every page is his: LinkedIn and others read <meta name="author">
   authors: [{ name: "Vinh Nguyen", url: SITE_URL }],
   creator: "Vinh Nguyen",
-  alternates: { canonical: "/" },
-  openGraph: { type: "profile", firstName: "Vinh", lastName: "Nguyen", ...shareCard(TITLE, DESCRIPTION, "/") },
+  // every page sets its own canonical and share card; these are only the fallback
+  openGraph: { type: "website", ...shareCard(TITLE, DESCRIPTION, "/") },
   twitter: { card: "summary_large_image", site: `@${X_HANDLE}`, creator: `@${X_HANDLE}` },
 };
 

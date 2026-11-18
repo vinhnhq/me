@@ -1,44 +1,44 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ResumeBody } from "@/components/resume-body";
-import { ResumeHeader } from "@/components/resume-header";
 import { SiteNav } from "@/components/site-nav";
-import { getResume } from "@/lib/markdown";
-import { SITE_URL, X_HANDLE, jsonLd } from "@/lib/site";
+import { Support } from "@/components/support";
+import { Tags } from "@/components/tags";
+import { formatDay, listPosts } from "@/lib/markdown";
+import { shareCard } from "@/lib/site";
 
-export default async function ResumePage() {
-  const resume = await getResume();
-  // The same facts as the page, as data: for search engines and AI agents (schema.org).
-  const person = {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    url: SITE_URL,
-    mainEntity: {
-      "@type": "Person",
-      name: resume.name,
-      jobTitle: resume.headline.split(" · ")[0],
-      description: resume.headline,
-      url: SITE_URL,
-      image: `${SITE_URL}/vinh-nguyen.jpg`,
-      email: `mailto:${resume.email}`,
-      address: { "@type": "PostalAddress", addressLocality: "Ho Chi Minh City", addressCountry: "VN" },
-      sameAs: [`https://github.com/${resume.github}`, `https://x.com/${X_HANDLE}`],
-    },
-  };
+const TITLE = "Blog — Field notes and case studies by Vinh Nguyen";
+const DESCRIPTION =
+  "Field notes and case studies from shipping real products with React, Next.js and AI coding agents: what worked, what broke, and what I changed.";
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", ...shareCard(TITLE, DESCRIPTION, "/") },
+};
+
+export default async function BlogPage() {
+  const posts = await listPosts();
   return (
-    <main className="page resume" data-resume>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
-      <SiteNav
-        action={
-          <a className="pill" href="/api/pdf" rel="nofollow" aria-label="Save as PDF">
-            {/* the narrowest phones keep only the last word, so the row still fits */}
-            <span className="pill-wide">Save as&nbsp;</span>PDF
-          </a>
-        }
-      >
-        <Link href="/blog">Blog</Link>
+    <main className="page blog">
+      <SiteNav>
+        <Link href="/resume">Résumé</Link>
       </SiteNav>
-      <ResumeHeader resume={resume} />
-      <ResumeBody sections={resume.sections} />
+      <h1>Blog</h1>
+      <p className="lede">Field notes and case studies from shipping real products.</p>
+      <ul className="posts">
+        {posts.map((p) => (
+          <li key={p.slug}>
+            <h2>
+              <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+            </h2>
+            <time dateTime={p.date}>{formatDay(p.date)}</time>
+            <p>{p.description}</p>
+            <Tags tags={p.tags} />
+          </li>
+        ))}
+      </ul>
+      <Support />
     </main>
   );
 }

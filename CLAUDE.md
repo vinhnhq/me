@@ -9,10 +9,12 @@ The site is TWO places: the CV, and a blog that holds everything else.
 
 | Path | What |
 |---|---|
-| `content/resume.md` | The CV: the single source for `/` and for the PDF |
+| `content/resume.md` | The CV: the single source for `/resume` and for the PDF |
 | `content/blog/<slug>.md` | Posts and case studies (`/blog`, `/blog/<slug>`) |
-| `app/page.tsx`, `components/resume-header.tsx`, `components/resume-body.tsx` | The CV page |
-| `app/blog/` | Blog list and post page |
+| `app/page.tsx` | The ROOT: the blog list (since 2026-11-18). `/blog` redirects to it |
+| `app/resume/page.tsx`, `components/resume-header.tsx`, `components/resume-body.tsx` | The CV page, at `/resume` |
+| `app/blog/[slug]/` | A post (`/blog/<slug>`) |
+| `components/support.tsx` | The Ko-fi line under the blog list and each post |
 | `app/api/pdf/route.ts`, `lib/pdf.ts` | The CV as a PDF, drawn on the server |
 | `components/site-nav.tsx` | The top row of every page |
 | `components/sticky-bar.tsx` | The bar the top row becomes when scrolled, and the travelling title |
@@ -75,7 +77,15 @@ Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, n
 
 ## Decisions Vinh made (do not undo without asking)
 
-All dated 2026-11-16.
+All dated 2026-11-16 unless they say otherwise.
+
+- **The blog list is the root** (2026-11-18): a visitor lands on the posts and goes from there to
+  a post or to the résumé at `/resume`. The PDF is drawn from `/resume`. Each page sets its own
+  canonical and share card; the layout's are only a fallback.
+- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_URL` in `lib/site.ts`), as a plain link
+  under the blog list and under each post (`components/support.tsx`), and in `/llms.txt`. NOT on
+  the CV or the PDF (my choice: a tip line does not belong on a job application; Vinh has not
+  objected). Not Ko-fi's widget: it loads a third-party script.
 
 - **Accent is burgundy `#800020`**, his lucky colour. On dark it is `oklch(0.66 0.18 18)`, because
   burgundy itself is unreadable on a dark page. Light and dark themes only.

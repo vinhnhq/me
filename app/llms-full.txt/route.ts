@@ -19,7 +19,7 @@ ${r.headline}
 - Phone: ${r.phone}
 - GitHub: https://github.com/${r.github}
 - Values: ${r.values.join(", ")}
-- Source: ${SITE_URL}/
+- Source: ${SITE_URL}/resume
 
 ${absoluteLinks(r.markdown)}`,
     ...posts.map(

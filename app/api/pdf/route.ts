@@ -12,11 +12,11 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function GET(req: Request): Promise<Response> {
-  const bytes = await renderResumePdf(new URL(req.url).origin);
+  const bytes = await renderResumePdf(`${new URL(req.url).origin}/resume`);
   return new Response(Buffer.from(bytes), {
     headers: {
       "content-type": "application/pdf",
-      // a copy of `/`, not a page of its own: crawlers are told not to list it (robots.txt
+      // a copy of `/resume`, not a page of its own: crawlers are told not to list it (robots.txt
       // also disallows /api/, and the links to it are rel="nofollow")
       "x-robots-tag": "noindex, nofollow",
       "content-disposition": 'attachment; filename="vinh-nguyen-resume.pdf"',

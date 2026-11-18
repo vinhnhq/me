@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
+import { Support } from "@/components/support";
 import { notFound } from "next/navigation";
 import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
@@ -49,8 +50,8 @@ export default async function PostPage({ params }: Props) {
     <main className="page post">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(article) }} />
       <SiteNav>
-        <Link href="/">Résumé</Link>
-        <Link href="/blog">Blog</Link>
+        <Link href="/resume">Résumé</Link>
+        <Link href="/">Blog</Link>
       </SiteNav>
       <h1>{post.title}</h1>
       <p className="lede">
@@ -82,6 +83,7 @@ export default async function PostPage({ params }: Props) {
         </p>
       )}
       <article dangerouslySetInnerHTML={{ __html: post.html }} />
+      <Support />
     </main>
   );
 }

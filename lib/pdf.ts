@@ -3,7 +3,7 @@ import "server-only";
  * The résumé page → an A4 PDF, drawn by a real Chromium (the K-Studio way).
  *
  * The same page a visitor reads is printed, so there is no second template to
- * drift from it: Chromium opens `/`, the print sheet in globals.css applies
+ * drift from it: Chromium opens `/resume`, the print sheet in globals.css applies
  * (A4, light, the nav hidden) and `page.pdf` writes it.
  *
  * Chromium: `@sparticuz/chromium` on Vercel (Linux, the function's own
