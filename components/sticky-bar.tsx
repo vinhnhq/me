@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 
@@ -24,6 +24,9 @@ const clamp = (n: number) => Math.min(1, Math.max(0, n));
  * Only then do the two change places. `end` is the scroll at which the
  * heading's top meets the top of the bar's name.
  *
+ * The title comes from the page as a prop (the same words as its h1), so it is
+ * in the server's HTML and nothing is read back from the DOM after hydration.
+ *
  * This component only MEASURES (end, slide, dx, scale → CSS variables on
  * <html>) and flips the discrete things on <html>: `data-head-stuck` from
  * `end` (what has faded out of the top row is then out of reach too), and
@@ -32,16 +35,9 @@ const clamp = (n: number) => Math.min(1, Math.max(0, n));
  * during iOS momentum scrolling. Browsers without scroll timelines get the
  * same motion from a requestAnimationFrame loop here.
  */
-export function StickyBar() {
+export function StickyBar({ title }: { title: string }) {
   const bar = useRef<HTMLDivElement>(null);
   const slot = useRef<HTMLSpanElement>(null);
-  // the page's own heading, read once it is on screen
-  const [title, setTitle] = useState("");
-
-  useEffect(() => {
-    setTitle(document.querySelector("main h1")?.textContent?.trim() ?? "");
-  }, []);
-
   useEffect(() => {
     if (!title) return;
     const root = document.documentElement;

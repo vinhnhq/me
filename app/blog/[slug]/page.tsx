@@ -49,7 +49,7 @@ export default async function PostPage({ params }: Props) {
   return (
     <main className="page post">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(article) }} />
-      <SiteNav>
+      <SiteNav title={post.title}>
         <Link href="/resume">Résumé</Link>
         <Link href="/">Blog</Link>
       </SiteNav>

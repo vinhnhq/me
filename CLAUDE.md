@@ -19,14 +19,47 @@ The site is TWO places: the CV, and a blog that holds everything else.
 | `components/site-nav.tsx` | The top row of every page |
 | `components/sticky-bar.tsx` | The bar the top row becomes when scrolled, and the travelling title |
 | `components/site-menu.tsx` | The full-screen menu |
-| `components/reader-controls.tsx`, `lib/themes.ts` | Theme and text-size pills |
+| `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx` | Theme and text-size pills, on ui-sdk (see "Tooling and guidelines") |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page |
 | `app/favicon.ico`, `app/icon.png`, `app/apple-icon.tsx` | The icon: white "VN" on a burgundy disc. Static files, so `/favicon.ico` exists. (The icon on the Vercel DASHBOARD is unrelated: it is the project's Avatar, uploaded by hand in Settings → General; set 2026-11-16) |
 | `app/globals.css` | ALL styling: plain CSS, no Tailwind |
 | `lib/markdown.ts` | Reads and parses everything in `content/` |
 | `scripts/ui-audit.ts` | `bun run audit`: the phone audit |
 
-Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun. No database, no CMS.
+Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun, `@ui-sdk/react` (beta) for the
+two interactive controls. No database, no CMS.
+
+## Tooling and guidelines (set up 2026-11-21)
+
+Three guides are installed as skills, and the site was refactored against them the same day
+with NO visual change (phone screenshots pixel-identical to the live site; desktop differs only
+in line endings, from `text-wrap`).
+
+| What | Where | Use |
+|---|---|---|
+| **ui-sdk** (Vercel Labs, ui-sdk.dev, BETA 0.1.0-beta.13, every API marked experimental) | `@ui-sdk/react`, `@ui-sdk/core`; skill `.claude/skills/ui-sdk`; docs in `node_modules/@ui-sdk/react/docs/` | Behaviours for controls. Do not hand-roll a `role=` it ships |
+| **Modern Web Guidance** (Chrome) | skill `.agents/skills/modern-web-guidance` (symlinked into `.claude/skills`) | `npx modern-web-guidance@latest search "<task>"` then `retrieve <id>` before HTML/CSS work; `legacy-scan .` found 0 legacy patterns |
+| **Web Interface Guidelines** (Vercel) | skill `.claude/skills/web-design-guidelines` | The review checklist |
+| **react-doctor** | dev dependency, `bun run doctor`, skill `.claude/skills/react-doctor` | Lints React. Its installer also added a GitHub workflow, a pre-commit hook and `.kiro/`; those were removed on purpose |
+| **axe-core** | inside `bun run audit` | Every machine-testable WCAG 2.2 A/AA rule, on 4 pages x 3 screens x 2 themes |
+
+- **Theme and text size are ui-sdk preferences** (`lib/preferences.ts`): `colorScheme`
+  (`data-color-scheme` = system/light/dark on `<html>`) and `textSize` (`data-size`). `Preferences`
+  (in the layout) renders the inline script that applies the saved values before first paint,
+  saves to localStorage under the OLD keys (`theme`, `size`, so returning readers keep their
+  choice) and syncs every control and tab. There is no hand-written boot script or event bus any
+  more.
+- **The pills are ui-sdk's `SegmentedControl`**: one Tab stop per pill, arrow keys move the
+  choice (the hand-rolled radiogroup had no arrow keys). Styled by `.segmented` and `[data-checked]`.
+- **Colours are `light-dark()` pairs** (`--bg-light`/`--bg-dark` and so on in `globals.css`), with a
+  `prefers-color-scheme` fallback for browsers before 2024, which then follow the device only.
+- **The menu stays a native `<dialog>`**: both guides prefer the native element, so ui-sdk's
+  Dialog was not used.
+- **react-doctor: 5 warnings left, all judged false positives** (score 53; it was 50 with 8):
+  three `dangerouslySetInnerHTML` (the HTML is our own markdown from `content/`, not user input)
+  and two plain `<a href="/api/pdf">` (a file download, which must NOT be a router `<Link>`).
+- Not done from the guidelines, on purpose: curly quotes in the content, `translate="no"` on brand
+  names, and updating `theme-color` when the reader overrides the device's scheme.
 
 ## Content rules
 
@@ -118,7 +151,9 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 
 - `.actions` (the top row) is `position: sticky`: scrolled, its buttons simply stay where they
   are. `sticky-bar.tsx` draws the strip behind the row and holds the page's title.
-- EVERY page's own `h1` becomes the bar's title: "Vinh Nguyen" on the CV, "Blog", a post's title.
+- EVERY page's own `h1` becomes the bar's title: "Vinh Nguyen" on the home page and the CV, a
+  post's title. The page passes it to `SiteNav` as `title` (the same words as its `h1`), so it is
+  in the server's HTML; it used to be read from the DOM in an effect.
   The motion is CONTINUOUS and tied to the scroll, as on tungv.com. Vinh preferred this to
   k-studio's discrete view-transition morph, which he found less smooth.
 - Three paths, chosen by measuring:
@@ -144,9 +179,9 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
   "Save as PDF", then a gap, then theme and text size at the foot. No divider lines, no name.
   Its close button is in the top right corner and TRAVELS there from the menu button (start pose
   measured on open as `--from-x/-y/-scale`) while the bars cross into an X.
-- Theme and text size live on `<html>` (`data-theme`, `data-size`) and in localStorage. Controls
-  re-read them on a `reader-settings` event, because the same control appears in the row and in
-  the menu. Changing theme plays a circular reveal (View Transitions API) from the pressed button.
+- Theme and text size live on `<html>` (`data-color-scheme`, `data-size`) and in localStorage,
+  through ui-sdk preferences (`lib/preferences.ts`), which keep the control in the row and the
+  one in the menu in step. Changing theme plays a circular reveal (View Transitions API) from the pressed button.
 - Text size: medium (default) 17px, small 16px, large 19px.
 
 ## Things that were tried and broke
@@ -219,7 +254,8 @@ This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
 
 ```bash
 bun run dev                                  # port 3100 (the session used 3101; see below)
-bun run audit [baseUrl]                      # overflow, 44px touch targets, text ≥ 12px, contrast ≥ 4.5:1
+bun run audit [baseUrl]                      # overflow, 44px touch targets, text ≥ 12px, contrast ≥ 4.5:1, axe-core WCAG 2.2 AA
+bun run doctor                               # react-doctor (5 known false positives)
 curl -s -o /tmp/cv.pdf <base>/api/pdf && pdfinfo /tmp/cv.pdf | grep Pages   # must say 2
 ```
 

@@ -1,12 +1,22 @@
 "use client";
 
-import { type ReactNode, useSyncExternalStore } from "react";
+import type { ColorSchemeValue } from "@ui-sdk/core";
+import { usePreference } from "@ui-sdk/react/preferences";
+import { SegmentedControl, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
+import { type ReactNode, useRef, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
-import { SIZE_KEY, type SizeId, THEME_KEY, type ThemeId } from "@/lib/themes";
+import { type SizeId, colorScheme, textSize } from "@/lib/preferences";
 
 type Option<T extends string> = { readonly id: T; readonly label: string; readonly icon: ReactNode };
 
-/** A pill of round buttons, one of them filled: the chosen one. */
+// The server cannot see the browser's choice, so nothing is marked until the page has hydrated.
+const noop = () => () => {};
+const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
+
+/**
+ * A pill of round buttons, one of them filled: the chosen one. ui-sdk's
+ * segmented control is a radio group: one Tab stop, arrow keys move the choice.
+ */
 function Segmented<T extends string>({
   label,
   options,
@@ -15,27 +25,28 @@ function Segmented<T extends string>({
 }: {
   label: string;
   options: readonly Option<T>[];
-  /** null until mounted: the server cannot see the browser's choice */
-  value: T | null;
-  /** the pressed button comes along: the theme change grows out of it */
-  onChange: (id: T, from: HTMLElement) => void;
+  value: T;
+  /** the chosen button comes along: the theme change grows out of it */
+  onChange: (id: T, from: HTMLElement | null) => void;
 }) {
+  const root = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   return (
-    <div className="segmented" role="radiogroup" aria-label={label}>
+    <SegmentedControl<T>
+      ref={root}
+      className="segmented"
+      aria-label={label}
+      value={hydrated ? value : null}
+      onValueChange={(next) => {
+        if (next) onChange(next, root.current?.querySelector<HTMLElement>(`[data-option="${next}"]`) ?? null);
+      }}
+    >
       {options.map((o) => (
-        <button
-          key={o.id}
-          type="button"
-          role="radio"
-          aria-checked={value === o.id}
-          aria-label={o.label}
-          title={o.label}
-          onClick={(e) => onChange(o.id, e.currentTarget)}
-        >
+        <SegmentedControlItem key={o.id} value={o.id} data-option={o.id} aria-label={o.label} title={o.label}>
           {o.icon}
-        </button>
+        </SegmentedControlItem>
       ))}
-    </div>
+    </SegmentedControl>
   );
 }
 
@@ -51,9 +62,7 @@ const svg = {
   "aria-hidden": true,
 } as const;
 
-type ThemeChoice = ThemeId | "system";
-
-const THEME_OPTIONS: readonly Option<ThemeChoice>[] = [
+const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
   {
     id: "light",
     label: "Light theme",
@@ -97,56 +106,22 @@ const SIZE_OPTIONS: readonly Option<SizeId>[] = [
   { id: "l", label: "Large text", icon: letter(16) },
 ];
 
-const systemTheme = (): ThemeId => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-
-function store(key: string, value: string | null) {
-  try {
-    if (value === null) localStorage.removeItem(key);
-    else localStorage.setItem(key, value);
-  } catch {
-    // private mode: the choice still applies for this visit
-  }
-}
-
-/*
-  The choices live on <html> (data-theme, data-size), not in React state: the
-  page shows these controls twice (the top bar and the sticky bar), and both
-  must show the same thing. A change is announced with an event; every control
-  re-reads <html>.
-*/
-const CHANGED = "reader-settings";
-const announce = () => window.dispatchEvent(new Event(CHANGED));
-
-function subscribe(onChange: () => void) {
-  window.addEventListener(CHANGED, onChange);
-  return () => window.removeEventListener(CHANGED, onChange);
-}
-const readTheme = (): ThemeChoice => (document.documentElement.dataset.theme as ThemeId | undefined) ?? "system";
-const readSize = (): SizeId => (document.documentElement.dataset.size as SizeId | undefined) ?? "m";
-// the server cannot see the browser's choice: nothing is marked until hydration
-const unknown = () => null;
-
 /** Light / dark / follow the device. Kept in this browser only. */
 export function ThemeControl() {
-  const theme = useSyncExternalStore(subscribe, readTheme, unknown);
+  const scheme = usePreference(colorScheme);
 
-  function chooseTheme(id: ThemeChoice, from: HTMLElement) {
-    const root = document.documentElement;
-    const apply = () => {
-      if (id === "system") delete root.dataset.theme;
-      else root.dataset.theme = id;
-      store(THEME_KEY, id === "system" ? null : id);
-      announce();
-    };
+  function chooseTheme(id: ColorSchemeValue, from: HTMLElement | null) {
+    const apply = () => colorScheme.set(id, { reason: "item-press" });
 
-    // Circular reveal: the new theme opens as a circle growing from the pressed
-    // button. Skipped when nothing would change colour (light → "device" on a
+    // Circular reveal: the new theme opens as a circle growing from the chosen
+    // button. Skipped when nothing would change colour (light to "device" on a
     // light device), for reduced motion, and where View Transitions are missing.
-    const isDark = (theme: string | undefined) => (theme ?? systemTheme()) === "dark";
-    const changes = isDark(root.dataset.theme) !== isDark(id === "system" ? undefined : id);
+    const next = id === "system" ? scheme.system : id;
+    const changes = next !== scheme.resolved;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!changes || still || !document.startViewTransition) return apply();
+    if (!changes || still || !from || !document.startViewTransition) return void apply();
 
+    const root = document.documentElement;
     const box = from.getBoundingClientRect();
     const x = box.left + box.width / 2;
     const y = box.top + box.height / 2;
@@ -165,18 +140,11 @@ export function ThemeControl() {
     transition.finished.finally(() => root.classList.remove("theme-transition"));
   }
 
-  return <Segmented label="Theme" options={THEME_OPTIONS} value={theme} onChange={chooseTheme} />;
+  return <Segmented label="Theme" options={THEME_OPTIONS} value={scheme.value} onChange={chooseTheme} />;
 }
 
 /** Small / medium / large text. Kept in this browser only. */
 export function SizeControl() {
-  const size = useSyncExternalStore(subscribe, readSize, unknown);
-
-  function chooseSize(id: SizeId) {
-    document.documentElement.dataset.size = id;
-    store(SIZE_KEY, id);
-    announce();
-  }
-
-  return <Segmented label="Text size" options={SIZE_OPTIONS} value={size} onChange={chooseSize} />;
+  const size = usePreference(textSize);
+  return <Segmented label="Text size" options={SIZE_OPTIONS} value={size.value} onChange={(id) => textSize.set(id, { reason: "item-press" })} />;
 }

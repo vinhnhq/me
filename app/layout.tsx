@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
+import { AppPreferences } from "@/components/app-preferences";
 import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL, X_HANDLE, shareCard } from "@/lib/site";
-import { SETTINGS_BOOT } from "@/lib/themes";
 import "./globals.css";
 
 // Manrope for reading, Geist Mono for dates, labels and code. Latin and Vietnamese:
@@ -28,6 +28,8 @@ export const metadata: Metadata = {
 
 // The phone browser's toolbar takes the page's own ground (--bg in globals.css), light or dark.
 export const viewport: Viewport = {
+  // both schemes are supported: the browser paints its own canvas and controls to match, before the CSS arrives
+  colorScheme: "light dark",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fbfaf8" },
     { media: "(prefers-color-scheme: dark)", color: "#111214" },
@@ -36,14 +38,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // the boot script sets data-theme and data-size before React hydrates: that mismatch is expected
+    // Preferences' inline script sets data-color-scheme and data-size before React hydrates: that mismatch is expected
     <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOT }} />
-      </head>
       <body>
-        {children}
-        <WaveFooter />
+        <AppPreferences>
+          {children}
+          <WaveFooter />
+        </AppPreferences>
       </body>
     </html>
   );

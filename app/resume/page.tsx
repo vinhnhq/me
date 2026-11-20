@@ -40,6 +40,7 @@ export default async function ResumePage() {
     <main className="page resume" data-resume>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <SiteNav
+        title={resume.name}
         action={
           <a className="pill" href="/api/pdf" rel="nofollow" aria-label="Save as PDF">
             {/* the narrowest phones keep only the last word, so the row still fits */}

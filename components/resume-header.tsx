@@ -29,7 +29,7 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
     <header className="resume-header">
       <div className="intro">
         {/* eslint-disable-next-line @next/next/no-img-element -- one small local file; the PDF prints it as is */}
-        <img className="photo" src="/vinh-nguyen.jpg" alt={r.name} width={160} height={160} />
+        <img className="photo" src="/vinh-nguyen.jpg" alt={r.name} width={160} height={160} fetchPriority="high" />
         <div>
           <h1>{r.name}</h1>
           <p className="headline">{r.headline}</p>

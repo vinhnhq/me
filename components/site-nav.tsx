@@ -13,7 +13,7 @@ import { StickyBar } from "@/components/sticky-bar";
  * `SiteMenu` holds the links and the settings. On a desk the menu button comes
  * in when the page is scrolled, in the place of the links.
  */
-export function SiteNav({ children, action }: { children: ReactNode; action?: ReactNode }) {
+export function SiteNav({ title, children, action }: { /** the page's h1, word for word: the bar shows it once scrolled */ title: string; children: ReactNode; action?: ReactNode }) {
   // two places only: the blog at the root (case studies included), and the CV
   const menu: MenuLink[] = [
     { href: "/", label: "Blog", note: "Field notes and case studies" },
@@ -34,7 +34,7 @@ export function SiteNav({ children, action }: { children: ReactNode; action?: Re
           {action}
         </span>
       </nav>
-      <StickyBar />
+      <StickyBar title={title} />
       {/* where "Skip to content" lands: the page's own text starts right after this */}
       <span id="content" tabIndex={-1} />
     </>

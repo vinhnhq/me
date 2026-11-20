@@ -5,6 +5,8 @@
 //   touch-size  a stand-alone control's target is under 44×44 (links inside a sentence are exempt, WCAG 2.5.8)
 //   small-text  text under 12px
 //   contrast    text under 4.5:1 against the page colour (3:1 for large text)
+//   wcag        any WCAG 2.2 A/AA rule that axe-core can test by machine (names, roles, ARIA, landmarks…)
+import axe from "axe-core";
 import { chromium } from "playwright-core";
 
 const base = process.argv[2] ?? "http://localhost:3100";
@@ -94,6 +96,15 @@ try {
           }
           return out;
         }, screen.width);
+        // axe-core, the engine behind Lighthouse's accessibility score, with every WCAG A/AA rule on
+        await page.evaluate(axe.source);
+        const violations = await page.evaluate(async () => {
+          const { violations } = await (window as unknown as { axe: typeof axe }).axe.run(document, {
+            runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] },
+          });
+          return violations.map((v) => `wcag: ${v.id} (${v.impact}) ${v.help}: ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(", ")}`);
+        });
+        problems.push(...violations);
         for (const p of problems) {
           failures++;
           console.log(`✗ ${screen.name} ${scheme} ${path} — ${p}`);

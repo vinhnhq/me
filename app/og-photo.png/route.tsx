@@ -13,8 +13,11 @@ import { ImageResponse } from "next/og";
 
 export const dynamic = "force-static";
 
+// read once, when the module loads, not inside the handler
+const photoFile = readFile(path.join(process.cwd(), "public", "vinh-nguyen.jpg"));
+
 export async function GET(): Promise<Response> {
-  const photo = await readFile(path.join(process.cwd(), "public", "vinh-nguyen.jpg"));
+  const photo = await photoFile;
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#800020" }}>

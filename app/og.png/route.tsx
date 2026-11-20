@@ -12,8 +12,11 @@ import { getResume } from "@/lib/markdown";
 
 export const dynamic = "force-static";
 
+// read once, when the module loads, not inside the handler
+const photoFile = readFile(path.join(process.cwd(), "public", "vinh-nguyen.jpg"));
+
 export async function GET(): Promise<Response> {
-  const [r, photo] = await Promise.all([getResume(), readFile(path.join(process.cwd(), "public", "vinh-nguyen.jpg"))]);
+  const [r, photo] = await Promise.all([getResume(), photoFile]);
   const [role, ...stack] = r.headline.split(" · ");
   return new ImageResponse(
     (

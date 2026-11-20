@@ -6,25 +6,29 @@ const CONTENT = path.join(process.cwd(), "content");
 
 /** Markdown → HTML. The content is ours, so no sanitising. A table gets its own
  *  sideways scroller, so on a phone it never pushes the page wider than the screen. */
-const toHtml = (source: string) =>
-  marked
+const toHtml = (source: string) => {
+  let pictures = 0;
+  return marked
     .parse(source, { async: false, gfm: true })
     .replaceAll("<table>", '<div class="table-scroll"><table>')
     .replaceAll("</table>", "</table></div>")
-    .replace(/<p>(<img [^>]*>)<\/p>/g, (_, img: string) => figure(img));
+    .replace(/<p>(<img [^>]*>)<\/p>/g, (_, img: string) => figure(img, pictures++ === 0));
+};
 
 /**
  * A picture on a line of its own, `![what it shows](/blog/x/name-1600x1000.jpg "Caption")`,
  * becomes a <figure>: the title is the caption, and the size in the file's NAME
  * becomes width/height, so the page keeps the picture's room before it loads
- * (no layout shift) and loads it only when it is scrolled near.
+ * (no layout shift) and loads it only when it is scrolled near. The first
+ * picture of a page is the exception: it is on screen at once (often the
+ * largest thing painted), so it is fetched early instead of lazily.
  */
-function figure(img: string): string {
+function figure(img: string, lead: boolean): string {
   const size = /src="[^"]*-(\d+)x(\d+)\.[a-z]+"/.exec(img);
   const title = /title="([^"]*)"/.exec(img)?.[1];
   const tag = img
     .replace(/ title="[^"]*"/, "")
-    .replace(/\s*\/?>$/, `${size ? ` width="${size[1]}" height="${size[2]}"` : ""} loading="lazy" decoding="async">`);
+    .replace(/\s*\/?>$/, `${size ? ` width="${size[1]}" height="${size[2]}"` : ""}${lead ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`);
   return `<figure>${tag}${title ? `<figcaption>${title}</figcaption>` : ""}</figure>`;
 }
 
