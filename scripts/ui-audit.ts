@@ -1,11 +1,3 @@
-// The phone audit, after K-Studio's `ui:audit`: measured on a touch screen, not eyeballed.
-// Needs the site running. Usage: bun run audit [baseUrl]   (default http://localhost:3100)
-//
-//   overflow    the page is wider than the screen
-//   touch-size  a stand-alone control's target is under 44×44 (links inside a sentence are exempt, WCAG 2.5.8)
-//   small-text  text under 12px
-//   contrast    text under 4.5:1 against the page colour (3:1 for large text)
-//   wcag        any WCAG 2.2 A/AA rule that axe-core can test by machine (names, roles, ARIA, landmarks…)
 import axe from "axe-core";
 import { chromium } from "playwright-core";
 
@@ -34,8 +26,6 @@ try {
         const problems = await page.evaluate((screenWidth) => {
           const out: string[] = [];
           const doc = document.documentElement;
-          // against the SCREEN, not innerWidth: a phone browser widens its layout
-          // viewport to fit an overflowing page, and innerWidth grows with it
           if (doc.scrollWidth > screenWidth) out.push(`overflow: page is ${doc.scrollWidth}px wide on a ${screenWidth}px screen`);
 
           const label = (e: Element) => `<${e.tagName.toLowerCase()}> "${(e.textContent ?? "").trim().slice(0, 30)}"`;
@@ -43,7 +33,6 @@ try {
           for (const el of document.querySelectorAll<HTMLElement>("a, button, summary")) {
             const r = el.getBoundingClientRect();
             if (r.width === 0) continue;
-            // a link in running text is exempt: its neighbours are words, not other targets
             const inline = el.tagName === "A" && getComputedStyle(el).display === "inline";
             if (!inline && (r.width < 44 || r.height < 44) && r.height < 44) {
               out.push(`touch-size: ${label(el)} is ${Math.round(r.width)}×${Math.round(r.height)}`);
@@ -57,7 +46,6 @@ try {
             });
             return 0.2126 * r + 0.7152 * g + 0.0722 * b;
           };
-          // any CSS colour (oklch too) → sRGB bytes, by letting a canvas paint it
           const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true })!;
           const rgb = (css: string) => {
             ctx.clearRect(0, 0, 1, 1);
@@ -96,7 +84,6 @@ try {
           }
           return out;
         }, screen.width);
-        // axe-core, the engine behind Lighthouse's accessibility score, with every WCAG A/AA rule on
         await page.evaluate(axe.source);
         const violations = await page.evaluate(async () => {
           const { violations } = await (window as unknown as { axe: typeof axe }).axe.run(document, {

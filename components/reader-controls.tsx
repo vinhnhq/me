@@ -9,14 +9,9 @@ import { type SizeId, colorScheme, textSize } from "@/lib/preferences";
 
 type Option<T extends string> = { readonly id: T; readonly label: string; readonly icon: ReactNode };
 
-// The server cannot see the browser's choice, so nothing is marked until the page has hydrated.
 const noop = () => () => {};
 const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
 
-/**
- * A pill of round buttons, one of them filled: the chosen one. ui-sdk's
- * segmented control is a radio group: one Tab stop, arrow keys move the choice.
- */
 function Segmented<T extends string>({
   label,
   options,
@@ -26,7 +21,6 @@ function Segmented<T extends string>({
   label: string;
   options: readonly Option<T>[];
   value: T;
-  /** the chosen button comes along: the theme change grows out of it */
   onChange: (id: T, from: HTMLElement | null) => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
@@ -106,16 +100,12 @@ const SIZE_OPTIONS: readonly Option<SizeId>[] = [
   { id: "l", label: "Large text", icon: letter(16) },
 ];
 
-/** Light / dark / follow the device. Kept in this browser only. */
 export function ThemeControl() {
   const scheme = usePreference(colorScheme);
 
   function chooseTheme(id: ColorSchemeValue, from: HTMLElement | null) {
     const apply = () => colorScheme.set(id, { reason: "item-press" });
 
-    // Circular reveal: the new theme opens as a circle growing from the chosen
-    // button. Skipped when nothing would change colour (light to "device" on a
-    // light device), for reduced motion, and where View Transitions are missing.
     const next = id === "system" ? scheme.system : id;
     const changes = next !== scheme.resolved;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -125,7 +115,6 @@ export function ThemeControl() {
     const box = from.getBoundingClientRect();
     const x = box.left + box.width / 2;
     const y = box.top + box.height / 2;
-    // far enough to reach the farthest corner of the screen
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     root.classList.add("theme-transition");
     const transition = document.startViewTransition(() => flushSync(apply));
@@ -143,7 +132,6 @@ export function ThemeControl() {
   return <Segmented label="Theme" options={THEME_OPTIONS} value={scheme.value} onChange={chooseTheme} />;
 }
 
-/** Small / medium / large text. Kept in this browser only. */
 export function SizeControl() {
   const size = usePreference(textSize);
   return <Segmented label="Text size" options={SIZE_OPTIONS} value={size.value} onChange={(id) => textSize.set(id, { reason: "item-press" })} />;

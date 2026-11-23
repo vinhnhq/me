@@ -9,7 +9,6 @@ import { SITE_URL, jsonLd, shareCard } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
-// Only the posts on disk exist; anything else is a 404.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
@@ -58,7 +57,6 @@ export default async function PostPage({ params }: Props) {
         <time dateTime={post.date}>{formatDay(post.date)}</time>
       </p>
       <Tags tags={post.tags} />
-      {/* a case study: who did what, when, with what, and something to open */}
       {post.role && post.when && post.stack && (
         <dl className="facts">
           <div>
@@ -82,6 +80,7 @@ export default async function PostPage({ params }: Props) {
           </a>
         </p>
       )}
+      {/* react-doctor-disable-next-line react-doctor/dangerous-html-sink */}
       <article dangerouslySetInnerHTML={{ __html: post.html }} />
       <Support />
     </main>

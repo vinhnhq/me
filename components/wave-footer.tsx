@@ -1,23 +1,10 @@
 import type { CSSProperties } from "react";
 
-/**
- * The page's last few centimetres: thin sine lines that fade in, swell and
- * slide into place as the reader reaches the bottom, all crossing at the
- * centre once they settle. (The idea is from tungv.com; this is our own build.)
- *
- * No script. Each line is a coloured strip seen through an SVG mask of one
- * sine period, repeated sideways; the motion is a CSS scroll-driven animation
- * (`.waves` in globals.css). Browsers without it, and readers who ask for
- * reduced motion, get the settled lines.
- */
 const HEIGHT = 120;
 
 type Line = {
-  /** one period, in px */
   readonly tile: number;
-  /** peak height in px; negative starts downwards */
   readonly amp: number;
-  /** how far it slides in from, in px */
   readonly shift: number;
   readonly color: string;
 };
@@ -30,7 +17,6 @@ const LINES: readonly Line[] = [
   { tile: 2100, amp: 28, shift: 760, color: "oklch(0.72 0.11 185)" },
 ];
 
-/** One sine period as an SVG mask; it crosses the middle line at its centre. */
 function mask({ tile, amp }: Line): string {
   const steps = 64;
   const points = Array.from({ length: steps + 1 }, (_, i) => {

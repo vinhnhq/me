@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 
-/** /manifest.webmanifest: the name, colours and icon a phone uses for "Add to Home Screen". */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Vinh Nguyen — Senior Fullstack Engineer",

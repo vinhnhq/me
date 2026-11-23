@@ -3,14 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { KOFI_URL } from "@/lib/site";
 
-/**
- * The Ko-fi button: one small round cup in the bottom right corner of the blog
- * list and of each post, never on the CV. It is NOT always there: it comes in
- * only when the reader reaches the end of the page (this component sits at the
- * end of the page's text and watches its own place), and leaves when they
- * scroll back up. Ko-fi's own floating widget was tried and dropped the same
- * day (2026-11-18): Vinh found it too big and annoying, always on screen.
- */
 export function Support() {
   const end = useRef<HTMLSpanElement>(null);
   const [shown, setShown] = useState(false);
@@ -18,7 +10,6 @@ export function Support() {
   useEffect(() => {
     const mark = end.current;
     if (!mark) return;
-    // on screen, or already scrolled past: either way the reader has reached the end
     const seen = new IntersectionObserver(([e]) => setShown(e.isIntersecting || e.boundingClientRect.top < 0));
     seen.observe(mark);
     return () => seen.disconnect();
@@ -35,7 +26,6 @@ export function Support() {
         aria-label="Buy me a coffee on Ko-fi"
         title="Buy me a coffee"
         data-shown={shown}
-        // out of sight is out of reach too, for Tab and for a screen reader
         inert={!shown}
       >
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

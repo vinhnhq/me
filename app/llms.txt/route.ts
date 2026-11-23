@@ -1,7 +1,3 @@
-/**
- * `GET /llms.txt` — the site's index for AI agents (llmstxt.org): who this is,
- * and where the full text is, in markdown. Written from `content/`, at build.
- */
 import { getResume, listPosts } from "@/lib/markdown";
 import { KOFI_URL, SITE_URL } from "@/lib/site";
 

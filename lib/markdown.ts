@@ -4,8 +4,6 @@ import { marked } from "marked";
 
 const CONTENT = path.join(process.cwd(), "content");
 
-/** Markdown → HTML. The content is ours, so no sanitising. A table gets its own
- *  sideways scroller, so on a phone it never pushes the page wider than the screen. */
 const toHtml = (source: string) => {
   let pictures = 0;
   return marked
@@ -15,14 +13,6 @@ const toHtml = (source: string) => {
     .replace(/<p>(<img [^>]*>)<\/p>/g, (_, img: string) => figure(img, pictures++ === 0));
 };
 
-/**
- * A picture on a line of its own, `![what it shows](/blog/x/name-1600x1000.jpg "Caption")`,
- * becomes a <figure>: the title is the caption, and the size in the file's NAME
- * becomes width/height, so the page keeps the picture's room before it loads
- * (no layout shift) and loads it only when it is scrolled near. The first
- * picture of a page is the exception: it is on screen at once (often the
- * largest thing painted), so it is fetched early instead of lazily.
- */
 function figure(img: string, lead: boolean): string {
   const size = /src="[^"]*-(\d+)x(\d+)\.[a-z]+"/.exec(img);
   const title = /title="([^"]*)"/.exec(img)?.[1];
@@ -32,10 +22,6 @@ function figure(img: string, lead: boolean): string {
   return `<figure>${tag}${title ? `<figcaption>${title}</figcaption>` : ""}</figure>`;
 }
 
-/**
- * Content files open with a `---` block of `key: value` lines. Nothing else
- * is supported, so there is no YAML parser to carry.
- */
 function parse(file: string, source: string, required: readonly string[]) {
   const m = /^---\n([\s\S]*?)\n---\n/.exec(source);
   if (!m) throw new Error(`content/${file} has no front matter`);
@@ -50,22 +36,17 @@ function parse(file: string, source: string, required: readonly string[]) {
   return { meta, body: source.slice(m[0].length) };
 }
 
-/** One job or degree: a `### Title` with an italic `*Org · Dates · Where*` line under it. */
 export type Entry = {
   readonly title: string;
   readonly org: string;
   readonly when: string;
-  /** "full-time, Ho Chi Minh City" — absent on a degree */
   readonly where?: string;
-  /** the intro line and every bullet */
   readonly html: string;
 };
 
 export type Section = {
   readonly title: string;
-  /** set for a section of jobs or degrees */
   readonly entries?: readonly Entry[];
-  /** set for a plain section, e.g. the skills list */
   readonly html?: string;
 };
 
@@ -76,12 +57,9 @@ export type Resume = {
   readonly phone: string;
   readonly location: string;
   readonly github: string;
-  /** "A · B · C": the three words under the summary; optional */
   readonly values: readonly string[];
-  /** The paragraphs before the first `##`: they sit in the header, beside the photo. */
   readonly summaryHtml: string;
   readonly sections: readonly Section[];
-  /** the file's own text under the front matter, for readers that want markdown (`/llms-full.txt`) */
   readonly markdown: string;
 };
 
@@ -91,7 +69,6 @@ function parseEntry(block: string): Entry {
   const metaAt = rest.findIndex((l) => l.trim() !== "");
   const meta = /^\*(.+)\*$/.exec(rest[metaAt]?.trim() ?? "");
   if (!meta) throw new Error(`content/resume.md: "${title}" needs an *Org · Dates · Where* line under it`);
-  // read from the end: the organisation itself may hold a " · " (three employers in one entry)
   const parts = meta[1].split(" · ");
   if (parts.length < 2) throw new Error(`content/resume.md: "${title}" needs at least *Org · Dates*`);
   const where = parts.length > 2 ? parts.pop() : undefined;
@@ -118,7 +95,6 @@ function parseSection(block: string): Section {
   return { title, entries };
 }
 
-/** `content/resume.md`: the header fields, the summary, then the sections. */
 export async function getResume(): Promise<Resume> {
   const source = await readFile(path.join(CONTENT, "resume.md"), "utf8");
   const { meta, body } = parse("resume.md", source, ["name", "headline", "email", "phone", "location", "github"]);
@@ -141,31 +117,24 @@ export async function getResume(): Promise<Resume> {
 export type Post = {
   readonly slug: string;
   readonly title: string;
-  /** ISO day, e.g. 2026-11-16 */
   readonly date: string;
   readonly description: string;
-  /** exactly three, e.g. ["ai-agents", "workflow", "testing"] */
   readonly tags: readonly string[];
-  /** A case study also says who did what, when and with what, and may have something to open. */
   readonly role?: string;
   readonly when?: string;
   readonly stack?: string;
   readonly link?: string;
   readonly linkLabel?: string;
   readonly html: string;
-  /** the file's own text under the front matter (`/llms-full.txt`) */
   readonly markdown: string;
 };
 
-/** A post is `content/blog/<slug>.md`: title, date, description, three tags, then the text.
- *  A case study is a post like any other, with `role`, `when`, `stack` (and `link`) added. */
 function parsePost(slug: string, source: string): Post {
   const { meta, body } = parse(`blog/${slug}.md`, source, ["title", "date", "description", "tags"]);
   const tags = meta.tags
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
-  // three, every time: enough to place a post, few enough to mean something
   if (tags.length !== 3) throw new Error(`content/blog/${slug}.md needs exactly 3 tags, has ${tags.length}`);
   return {
     slug,
@@ -183,7 +152,6 @@ function parsePost(slug: string, source: string): Post {
   };
 }
 
-/** Every post, newest first. */
 export async function listPosts(): Promise<Post[]> {
   const files = (await readdir(path.join(CONTENT, "blog"))).filter((f) => f.endsWith(".md"));
   const posts = await Promise.all(

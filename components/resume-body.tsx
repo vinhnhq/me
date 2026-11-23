@@ -1,6 +1,5 @@
 import type { Entry, Section } from "@/lib/markdown";
 
-/** A job or a degree: title, the dates on one line, then the text. */
 function EntryRow({ entry: e }: { entry: Entry }) {
   return (
     <div className="entry">
@@ -11,6 +10,7 @@ function EntryRow({ entry: e }: { entry: Entry }) {
         <span>{e.when}</span>
         {e.where && <span>{e.where}</span>}
       </p>
+      {/* react-doctor-disable-next-line react-doctor/dangerous-html-sink */}
       <div className="entry-text" dangerouslySetInnerHTML={{ __html: e.html }} />
     </div>
   );

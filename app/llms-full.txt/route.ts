@@ -1,7 +1,3 @@
-/**
- * `GET /llms-full.txt` — the résumé and every post in full, as one markdown
- * file: what an AI agent would otherwise have to dig out of the HTML.
- */
 import { getResume, listPosts } from "@/lib/markdown";
 import { SITE_URL, absoluteLinks } from "@/lib/site";
 
