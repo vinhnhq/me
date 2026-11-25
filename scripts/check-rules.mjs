@@ -49,6 +49,8 @@ const RULES = [
     const outside = css.slice(0, css.indexOf("@layer components {")).replace(/@theme inline\s*{[^}]*}/, "");
     return layer !== -1 && layer < tailwind && !/^[.#a-z:*\[][^@{]*{/m.test(outside);
   }],
+  ["ADR-012", "the verify gate runs the real browsers: Safari in the iOS simulators and Chrome in the Android emulator", () =>
+    /step\("real", "bun run check:real"\)/.test(read("scripts/verify.mjs")) && pkg.scripts["check:real"] === "node scripts/check-real.mjs"],
   ["ADR-013", "nothing links to the K-Studio app's demo", () =>
     withText([...tracked("content"), ...source], text => /k-studio[a-z0-9-]*\.vercel\.app/.test(text)).length === 0],
 ];

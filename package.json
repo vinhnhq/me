@@ -14,7 +14,8 @@
     "check:pdf": "node scripts/check-pdf.mjs",
     "check:visual": "node scripts/check-visual.mjs",
     "shots:baseline": "node scripts/check-visual.mjs --update",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "check:real": "node scripts/check-real.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^153.0.0",

@@ -12,7 +12,10 @@ ADR.
 - **No comments in code** (ADR-001). A reason goes in an ADR, in the same change.
 - **A change is a branch and a pull request.** Never push to `main`, never merge, never deploy:
   open the pull request and stop (ADR-014).
-- **Before handing over: `bun run verify`**, then say what was not verified.
+- **Before handing over: `bun run verify`, real devices included.** It drives Safari in the iOS
+  simulators (Device Hub) and Chrome in the Android Studio emulator through `check:real`. Do not
+  skip that step on this Mac; then look through `screens/real` and say what was not verified
+  (ADR-012).
 - **Before HTML or CSS work**, look the task up in Modern Web Guidance; before a control, check
   whether ui-sdk ships it (ADR-010).
 - **Private facts stay out of this repository.** What the résumé claims (dates, titles, numbers,
