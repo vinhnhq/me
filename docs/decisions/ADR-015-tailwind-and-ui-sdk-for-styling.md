@@ -87,6 +87,21 @@ What the zero-pixel check caught on the way:
   `cubic-bezier(0, 0, 0.58, 1)`); the cup uses `ease-[ease-out]`. `rounded-full` is not `50%`
   either, though on a square they draw the same.
 
+### Step three, second half: the résumé's header and body (2026-11-25)
+
+The photo, the headline, the values, the contact line, each job's title, organisation and dates,
+and the section headings now carry utilities, their phone, touch and print variants included.
+The stylesheet is 554 lines.
+
+- **The contact links stay underlined on paper.** The print sheet said `a { text-decoration:
+  none }`, but `.contact a` was more specific, so those four links kept their underline in the
+  PDF. The first conversion removed it (`print:no-underline`), and the print picture showed one
+  changed row of pixels.
+- **The two pills are not in this step.** Their rules are tied to the top row
+  (`.actions > .controls > .segmented`), so they move with the header.
+- **Proof that the utilities stand alone**: with the old rules switched off for every converted
+  element of the résumé, 83 of 83 pictures matched.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`

@@ -23,6 +23,9 @@ function Figure({ src = "", alt = "", title, lead }: Picture & { lead: boolean }
   );
 }
 
+export const SECTION_HEADING =
+  "mt-10 mb-4 flex items-center gap-4 text-[0.95rem] font-bold tracking-[0.06em] uppercase after:h-[2px] after:flex-1 after:bg-rule after:content-[''] print:mt-4 print:mb-2 print:text-[9.5pt]";
+
 function components(): Components {
   let pictures = 0;
   return {
@@ -34,10 +37,7 @@ function components(): Components {
       return <p className="my-2 text-pretty">{children}</p>;
     },
     h2: ({ node: _, ...props }: Rest<"h2">) => (
-      <h2
-        className="mt-10 mb-4 flex items-center gap-4 text-[0.95rem] font-bold tracking-[0.06em] uppercase after:h-[2px] after:flex-1 after:bg-rule after:content-[''] print:mt-4 print:mb-2 print:text-[9.5pt]"
-        {...props}
-      />
+      <h2 className={SECTION_HEADING} {...props} />
     ),
     h3: ({ node: _, ...props }: Rest<"h3">) => (
       <h3 className="mt-7 mb-[0.1rem] text-[1.05rem] font-semibold text-balance print:m-0 print:break-after-avoid" {...props} />
