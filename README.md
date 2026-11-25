@@ -76,4 +76,7 @@ and stops. It never merges and never deploys. The reasoning is in
 | `docs/decisions/` | Why each thing is the way it is |
 | `.claude/skills/`, `.agents/skills/` | The guides and commands the agent works from |
 
-The text, the photograph and the screenshots are Vinh Nguyen's own and are not for reuse.
+## Licence
+
+The code is under the [MIT licence](LICENSE). The files in `content/` and `public/` (the résumé,
+the posts, the photograph and the screenshots) are Vinh Nguyen's own and are not for reuse.
