@@ -28,31 +28,31 @@ bun run build && bun run start   # the production build, on :3100
 
 ## Write
 
-| To change | Edit |
-|---|---|
-| The résumé | `content/resume.md`: front matter (`name`, `headline`, `email`, `phone`, `location`, `github`, `values`), a summary, then `##` sections. A job is `### Title` and an italic `*Org · Dates · Where*` line |
-| A post | `content/blog/<slug>.md`: `title`, `date`, `description` and exactly three `tags` |
-| A case study | A post with `role`, `when`, `stack` and optionally `link`, `linkLabel` |
-| A picture | `![what it shows](/blog/<slug>/name-1600x1000.jpg "Caption")` on its own line; the file goes in `public/blog/<slug>/`, and the size in its name becomes the picture's width and height |
+| To change    | Edit                                                                                                                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The résumé   | `content/resume.md`: front matter (`name`, `headline`, `email`, `phone`, `location`, `github`, `values`), a summary, then `##` sections. A job is `### Title` and an italic `*Org · Dates · Where*` line |
+| A post       | `content/blog/<slug>.md`: `title`, `date`, `description` and exactly three `tags`                                                                                                                        |
+| A case study | A post with `role`, `when`, `stack` and optionally `link`, `linkLabel`                                                                                                                                   |
+| A picture    | `![what it shows](/blog/<slug>/name-1600x1000.jpg "Caption")` on its own line; the file goes in `public/blog/<slug>/`, and the size in its name becomes the picture's width and height                   |
 
 ## Checks
 
 Each one answers pass or fail. The ones that open the site need it running (`bun run start`), or
 take another address as an argument.
 
-| Command | What it proves |
-|---|---|
-| `bun run typecheck` | The types hold |
-| `bun run lint` | Biome: the code and the stylesheet are formatted and pass its lint rules. `bun run format` fixes what can be fixed |
-| `bun run check:classes` | Every Tailwind class is in its canonical spelling (`z-9`, not `z-[9]`) and in Tailwind's order, asked of Tailwind itself |
-| `bun run check:comments` | There is no comment in the code; a reason belongs in `docs/decisions` |
-| `bun run check:rules` | Nineteen rules, each tied to its decision record: the menu never uses a scroll-pinning drawer, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
-| `bun run doctor` | react-doctor scores 100 |
-| `bun run audit [url]` | On 4 pages, 3 touch screens and both themes: the page is no wider than the screen, controls are 44×44, text is at least 12px and 4.5:1, and no WCAG 2.2 A or AA rule that axe-core can test is broken |
-| `bun run check:pdf [url]` | The résumé's PDF answers, has exactly 2 pages and is marked `noindex` |
-| `bun run check:visual` | 83 pictures (4 pages, 3 sizes, both themes, the menu, keyboard focus, the résumé under print styles) match the baseline with zero changed pixels. `bun run shots:baseline` saves the baseline from a build you trust, on the same machine |
-| `bun run check:real` | In real Safari (iPhone and iPad simulators) and real Chrome (Android emulator): no overflow, 44px targets, the accessibility rules, the title reaching the bar, the menu, the scroll position kept under the menu, the dark theme and large text. Needs Xcode and Android Studio |
-| `bun run verify` | All of the above, in order, on a fresh build. `SKIP=real` leaves a step out and says so |
+| Command                   | What it proves                                                                                                                                                                                                                                                                   |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun run typecheck`       | The types hold                                                                                                                                                                                                                                                                   |
+| `bun run lint`            | Biome: the code and the stylesheet are formatted and pass its lint rules. `bun run format` fixes what can be fixed                                                                                                                                                               |
+| `bun run check:classes`   | Every Tailwind class is in its canonical spelling (`z-9`, not `z-[9]`) and in Tailwind's order, asked of Tailwind itself                                                                                                                                                         |
+| `bun run check:comments`  | There is no comment in the code; a reason belongs in `docs/decisions`                                                                                                                                                                                                            |
+| `bun run check:rules`     | Nineteen rules, each tied to its decision record: the menu never uses a scroll-pinning drawer, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on                                                                               |
+| `bun run doctor`          | react-doctor scores 100                                                                                                                                                                                                                                                          |
+| `bun run audit [url]`     | On 4 pages, 3 touch screens and both themes: the page is no wider than the screen, controls are 44×44, text is at least 12px and 4.5:1, and no WCAG 2.2 A or AA rule that axe-core can test is broken                                                                            |
+| `bun run check:pdf [url]` | The résumé's PDF answers, has exactly 2 pages and is marked `noindex`                                                                                                                                                                                                            |
+| `bun run check:visual`    | 83 pictures (4 pages, 3 sizes, both themes, the menu, keyboard focus, the résumé under print styles) match the baseline with zero changed pixels. `bun run shots:baseline` saves the baseline from a build you trust, on the same machine                                        |
+| `bun run check:real`      | In real Safari (iPhone and iPad simulators) and real Chrome (Android emulator): no overflow, 44px targets, the accessibility rules, the title reaching the bar, the menu, the scroll position kept under the menu, the dark theme and large text. Needs Xcode and Android Studio |
+| `bun run verify`          | All of the above, in order, on a fresh build. `SKIP=real` leaves a step out and says so                                                                                                                                                                                          |
 
 ## The loop
 
@@ -71,15 +71,15 @@ and stops. It never merges and never deploys. The reasoning is in
 
 ## Where things are
 
-| Path | What |
-|---|---|
-| `content/` | The résumé and the posts |
-| `app/` | Pages and routes; `app/globals.css` holds the tokens, the motion and the print sheet |
-| `components/` | The header, the menu, the controls, the résumé's parts |
-| `lib/` | Reading the markdown, drawing the PDF, the site's constants |
-| `scripts/` | The checks |
-| `docs/decisions/` | Why each thing is the way it is |
-| `.claude/skills/` | The guides and commands the agent works from |
+| Path              | What                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| `content/`        | The résumé and the posts                                                             |
+| `app/`            | Pages and routes; `app/globals.css` holds the tokens, the motion and the print sheet |
+| `components/`     | The header, the menu, the controls, the résumé's parts                               |
+| `lib/`            | Reading the markdown, drawing the PDF, the site's constants                          |
+| `scripts/`        | The checks                                                                           |
+| `docs/decisions/` | Why each thing is the way it is                                                      |
+| `.claude/skills/` | The guides and commands the agent works from                                         |
 
 ## Licence
 

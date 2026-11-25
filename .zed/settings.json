@@ -1,5 +1,14 @@
 {
   "format_on_save": "on",
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "lint": {
+          "suggestCanonicalClasses": "ignore"
+        }
+      }
+    }
+  },
   "languages": {
     "TypeScript": {
       "formatter": {
@@ -56,7 +65,10 @@
       }
     },
     "Markdown": {
-      "format_on_save": "off"
+      "formatter": "prettier",
+      "prettier": {
+        "allowed": true
+      }
     }
   }
 }

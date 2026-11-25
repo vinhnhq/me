@@ -12,8 +12,8 @@ ADR.
 - **No comments in code** (ADR-001). A reason goes in an ADR, in the same change.
 - **A change is a branch and a pull request.** Never push to `main`, never merge, never deploy:
   open the pull request and stop (ADR-014).
-- **After editing code, run `bun run format`** (Biome, then Tailwind's canonical class names and
-  order). The owner's editor formats on save; unformatted work comes back as noise in his next
+- **After editing code or markdown, run `bun run format`** (Tailwind's canonical class names
+  and order, Biome, then Prettier for markdown). The owner's editor formats on save; unformatted work comes back as noise in his next
   diff (ADR-016).
 - **Before handing over: `bun run verify`, real devices included.** It drives Safari in the iOS
   simulators (Device Hub) and Chrome in the Android Studio emulator through `check:real`. Do not
@@ -26,25 +26,25 @@ ADR.
 
 ## Where things are
 
-| Path | What | ADR |
-|---|---|---|
-| `content/resume.md`, `content/blog/` | The résumé and the posts | 002 |
-| `lib/markdown.ts` | Reads and parses everything in `content/` | 002 |
-| `components/markdown.tsx` | Renders markdown as components that carry their utilities | 002, 015 |
-| `app/page.tsx` | The root: the blog list | 007 |
-| `app/resume/page.tsx`, `components/resume-*.tsx` | The résumé | 007 |
-| `app/blog/[slug]/page.tsx` | A post | 002, 013 |
-| `app/api/pdf/route.ts`, `lib/pdf.ts` | The résumé as a PDF | 006 |
-| `components/site-nav.tsx`, `components/sticky-bar.tsx` | The top row, and the bar it becomes | 004 |
-| `components/site-menu.tsx` | The full-screen menu, on ui-sdk's Dialog | 005 |
-| `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx` | Theme and text size | 003, 010 |
-| `components/support.tsx` | The Ko-fi cup | 011 |
-| `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
-| `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents | 008 |
-| `app/globals.css` | Tokens, state and motion (the travelling title, the bar, the menu, the waves), the print sheet | 003, 004, 005, 015 |
-| `lib/styles.ts` | Class strings shared by the pages: the page shell, the page title, the focus ring | 015 |
-| `scripts/` | The checks | 012 |
-| `.github/workflows/` | The pull-request gate and the daily check | 014 |
+| Path                                                                                                   | What                                                                                           | ADR                |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | ------------------ |
+| `content/resume.md`, `content/blog/`                                                                   | The résumé and the posts                                                                       | 002                |
+| `lib/markdown.ts`                                                                                      | Reads and parses everything in `content/`                                                      | 002                |
+| `components/markdown.tsx`                                                                              | Renders markdown as components that carry their utilities                                      | 002, 015           |
+| `app/page.tsx`                                                                                         | The root: the blog list                                                                        | 007                |
+| `app/resume/page.tsx`, `components/resume-*.tsx`                                                       | The résumé                                                                                     | 007                |
+| `app/blog/[slug]/page.tsx`                                                                             | A post                                                                                         | 002, 013           |
+| `app/api/pdf/route.ts`, `lib/pdf.ts`                                                                   | The résumé as a PDF                                                                            | 006                |
+| `components/site-nav.tsx`, `components/sticky-bar.tsx`                                                 | The top row, and the bar it becomes                                                            | 004                |
+| `components/site-menu.tsx`                                                                             | The full-screen menu, on ui-sdk's Dialog                                                       | 005                |
+| `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx`               | Theme and text size                                                                            | 003, 010           |
+| `components/support.tsx`                                                                               | The Ko-fi cup                                                                                  | 011                |
+| `components/wave-footer.tsx`                                                                           | The wave lines at the foot of every page                                                       | 003                |
+| `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents                                                                  | 008                |
+| `app/globals.css`                                                                                      | Tokens, state and motion (the travelling title, the bar, the menu, the waves), the print sheet | 003, 004, 005, 015 |
+| `lib/styles.ts`                                                                                        | Class strings shared by the pages: the page shell, the page title, the focus ring              | 015                |
+| `scripts/`                                                                                             | The checks                                                                                     | 012                |
+| `.github/workflows/`                                                                                   | The pull-request gate and the daily check                                                      | 014                |
 
 ## Traps a script cannot test
 
@@ -87,7 +87,7 @@ ADR.
 - **In the simulators, open a fresh tab with a new `?r=N`** (ADR-012). Booting them:
   `xcrun simctl boot <id>`, `xcrun simctl openurl <id> <url>`, `xcrun simctl io <id> screenshot`;
   Android through `adb reverse tcp:3100 tcp:3100`. Taps can be sent to Android (`adb shell input
-  tap`), not to iOS.
+tap`), not to iOS.
 - **In `next dev`, `/llms-full.txt` once answered 500 on a stale module** while the build was
   fine; restart dev.
 - **The K-Studio post's pictures follow ADR-013**: invented data only, names and photographs

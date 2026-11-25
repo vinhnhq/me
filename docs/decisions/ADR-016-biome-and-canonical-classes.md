@@ -22,9 +22,14 @@ work is finished.
   scripts and the stylesheet. `bun run lint` checks; `bun run format` fixes. Line width 140,
   double quotes, semicolons, trailing commas.
 - **The whole code base was formatted once**, in one commit, so later diffs hold only real changes.
-- **Left out of Biome**: markdown (it would re-align every table in the records), SVG files,
-  `tsconfig.json` (Next.js rewrites it in its own format), the agent skills, `content/` and
-  `public/`.
+- **Left out of Biome**: markdown (Biome does not format it), SVG files, `tsconfig.json`
+  (Next.js rewrites it in its own format), the agent skills, `content/` and `public/`.
+- **Markdown is formatted by Prettier** (pinned, since 2026-11-26). The owner asked for tables
+  whose columns line up in the editor, on save, and for every markdown file to follow it.
+  `bun run format` writes it and `bun run lint` checks it; the agent skills in `.claude` are
+  left out (`.prettierignore`). Prose is not rewrapped (`proseWrap: preserve`). Prettier writes
+  emphasis as `_x_`, so the résumé's parser reads its `Org · Dates · Where` line with either
+  mark (`lib/markdown.ts`).
 - **Two CSS rules are off.** `noDescendingSpecificity` and `noImportantStyles` do not fit a
   stylesheet that is mostly state rules: the print sheet needs `!important` to beat a running
   animation, and the state rules are ordered by state, not by specificity.
@@ -41,7 +46,7 @@ work is finished.
   the default root was 17px, and for a day the editor settings said 17; since the default became
   16px (2026-11-25) the extension's own default is right and the setting is gone.
 - **The owner's editor is Zed.** `.zed/settings.json` makes Biome the formatter for TypeScript,
-  TSX, JavaScript, CSS and JSON, runs its fixes on format, and leaves markdown alone. It needs
+  TSX, JavaScript, CSS and JSON, runs its fixes on format, and gives markdown to Prettier. It needs
   Zed's Biome extension installed; without it Zed falls back to its own formatter, which is
   what kept reformatting finished work.
 - **Both are steps of `bun run verify` and of the pull-request gate.**
@@ -66,8 +71,8 @@ work is finished.
 
 - **Biome's own class sorter** (`useSortedClasses`). Not in this version's rule set, and it would
   not know this site's `phone:`, `narrow:` and `tablet:` variants; Tailwind's own order does.
-- **Prettier with its Tailwind plugin.** A second tool to do one thing Tailwind's API already
-  answers.
+- **Prettier with its Tailwind plugin, for the code.** A second tool to do one thing Tailwind's
+  API already answers. Prettier is here for markdown only.
 - **ESLint.** Biome covers the rules that matter here, and react-doctor covers React (ADR-010).
 
 ## Consequences
@@ -78,5 +83,7 @@ work is finished.
   pinned with Tailwind's version; an upgrade may need the script changed.
 - The check finds class lists by looking at string literals whose words are mostly Tailwind
   classes. A class list hidden in some other shape would be missed.
-- The editor may still suggest turning a pixel value into a rem-based class. It is exact at the
-  default text size and not at the other two; leave the pixel value.
+- The Tailwind extension suggests turning a pixel value into a rem-based class (`pl-[40px]` to
+  `pl-10`). It is exact at the default text size and not at the other two, so the editor
+  settings switch that one hint off (`suggestCanonicalClasses`); `check:classes` is the
+  authority on spelling, and it keeps pixels.
