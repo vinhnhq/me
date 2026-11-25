@@ -68,6 +68,15 @@ for (const [size, [width, height, touch]] of Object.entries(SIZES)) {
     await context.close();
   }
 }
+const paper = await browser.newContext({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 1 });
+const sheet = await paper.newPage();
+await sheet.emulateMedia({ media: "print" });
+await sheet.goto(`${BASE}/resume`, { waitUntil: "networkidle" });
+for (const [name, top] of [["print-resume-1", 0], ["print-resume-2", 1123], ["print-resume-3", 2246]]) {
+  await sheet.evaluate(y => window.scrollTo(0, y), top);
+  await take(sheet, name);
+}
+await paper.close();
 await browser.close();
 
 if (UPDATE) {

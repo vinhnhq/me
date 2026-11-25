@@ -29,8 +29,9 @@ able to fail.
 - **`bun run check:rules`** (`scripts/check-rules.mjs`): the traps a script can test, each tied to
   its ADR.
 - **`bun run check:comments`** (ADR-001).
-- **`bun run check:visual`**: viewport pictures of every page, at a phone and a desk, light and
-  dark, with reduced motion on. A pixel counts as changed past 2 levels on a channel, and ONE
+- **`bun run check:visual`**: viewport pictures of every page, at a phone, a tablet and a desk,
+  light and dark, with reduced motion on, plus three pages of the résumé under print styles (the
+  PDF's layout, added 2026-11-25): 83 pictures. A pixel counts as changed past 2 levels on a channel, and ONE
   changed pixel fails the picture. The baseline (`visual/`) is this machine's rendering of a
   local build and is not in git; `bun run shots:baseline` saves it. A baseline taken from the
   live site does not work: Vercel's build of the same commit differed from a local one by 12

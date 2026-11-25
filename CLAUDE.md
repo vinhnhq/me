@@ -27,6 +27,7 @@ ADR.
 |---|---|---|
 | `content/resume.md`, `content/blog/` | The résumé and the posts | 002 |
 | `lib/markdown.ts` | Reads and parses everything in `content/` | 002 |
+| `components/markdown.tsx` | Renders markdown as components that carry their utilities | 002, 015 |
 | `app/page.tsx` | The root: the blog list | 007 |
 | `app/resume/page.tsx`, `components/resume-*.tsx` | The résumé | 007 |
 | `app/blog/[slug]/page.tsx` | A post | 002, 013 |
@@ -51,6 +52,11 @@ ADR.
 - **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
 - **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). Old rules live
   in `@layer components`; an unlayered rule would beat every utility.
+- **A rule in `@layer components` loses to ANY utility.** An old rule that restyles an element
+  from outside (`.box p { … }`) stops working the moment that element gets a utility for the
+  same property; move the override onto the container as a utility (`[&_p]:m-0`).
+- **The root font size is 17px**, so rem-based utilities are not the pixel sizes Tailwind's docs
+  list. Keep a pixel value as pixels: `rounded-[4px]`.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
 - **The baseline for `check:visual` comes from a local build of `main`, never from the live
   site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).

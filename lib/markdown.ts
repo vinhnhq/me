@@ -1,26 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { marked } from "marked";
 
 const CONTENT = path.join(process.cwd(), "content");
-
-const toHtml = (source: string) => {
-  let pictures = 0;
-  return marked
-    .parse(source, { async: false, gfm: true })
-    .replaceAll("<table>", '<div class="table-scroll"><table>')
-    .replaceAll("</table>", "</table></div>")
-    .replace(/<p>(<img [^>]*>)<\/p>/g, (_, img: string) => figure(img, pictures++ === 0));
-};
-
-function figure(img: string, lead: boolean): string {
-  const size = /src="[^"]*-(\d+)x(\d+)\.[a-z]+"/.exec(img);
-  const title = /title="([^"]*)"/.exec(img)?.[1];
-  const tag = img
-    .replace(/ title="[^"]*"/, "")
-    .replace(/\s*\/?>$/, `${size ? ` width="${size[1]}" height="${size[2]}"` : ""}${lead ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`);
-  return `<figure>${tag}${title ? `<figcaption>${title}</figcaption>` : ""}</figure>`;
-}
 
 function parse(file: string, source: string, required: readonly string[]) {
   const m = /^---\n([\s\S]*?)\n---\n/.exec(source);
@@ -41,13 +22,13 @@ export type Entry = {
   readonly org: string;
   readonly when: string;
   readonly where?: string;
-  readonly html: string;
+  readonly text: string;
 };
 
 export type Section = {
   readonly title: string;
   readonly entries?: readonly Entry[];
-  readonly html?: string;
+  readonly text?: string;
 };
 
 export type Resume = {
@@ -58,7 +39,7 @@ export type Resume = {
   readonly location: string;
   readonly github: string;
   readonly values: readonly string[];
-  readonly summaryHtml: string;
+  readonly summary: string;
   readonly sections: readonly Section[];
   readonly markdown: string;
 };
@@ -79,7 +60,7 @@ function parseEntry(block: string): Entry {
     org: parts.join(" · "),
     when,
     where,
-    html: toHtml(text),
+    text,
   };
 }
 
@@ -87,7 +68,7 @@ function parseSection(block: string): Section {
   const nl = block.indexOf("\n");
   const title = block.slice(0, nl).trim();
   const text = block.slice(nl + 1);
-  if (!/^### /m.test(text)) return { title, html: toHtml(text) };
+  if (!/^### /m.test(text)) return { title, text };
   const entries = text
     .split(/^### /m)
     .slice(1)
@@ -108,7 +89,7 @@ export async function getResume(): Promise<Resume> {
     location: meta.location,
     github: meta.github,
     values: (meta.values ?? "").split("·").map((v) => v.trim()).filter(Boolean),
-    summaryHtml: toHtml(summary),
+    summary,
     sections: sections.map(parseSection),
     markdown: body.trim(),
   };
@@ -125,7 +106,6 @@ export type Post = {
   readonly stack?: string;
   readonly link?: string;
   readonly linkLabel?: string;
-  readonly html: string;
   readonly markdown: string;
 };
 
@@ -147,7 +127,6 @@ function parsePost(slug: string, source: string): Post {
     stack: meta.stack,
     link: meta.link,
     linkLabel: meta.linkLabel,
-    html: toHtml(body),
     markdown: body.trim(),
   };
 }

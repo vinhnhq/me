@@ -47,6 +47,25 @@ his other projects use, and accepted that the file would shrink but not disappea
   part that needs it is converted.
 - After those seven rules: 80 of 80 pictures with no pixel changed, and the PDF at 2 pages.
 
+### Step two: markdown as components (2026-11-25)
+
+- `components/markdown.tsx` maps every markdown element to a component with utilities; `marked`
+  and the six raw-HTML sinks are gone (ADR-002).
+- **A rule in `@layer components` loses to any utility, whatever its specificity.** So the
+  context overrides the old CSS made from outside (`.summary p`, `.entry-text > :first-child`,
+  their print versions) had to become utilities on the containers; left as rules they would
+  have silently stopped working.
+- **The next/font variables were renamed** to `--font-manrope` and `--font-geist-mono`, so
+  Tailwind's own `--font-sans` and `--font-mono` (and the `font-sans`, `font-mono` utilities)
+  can point at them with the same fallbacks as before.
+- **`phone:` and `narrow:` are custom variants** for `max-width: 40rem` and `60rem`: Tailwind's
+  `max-sm:` means "below 40rem", one pixel different from the old query.
+- **Sizes in pixels stay in pixels** (`rounded-[4px]`, `after:h-[2px]`): the root font size is
+  17px here, so Tailwind's rem-based `rounded-sm` would be 4.25px.
+- **Proof that the utilities stand alone**: with the old element rules switched off inside the
+  markdown (`all: revert-layer`, injected for the test only), the pictures still matched, 83 of
+  83. The old global element rules stay until the other components no longer need them.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`

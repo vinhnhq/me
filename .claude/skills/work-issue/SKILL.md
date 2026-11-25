@@ -27,7 +27,7 @@ One issue, one branch, one pull request. The owner verifies and merges; you neve
    - `bun run typecheck && bun run check:comments && bun run check:rules` — seconds.
    - `bun run verify` — everything (a few minutes). `SKIP=real,visual` on a
      machine with no baseline pictures, and say so in the pull request.
-   - `check:visual` must stay at 80/80 unless the issue changes the look. If it does, look at
+   - `check:visual` must stay at 83/83 unless the issue changes the look. If it does, look at
      every picture in `visual/diff`, and re-save the baseline only for changes the issue asked for.
 6. **Have it checked by another agent.** Spawn one reviewer (`agent-skills:code-reviewer`) with the
    diff and the issue, not your conclusion. Fix what it finds that is real; rerun the checks it

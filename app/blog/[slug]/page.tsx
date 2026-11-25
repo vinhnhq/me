@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Markdown } from "@/components/markdown";
 import { SiteNav } from "@/components/site-nav";
 import { Support } from "@/components/support";
 import { notFound } from "next/navigation";
@@ -80,8 +81,9 @@ export default async function PostPage({ params }: Props) {
           </a>
         </p>
       )}
-      {/* react-doctor-disable-next-line react-doctor/dangerous-html-sink */}
-      <article dangerouslySetInnerHTML={{ __html: post.html }} />
+      <article>
+        <Markdown source={post.markdown} />
+      </article>
       <Support />
     </main>
   );
