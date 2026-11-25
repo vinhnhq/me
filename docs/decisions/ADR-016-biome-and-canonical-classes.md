@@ -83,5 +83,7 @@ work is finished.
   pinned with Tailwind's version; an upgrade may need the script changed.
 - The check finds class lists by looking at string literals whose words are mostly Tailwind
   classes. A class list hidden in some other shape would be missed.
-- The editor may still suggest turning a pixel value into a rem-based class. It is exact at the
-  default text size and not at the other two; leave the pixel value.
+- The Tailwind extension suggests turning a pixel value into a rem-based class (`pl-[40px]` to
+  `pl-10`). It is exact at the default text size and not at the other two, so the editor
+  settings switch that one hint off (`suggestCanonicalClasses`); `check:classes` is the
+  authority on spelling, and it keeps pixels.
