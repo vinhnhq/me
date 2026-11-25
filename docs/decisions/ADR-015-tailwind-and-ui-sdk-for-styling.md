@@ -66,6 +66,27 @@ his other projects use, and accepted that the file would shrink but not disappea
   markdown (`all: revert-layer`, injected for the test only), the pictures still matched, 83 of
   83. The old global element rules stay until the other components no longer need them.
 
+### Step three, first half: the blog's components (2026-11-25)
+
+The tags, the Ko-fi cup, the home page's introduction and list, and a post's date, facts and
+button now carry utilities; their rules are deleted. The wave footer stays as CSS: it is motion.
+What the zero-pixel check caught on the way:
+
+- **One rule was styling two things.** `.intro` was written for the home page's first paragraph,
+  and the résumé's header block has the same class name, so it had been taking its margin and
+  font size from there. Deleting the rule moved the résumé and the PDF.
+- **A rule reached further than meant.** `.posts li` also matched the tags' items nested in each
+  post, which is where the short line above every tag on the home page comes from. It is kept,
+  now written on purpose (`item="border-t border-rule py-4"`).
+- **`.no-print` cannot hide an element that has a display utility**: `grid` beats it. Such an
+  element uses `print:hidden`.
+- **Splitting a sentence around a link moved the link by 1/64 of a pixel.** `my{" "}` and a
+  line break made two text nodes where there had been one, and the shaping changed. The sentence
+  stays on one line in the source.
+- **Tailwind's `ease-out` is not the CSS keyword** (`cubic-bezier(0, 0, 0.2, 1)` against
+  `cubic-bezier(0, 0, 0.58, 1)`); the cup uses `ease-[ease-out]`. `rounded-full` is not `50%`
+  either, though on a square they draw the same.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`
