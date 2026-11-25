@@ -55,6 +55,10 @@ ADR.
 - **A rule in `@layer components` loses to ANY utility.** An old rule that restyles an element
   from outside (`.box p { … }`) stops working the moment that element gets a utility for the
   same property; move the override onto the container as a utility (`[&_p]:m-0`).
+- **`.no-print` loses to a display utility** (`grid`, `flex`, `block`): on an element with
+  utilities, hide it on paper with `print:hidden`.
+- **Before deleting an old class rule, search for every element with that class name**, and for
+  descendants its selector reaches by accident (`.intro` and `.posts li` both did, ADR-015).
 - **The root font size is 17px**, so rem-based utilities are not the pixel sizes Tailwind's docs
   list. Keep a pixel value as pixels: `rounded-[4px]`.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).

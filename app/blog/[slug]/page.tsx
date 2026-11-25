@@ -54,29 +54,32 @@ export default async function PostPage({ params }: Props) {
         <Link href="/">Blog</Link>
       </SiteNav>
       <h1>{post.title}</h1>
-      <p className="lede">
+      <p className="mt-0 mb-2 text-pretty text-muted">
         <time dateTime={post.date}>{formatDay(post.date)}</time>
       </p>
-      <Tags tags={post.tags} />
+      <Tags tags={post.tags} className="mb-6" />
       {post.role && post.when && post.stack && (
-        <dl className="facts">
+        <dl className="my-6 grid gap-4 border-y border-rule py-4">
           <div>
-            <dt>My role</dt>
-            <dd>{post.role}</dd>
+            <dt className="text-[0.8rem] text-muted">My role</dt>
+            <dd className="m-0">{post.role}</dd>
           </div>
           <div>
-            <dt>When</dt>
-            <dd>{post.when}</dd>
+            <dt className="text-[0.8rem] text-muted">When</dt>
+            <dd className="m-0">{post.when}</dd>
           </div>
           <div>
-            <dt>Built with</dt>
-            <dd>{post.stack}</dd>
+            <dt className="text-[0.8rem] text-muted">Built with</dt>
+            <dd className="m-0">{post.stack}</dd>
           </div>
         </dl>
       )}
       {post.link && (
-        <p>
-          <a className="button" href={post.link}>
+        <p className="my-6 text-pretty">
+          <a
+            className="inline-flex min-h-11 touch-manipulation items-center rounded-lg bg-accent px-[1.1rem] font-semibold text-bg no-underline"
+            href={post.link}
+          >
             {post.linkLabel ?? "Open it"}
           </a>
         </p>

@@ -19,7 +19,7 @@ export function Support() {
     <>
       <span ref={end} aria-hidden="true" />
       <a
-        className="kofi no-print"
+        className="fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))] z-[9] grid size-11 translate-y-2 touch-manipulation place-items-center rounded-[50%] border border-accent bg-bg text-accent opacity-0 transition-[opacity,translate] duration-[240ms] ease-[ease-out] [-webkit-tap-highlight-color:transparent] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent data-[shown=true]:translate-y-0 data-[shown=true]:opacity-100 motion-reduce:translate-none motion-reduce:transition-none print:hidden"
         href={KOFI_URL}
         target="_blank"
         rel="noopener noreferrer"

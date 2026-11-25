@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   openGraph: { type: "website", ...shareCard(TITLE, DESCRIPTION, "/") },
 };
 
+const LINK = "touch-manipulation text-accent underline underline-offset-2";
+
 export default async function BlogPage() {
   const posts = await listPosts();
   return (
@@ -25,20 +27,27 @@ export default async function BlogPage() {
         <Link href="/resume">Résumé</Link>
       </SiteNav>
       <h1>Vinh Nguyen</h1>
-      <p className="intro">
+      <p className="mt-2 mb-3 text-[1.05rem] text-pretty">
         Senior fullstack engineer in Ho Chi Minh City, building with React, Next.js, TypeScript and AI coding agents.
-        Open to remote roles and contracts: here is my <Link href="/resume">résumé</Link>.
+        Open to remote roles and contracts: here is my <Link className={LINK} href="/resume">résumé</Link>.
       </p>
-      <p className="lede">Field notes and case studies from shipping real products.</p>
-      <ul className="posts">
+      <p className="mt-0 mb-2 text-pretty text-muted">Field notes and case studies from shipping real products.</p>
+      <ul className="mt-8 mb-0 list-none p-0">
         {posts.map((p) => (
-          <li key={p.slug}>
-            <h2>
-              <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+          <li key={p.slug} className="m-0 border-t border-rule py-4 text-pretty">
+            <h2 className="m-0 block text-balance normal-case tracking-normal [font:inherit] after:content-none">
+              <Link
+                className="inline-block touch-manipulation text-[1.05rem] font-semibold text-accent underline underline-offset-2 pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
+                href={`/blog/${p.slug}`}
+              >
+                {p.title}
+              </Link>
             </h2>
-            <time dateTime={p.date}>{formatDay(p.date)}</time>
-            <p>{p.description}</p>
-            <Tags tags={p.tags} />
+            <time className="block text-[0.85rem] text-muted" dateTime={p.date}>
+              {formatDay(p.date)}
+            </time>
+            <p className="mt-1 mb-0 text-pretty text-muted">{p.description}</p>
+            <Tags tags={p.tags} item="border-t border-rule py-4" />
           </li>
         ))}
       </ul>
