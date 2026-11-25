@@ -49,6 +49,10 @@ ADR.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
 - **The baseline for `check:visual` comes from a local build of `main`, never from the live
   site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).
+- **Do not poll or audit the live site in a loop from one machine.** On 2026-11-25, a burst of
+  checks from this Mac made Vercel answer 403 with its security checkpoint to this address only;
+  the site was fine. To check production, run the `daily` workflow (`gh workflow run daily`),
+  which looks from GitHub's network.
 - **If port 3100 is busy, find what holds it**: an old server once answered for a build that was
   not running (ADR-012).
 - **In the simulators, open a fresh tab with a new `?r=N`** (ADR-012). Booting them:
