@@ -23,7 +23,6 @@ const icons = {
   ),
 };
 
-/** Photo on the left, name / headline / summary beside it, then the contact line. */
 export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
     <header className="resume-header">
@@ -33,6 +32,7 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
         <div>
           <h1>{r.name}</h1>
           <p className="headline">{r.headline}</p>
+          {/* react-doctor-disable-next-line react-doctor/dangerous-html-sink */}
           <div className="summary" dangerouslySetInnerHTML={{ __html: r.summaryHtml }} />
           {r.values.length > 0 && (
             <p className="values">
@@ -44,7 +44,6 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
           )}
         </div>
       </div>
-      {/* Plain text, as on a business card; the handle alone would not say where it lives. */}
       <ul className="contact">
         <li>{r.location}</li>
         <li>

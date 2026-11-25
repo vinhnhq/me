@@ -1,0 +1,32 @@
+name: daily
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  live-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE: https://vinhn.dev
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: ./node_modules/.bin/playwright-core install --with-deps chromium
+      - name: The live site
+        run: |
+          set +e
+          { bun run audit "$BASE"; echo "audit exit $?"; bun run check:pdf "$BASE"; echo "pdf exit $?"; } > live.log 2>&1
+          cat live.log
+          ! grep -E "^(audit|pdf) exit [1-9]" live.log
+      - name: Open or update the issue
+        if: failure()
+        run: |
+          body="$(printf 'The daily check of %s failed.\n\n```\n%s\n```\n\nRun: %s/%s/actions/runs/%s' "$BASE" "$(tail -60 live.log)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+          open="$(gh issue list --label daily-check --state open --json number -q '.[0].number')"
+          if [ -n "$open" ]; then gh issue comment "$open" --body "$body"; else gh issue create --title "Daily check: the live site fails" --label daily-check --label agent-ready --body "$body"; fi

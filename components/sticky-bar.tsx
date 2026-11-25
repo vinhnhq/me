@@ -4,37 +4,6 @@ import { useEffect, useRef } from "react";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 
-/**
- * The ground and the title of the bar the page's top row becomes once it is
- * scrolled: the row itself (`.actions`, theme and "Save as PDF") is sticky and
- * simply stays; this draws the strip behind it and holds, on its left, the
- * page's OWN title: "Vinh Nguyen" on the CV, "Blog" on the blog, a post's
- * title on the post. Pressing it goes back to the top of the page.
- *
- * The hand-over is CONTINUOUS and tied to the scroll, the way tungv.com does
- * it. The page's big title is not swapped for a small one; it travels there,
- * in two legs (on the CV, so that it never crosses the photo on its left):
- *
- *   leg 1, UP     scroll 0 → end          the name rides up with the page,
- *                                         shrinking to the bar's size; the bar
- *                                         fades in over the second half
- *   leg 2, LEFT   scroll end → end+slide  the name stays in the bar's row and
- *                                         slides left onto the bar's own name
- *
- * Only then do the two change places. `end` is the scroll at which the
- * heading's top meets the top of the bar's name.
- *
- * The title comes from the page as a prop (the same words as its h1), so it is
- * in the server's HTML and nothing is read back from the DOM after hydration.
- *
- * This component only MEASURES (end, slide, dx, scale → CSS variables on
- * <html>) and flips the discrete things on <html>: `data-head-stuck` from
- * `end` (what has faded out of the top row is then out of reach too), and
- * `data-head-collapsed` at `end + slide` (the names swap). The per-frame motion is a CSS scroll-driven
- * animation (globals.css), which runs off the main thread, so it keeps up
- * during iOS momentum scrolling. Browsers without scroll timelines get the
- * same motion from a requestAnimationFrame loop here.
- */
 export function StickyBar({ title }: { title: string }) {
   const bar = useRef<HTMLDivElement>(null);
   const slot = useRef<HTMLSpanElement>(null);
@@ -46,18 +15,7 @@ export function StickyBar({ title }: { title: string }) {
     const slotEl = slot.current;
     if (!heading || !barEl || !slotEl) return;
 
-    // Two ways for the big title to become the bar's:
-    //  "land"  one line, and the bar can show all of it: it shrinks and travels
-    //          until it sits exactly on the bar's title, then they swap.
-    //  "fade"  it wraps (a long post title on a phone) or the bar must cut it
-    //          short: one cannot land on the other, so it shrinks towards the
-    //          bar and fades out over the last stretch as the bar's fades in.
     let mode: "land" | "fade" = "land";
-    // A landing title takes one of two paths. With something in the way on its
-    // left (the CV's photo) it goes UP first and then LEFT along the bar: two
-    // legs. Anywhere else its place in the bar is to its right, past the menu
-    // button, and going up first would run it straight over that button; so it
-    // moves across WHILE it rises, one leg, and arrives already clear.
     let legs: 1 | 2 = 1;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
     const native = CSS.supports("animation-timeline: scroll()");
@@ -68,9 +26,6 @@ export function StickyBar({ title }: { title: string }) {
     let isStuck = false;
     let isSwapped = false;
     let frame = 0;
-    // What cannot be seen must not be reachable either, by Tab or by a screen
-    // reader: the bar's title before the bar is there, and on a desk the menu
-    // button, which only comes in with the bar.
     const nameEl = slotEl.parentElement!;
     const menuButton = document.querySelector<HTMLElement>(".actions > .menu-button");
     const wide = window.matchMedia("(min-width: 60.01rem)");
@@ -89,11 +44,8 @@ export function StickyBar({ title }: { title: string }) {
       const direct = moving && mode === "land" && legs === 1;
       const fades = moving && mode === "fade";
       if (!native) {
-        // scale and translate are separate properties: translate is in page pixels, unscaled
-        const late = clamp((up - 0.6) / 0.4); // the last stretch, where a fading title hands over
+        const late = clamp((up - 0.6) / 0.4);
         heading.style.scale = moving ? String(1 + (scale - 1) * up) : "";
-        // while it slides left it also moves DOWN the page by as much as the page
-        // has scrolled since `end`: on screen, it stays in the bar's row
         heading.style.translate = travels ? `${dx * left}px ${slide * left}px` : fades || direct ? `${dx * up}px 0px` : "";
         heading.style.opacity = fades ? String(1 - late) : "";
         slotEl.parentElement!.style.opacity = fades ? String(late) : "";
@@ -105,7 +57,6 @@ export function StickyBar({ title }: { title: string }) {
         root.toggleAttribute("data-head-stuck", stuckNow);
         reach();
       }
-      // without a travelling title there is no second leg to wait for
       const swappedNow = travels ? left >= 1 : stuckNow;
       if (swappedNow !== isSwapped) {
         isSwapped = swappedNow;
@@ -114,7 +65,6 @@ export function StickyBar({ title }: { title: string }) {
     };
 
     const measure = () => {
-      // where the heading really is, without the motion applied to it
       heading.style.animation = "none";
       heading.style.scale = "";
       heading.style.translate = "";
@@ -128,11 +78,9 @@ export function StickyBar({ title }: { title: string }) {
       if (mode === "land") {
         dx = to.left - from.left;
         scale = to.width / from.width;
-        // two legs: the further it has to go sideways, the longer the scroll it gets to do it in
         legs = dx < -2 ? 2 : 1;
         slide = legs === 2 ? Math.min(140, Math.max(40, Math.abs(dx) * 0.6)) : 1;
       } else {
-        // down to the bar's type size, and across so the shrunken block is centred on the bar's title
         scale = parseFloat(getComputedStyle(slotEl).fontSize) / parseFloat(type.fontSize);
         dx = to.left + to.width / 2 - (from.left + (from.width * scale) / 2);
         slide = 1;
@@ -146,16 +94,15 @@ export function StickyBar({ title }: { title: string }) {
       root.toggleAttribute("data-head-direct", mode === "land" && legs === 1 && !still.matches);
       root.toggleAttribute("data-head-fades", mode === "fade" && !still.matches);
       update();
-      reach(); // the width may have changed, and with it whether the menu button is always there
+      reach();
     };
 
     const onScroll = () => {
       frame ||= requestAnimationFrame(update);
     };
 
-    measure(); // also right for a reload half way down
+    measure();
     document.fonts?.ready.then(measure);
-    // a new text size, a rotated tablet, a resized window: the geometry changes
     const resized = new ResizeObserver(measure);
     resized.observe(document.body);
     still.addEventListener("change", measure);
@@ -187,7 +134,6 @@ export function StickyBar({ title }: { title: string }) {
             window.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
           }}
         >
-          {/* the box the big title lands on: measured, so it hugs the text */}
           <span ref={slot}>{title}</span>
         </a>
       </div>

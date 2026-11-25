@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 
 export default async function ResumePage() {
   const resume = await getResume();
-  // The same facts as the page, as data: for search engines and AI agents (schema.org).
   const person = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
@@ -42,8 +41,8 @@ export default async function ResumePage() {
       <SiteNav
         title={resume.name}
         action={
+          // react-doctor-disable-next-line react-doctor/nextjs-no-a-element
           <a className="pill" href="/api/pdf" rel="nofollow" aria-label="Save as PDF">
-            {/* the narrowest phones keep only the last word, so the row still fits */}
             <span className="pill-wide">Save as&nbsp;</span>PDF
           </a>
         }

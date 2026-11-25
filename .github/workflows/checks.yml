@@ -1,0 +1,30 @@
+name: checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fast-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run check:comments
+      - run: bun run check:rules
+      - run: bun run doctor 2>&1 | tee doctor.log && grep -q '100 / 100' doctor.log
+      - run: bun run build
+      - run: bun run typecheck
+      - run: ./node_modules/.bin/playwright-core install --with-deps chromium
+      - name: The checks against the build
+        run: |
+          ./node_modules/.bin/next start -p 3100 &
+          for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3100/ && break; sleep 0.5; done
+          bun run audit
+          bun run check:pdf

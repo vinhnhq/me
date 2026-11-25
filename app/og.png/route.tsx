@@ -1,10 +1,3 @@
-/**
- * `GET /og.png` — the card a link to this site shows when it is pasted into
- * Facebook, LinkedIn, X, Zalo, Slack… 1200×630 (1.91:1, what they all expect).
- *
- * Vinh's choice: NOT the photo blown up to fill the card. A solid burgundy
- * ground, the photo small and round, and the words doing the work.
- */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
@@ -12,7 +5,6 @@ import { getResume } from "@/lib/markdown";
 
 export const dynamic = "force-static";
 
-// read once, when the module loads, not inside the handler
 const photoFile = readFile(path.join(process.cwd(), "public", "vinh-nguyen.jpg"));
 
 export async function GET(): Promise<Response> {
@@ -32,7 +24,6 @@ export async function GET(): Promise<Response> {
           color: "#fff",
         }}
       >
-        {/* Few things, all large: LinkedIn shows this card as a thumbnail about 200px wide. */}
         <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
           {/* biome-ignore lint: an ImageResponse draws plain <img> */}
           <img
@@ -48,7 +39,6 @@ export async function GET(): Promise<Response> {
           </div>
         </div>
         <div style={{ display: "flex", fontSize: 40, opacity: 0.85 }}>{[...stack, "Open to remote"].join(" · ")}</div>
-        {/* the call to action: what pressing the card does, and where it goes */}
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
           <div style={{ display: "flex", padding: "20px 44px", borderRadius: 60, background: "#fff", color: "#800020", fontSize: 44, fontWeight: 700 }}>
             Read my résumé

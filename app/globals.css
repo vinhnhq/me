@@ -1,9 +1,3 @@
-/*
-  Light and dark. `data-color-scheme` on <html> is the reader's choice
-  ("system", "light" or "dark": lib/preferences.ts); every colour is a pair, and
-  `light-dark()` picks the half that matches the scheme in use.
-  The accent is burgundy (#800020), lifted to a readable red-rose on dark.
-*/
 :root {
   --bg-light: #fbfaf8;      --bg-dark: #111214;
   --fg-light: #1f2328;      --fg-dark: #e7e5e2;
@@ -12,7 +6,6 @@
   --rule-light: #e6e2dc;    --rule-dark: #2a2c30;
   --chip-light: #f1eee9;    --chip-dark: #1c1e21;
 
-  /* browsers without light-dark() (before 2024): light, or dark when the device is */
   --bg: var(--bg-light);
   --fg: var(--fg-light);
   --muted: var(--muted-light);
@@ -46,22 +39,15 @@
 
 * { box-sizing: border-box; }
 
-/* a keyboard's focus, or a jump to a heading, never lands under the sticky bar */
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
-/* The reader's text size: everything on the page is in rem, so it all follows. */
-/* medium, the default, is 17px; small is the browser's own 16px */
 html { font-size: 106.25%; }
 html[data-size="s"] { font-size: 100%; }
 html[data-size="l"] { font-size: 118.75%; }
 
-/* Phone rules learned on K-Studio:
-   - nothing may push the page wider than the screen: long words and addresses wrap;
-   - a control answers at once: without `manipulation` iOS waits ~300ms for a double-tap. */
 body { overflow-wrap: break-word; }
 a, button, summary { touch-action: manipulation; }
 
 body {
-  /* a short page still fills the screen, so the wave footer sits at the bottom of it */
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -71,11 +57,6 @@ body {
   font: 400 1rem/1.6 var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-/*
-  Graph paper behind the top of every page (K-Studio's `.paper-grid`): a 28px
-  grid drawn once in CSS, at 5% of the text colour so one alpha reads in light
-  and in dark, and masked to fade out before its edges. No script, no canvas.
-*/
 body { position: relative; }
 body::before {
   content: "";
@@ -104,13 +85,9 @@ body::before {
 
 a { color: var(--accent); text-underline-offset: 2px; }
 
-/* Page titles and the name are set in the mono face at a medium weight: the
-   engineer's hand, lighter than a bold sans. --title-* is shared by the big
-   name, the bar's name and the menu's, so one scales exactly onto the other. */
 :root { --title-font: var(--font-mono), ui-monospace, monospace; --title-weight: 500; --title-tracking: -0.04em; }
 h1 { font-family: var(--title-font); font-size: 2.1rem; line-height: 1.15; font-weight: var(--title-weight); margin: 0 0 0.35rem; letter-spacing: var(--title-tracking); }
 
-/* Section heading: the words, then a rule running to the edge. */
 h2 {
   display: flex;
   align-items: center;
@@ -125,7 +102,6 @@ h2::after { content: ""; flex: 1; height: 2px; background: var(--rule); }
 
 h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 
-/* A job or degree, one column on every screen: title, the dates on one line, then the text. */
 .entry { margin-top: 1.75rem; }
 .entry h3 { margin-top: 0; }
 .entry-text > :first-child { margin-top: 0.35rem; }
@@ -140,7 +116,6 @@ h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.1rem; }
 .entry-when span:first-child { color: var(--fg); }
 .entry-when span + span::before { content: " · "; }
 
-/* Case study. */
 .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.25rem; }
 .facts { display: grid; gap: 1rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--rule); }
 .facts dt { font-size: 0.8rem; color: var(--muted); }
@@ -161,7 +136,6 @@ p:has(> .button) { margin: 1.5rem 0; }
 .table-scroll { overflow-x: auto; }
 
 p { margin: 0.5rem 0; }
-/* no lonely last word: headings break into even lines, text avoids a one-word last line */
 h1, h3, .posts h2 { text-wrap: balance; }
 p, li, figcaption { text-wrap: pretty; }
 ul { padding-left: 1.1rem; margin: 0.5rem 0; }
@@ -176,9 +150,7 @@ thead { display: none; }
 td { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 
-/* Top bar: links left; text size, theme and the page's action right. */
 .actions {
-  /* sticky: scrolled, this row IS the bar; .sticky-bar only draws the strip behind it */
   position: sticky;
   top: 0.5rem;
   z-index: 11;
@@ -186,12 +158,9 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem 1rem;
-  /* as tall as the bar's row whatever is in it: on a page with no pill the menu
-     button sat 4px above the bar's title */
   min-height: var(--menu-size);
   font-size: 0.9rem;
   margin-bottom: 2rem;
-  /* the strip behind is the only thing here to press through to */
   pointer-events: none;
 }
 .actions > * { pointer-events: auto; }
@@ -200,8 +169,6 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .actions .links a:hover { color: var(--fg); }
 .actions .controls { display: flex; align-items: center; gap: 0.5rem; }
 
-/* A pill of round buttons; the chosen one is a filled disc. */
-/* solid, not see-through: stuck at the top, they float over the photo and text for a moment */
 .segmented { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; background: var(--bg); }
 .segmented button {
   display: grid;
@@ -221,12 +188,9 @@ td:first-child { color: var(--muted); padding-right: 1rem; width: 55%; }
 .segmented button[data-checked] { background: var(--fg); color: var(--bg); }
 .segmented button:focus-visible, .pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Theme change (reader-controls.tsx): the script draws the circle, so the
-   browser's own cross-fade between the two snapshots is switched off. */
 html.theme-transition::view-transition-old(root),
 html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 
-/* The same pill as a single action. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -243,7 +207,6 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 }
 .pill:hover { border-color: var(--muted); }
 
-/* Résumé header: photo left, name / headline / summary right, contact row under both. */
 .resume-header .intro { display: flex; gap: 2rem; align-items: flex-start; }
 .photo {
   flex: none;
@@ -251,7 +214,6 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   height: 9.5rem;
   border-radius: 50%;
   object-fit: cover;
-  /* the ring: accent, with a gap of page colour between it and the picture */
   border: 4px solid var(--bg);
   outline: 3px solid var(--accent);
   margin: 3px;
@@ -259,11 +221,9 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 .headline { color: var(--accent); font-size: 1.2rem; margin: 0 0 0.5rem; }
 .summary p { margin: 0; }
 .summary p + p { margin-top: 0.6rem; }
-/* The three words: a small mono label, then the words with dots between them. */
 .values { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.6rem; margin: 0.9rem 0 0; }
 .values-label { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
 .values strong { font-weight: 700; }
-/* the dot is drawn, not read: the second line gives it an empty spoken text where that is supported */
 .values strong + strong::before { content: "·"; content: "·" / ""; color: var(--muted); font-weight: 400; margin-right: 0.6rem; }
 
 .contact {
@@ -283,13 +243,6 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
 .contact a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
 .contact a:hover { color: var(--fg); text-decoration-color: currentColor; }
 
-/*
-  Sticky bar (components/sticky-bar.tsx). The hand-over from the page's
-  heading is tied to the scroll: the component measures three numbers into
-  --head-end / --head-dx / --head-scale, and the motion below runs on them.
-  Opaque, not blurred: a backdrop blur re-reads the text scrolling under it
-  every frame (K-Studio's lesson).
-*/
 .sticky-bar {
   position: fixed;
   inset: 0 0 auto 0;
@@ -298,31 +251,18 @@ html.theme-transition::view-transition-new(root) { animation: none; mix-blend-mo
   border-bottom: 1px solid var(--rule);
   opacity: 0;
   visibility: hidden;
-  /* never in the way of the page under it; only its name can be pressed, once shown */
   pointer-events: none;
 }
 html[data-head-stuck] .sticky-bar { opacity: 1; }
 html[data-head-stuck] .sticky-name { pointer-events: auto; }
-/* What leaves the top row once it is the bar: the links (the name takes their
-   place) and the text size. They fade with the scroll, and at the end are out
-   of reach as well as out of sight. */
 html[data-head-stuck] .actions .links,
 html[data-head-stuck] .actions > .controls > .segmented[aria-label="Text size"] { visibility: hidden; }
-/* phones: the pill keeps only its last word, so a centred title fits between it and the menu button */
 @media (max-width: 40rem) {
   .pill-wide { display: none; }
 }
 
-/* On the CV the big name travels into the bar in two legs (up while shrinking,
-   then left along the bar, clear of the photo) and stands in for the bar's own
-   name until it lands; then the two change places. Its box hugs its text, as
-   the small one's does, so one scales exactly onto the other. */
 main h1 { width: fit-content; position: relative; transform-origin: top left; }
-/* above the bar only while it is the thing travelling into it; a title that
-   does not travel (two lines on a phone) must pass UNDER the bar like the rest */
 html[data-head-travels] main h1, html[data-head-direct] main h1, html[data-head-fades] main h1 { z-index: 11; }
-/* a title that fades into the bar (it wraps, or the bar must cut it short) is gone once the bar is there.
-   Gone from SIGHT only (opacity, not visibility): a screen reader must still find the page's h1. */
 html[data-head-fades][data-head-stuck] main h1 { opacity: 0; pointer-events: none; }
 html[data-head-travels]:not([data-head-collapsed]) .sticky-name,
 html[data-head-direct]:not([data-head-collapsed]) .sticky-name { opacity: 0; }
@@ -332,14 +272,12 @@ html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* fully there by the time the name arrives in its row */
     .sticky-bar {
       visibility: visible;
       animation: bar-in linear both;
       animation-timeline: scroll(root);
       animation-range: calc(var(--head-end, 200px) * 0.5) var(--head-end, 200px);
     }
-    /* gone before the name needs the room, and before the strip is half there */
     .actions .links,
     .actions > .controls > .segmented[aria-label="Text size"] {
       animation: bar-out linear both;
@@ -358,15 +296,12 @@ html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events
 @keyframes bar-out { to { opacity: 0; } }
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* the fading kind: shrinks and drifts towards the bar's title all the way
-       up, and over the last stretch the two cross-fade */
     html[data-head-fades] main h1 {
       animation: name-up linear both, name-over linear both, name-out linear both;
       animation-timeline: scroll(root), scroll(root), scroll(root);
       animation-range: 0px var(--head-end, 200px), 0px var(--head-end, 200px), calc(var(--head-end, 200px) * 0.6) var(--head-end, 200px);
       will-change: scale, translate, opacity;
     }
-    /* the direct kind: across WHILE it rises, so it never runs over the menu button */
     html[data-head-direct] main h1 {
       animation: name-up linear both, name-over linear both;
       animation-timeline: scroll(root), scroll(root);
@@ -383,20 +318,9 @@ html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events
 @keyframes name-over { to { translate: var(--head-dx, 0px) 0px; } }
 @keyframes name-out { to { opacity: 0; } }
 @keyframes name-up { to { scale: var(--head-scale, 1); } }
-/* down by as much as the page scrolls meanwhile: on screen it holds its row and only moves left */
 @keyframes name-left { to { translate: var(--head-dx, 0px) var(--head-slide, 0px); } }
 
-/*
-  The menu of phones and tablets (components/site-menu.tsx). There the button
-  is the left end of the top row from the start, and once the page is scrolled
-  the name lands beside it. Desk-wide screens never show it: everything fits in
-  the row.
-*/
-/* as tall as the pills beside it; a full 44px on touch (set further down) */
 :root { --menu-size: calc(1.75rem + 8px); }
-/* Bare icons, the way Apple draws them: no ring and no fill, but the full
-   round area around the bars is still the button, so the target stays 44px.
-   A pointer hovering over it sees the area; a keyboard sees a focus ring. */
 .menu-button, .menu-close {
   display: grid;
   place-items: center;
@@ -413,7 +337,6 @@ html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events
 @media (hover: hover) {
   .menu-button:hover, .menu-close:hover { background: var(--chip); }
 }
-/* no grey flash box on tap: the turning bars are the feedback */
 .menu-button, .menu-close, .segmented button, .pill { -webkit-tap-highlight-color: transparent; }
 .menu-button:focus-visible, .menu-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .menu-button { display: none; }
@@ -429,17 +352,9 @@ html[data-head-direct][data-head-collapsed] main h1 { opacity: 0; pointer-events
 }
 .bars span:first-child { top: 0; }
 .bars span:last-child { bottom: 0; }
-/* open: the two bars meet in the middle and cross; closed, they part again */
 .bars[data-open="true"] span:first-child { top: calc(50% - 0.75px); rotate: 45deg; }
 .bars[data-open="true"] span:last-child { bottom: calc(50% - 0.75px); rotate: -45deg; }
 
-/*
-  The sheet. It fades in over the page. Its close button is large and lives in
-  the top right corner, but arrives there from the menu button: --from-x/-y and
-  --from-scale (measured as it opens) are its pose ON the menu button, and it
-  travels to the corner as the bars cross. The links follow, one after another,
-  a few pixels up into place.
-*/
 dialog.menu {
   width: 100vw;
   max-width: none;
@@ -457,13 +372,11 @@ dialog.menu {
 }
 dialog.menu[data-open="true"] { opacity: 1; }
 dialog.menu::backdrop { background: none; }
-/* the page behind does not scroll under the sheet */
 html:has(dialog.menu[open]) { overflow: hidden; }
 .menu-close {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
-  /* the menu button's own size: the menu is not a louder place than the page */
   width: var(--menu-size);
   height: var(--menu-size);
   transform: translate(var(--from-x, 0px), var(--from-y, 0px)) scale(var(--from-scale, 1));
@@ -474,12 +387,8 @@ dialog.menu[data-open="true"] .menu-close { transform: none; }
   .menu-close { top: 0.75rem; right: 0.5rem; }
 }
 
-/* Laid out like the page it covers: the same column (--menu-x in from each
-   side), the places to go at the top in large type, and the settings at the
-   foot, where a thumb rests and where they are out of the way of the links. */
 dialog.menu[open] { display: flex; flex-direction: column; }
 .menu-links, .menu-settings { margin-inline: var(--menu-x, 1rem); width: min(100vw - 2 * var(--menu-x, 1rem), 48rem); }
-/* starts below the close button's row */
 .menu-links { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 4.5rem; }
 .menu-links a, .menu-settings {
   opacity: 0;
@@ -490,7 +399,6 @@ dialog.menu[data-open="true"] .menu-links a,
 dialog.menu[data-open="true"] .menu-settings {
   opacity: 1;
   translate: none;
-  /* arriving only: on the way out everything leaves together */
   transition-delay: calc(60ms + var(--i, 0) * 45ms);
 }
 .menu-links a {
@@ -510,13 +418,11 @@ dialog.menu[data-open="true"] .menu-settings {
 }
 .menu-links a:hover { color: var(--accent); }
 .menu-links a span { color: var(--muted); font-family: var(--font-sans), sans-serif; font-size: 0.85rem; font-weight: 400; letter-spacing: 0; margin-top: 0.15rem; }
-/* the settings: pushed to the foot; side by side where there is room */
 .menu-settings {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem 2.5rem;
   margin-top: auto;
-  /* no rule above it: the empty space between is the separator */
   padding: 2rem 0 0.5rem;
 }
 .menu-settings > div { display: flex; align-items: center; gap: 1rem; }
@@ -525,7 +431,6 @@ dialog.menu[data-open="true"] .menu-settings {
   .menu-links { margin-top: 5.5rem; }
 }
 @media (max-width: 40rem) {
-  /* a phone: one setting per row, label left, control right */
   .menu-settings { flex-direction: column; flex-wrap: nowrap; }
   .menu-settings > div { justify-content: space-between; }
 }
@@ -537,37 +442,27 @@ dialog.menu[data-open="true"] .menu-settings {
   display: flex;
   align-items: center;
   max-width: 50rem;
-  /* the top row's height plus the 0.5rem it sticks at, above and below */
   height: calc(1.75rem + 8px + 1rem);
   margin: 0 auto;
   padding: 0 1rem;
 }
 .sticky-name { color: var(--fg); font-family: var(--title-font); font-weight: var(--title-weight); font-size: 1.05rem; letter-spacing: var(--title-tracking); text-decoration: none; white-space: nowrap; }
-/* same proportions as the h1 (line-height 1.15), so the scaled heading and this coincide;
-   a title too long for the bar is cut short with an ellipsis (and then does not travel) */
-/* --bar-reserve: the room the row's own controls take at the right end */
 :root { --bar-reserve: 15rem; }
 @media (max-width: 60rem) { :root { --bar-reserve: 8.5rem; } }
 @media (max-width: 23rem) { :root { --bar-reserve: 4.5rem; } }
 .sticky-name { display: block; min-width: 0; max-width: calc(100% - (var(--menu-size) + 1.1rem) / 2 - 0.75rem - var(--bar-reserve)); }
 .sticky-name span { display: block; min-width: 0; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Keyboard: the first Tab stop on every page jumps past the row to the text. Out of sight until focused. */
 .skip { display: inline-flex; align-items: center; min-height: 2.75rem; position: fixed; top: 0.5rem; left: 0.5rem; z-index: 30; padding: 0 0.9rem; border-radius: 999px; background: var(--fg); color: var(--bg); font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; translate: 0 -200%; }
 .skip:focus-visible { translate: 0 0; outline: 2px solid var(--accent); outline-offset: 2px; }
 #content { display: block; scroll-margin-top: 5rem; }
 
-/* A picture in a post: the full width of the text, a hairline round it (screens are mostly
-   white, and would otherwise run into the page), its caption small and muted under it. */
 .post figure { margin: 1.75rem 0; }
 .post figure img { display: block; width: 100%; height: auto; border-radius: 0.6rem; border: 1px solid var(--rule); }
 .post figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
 
 .lede { color: var(--muted); margin-top: 0; }
-/* the home page: who this is, one step larger than the lede under it */
 .intro { margin: 0.5rem 0 0.75rem; font-size: 1.05rem; }
-/* The Ko-fi cup (components/support.tsx): small, round, bottom right, and only
-   once the reader is at the end of the page. 44px, like every other target. */
 .kofi {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -577,7 +472,6 @@ dialog.menu[data-open="true"] .menu-settings {
   place-items: center;
   width: 2.75rem;
   height: 2.75rem;
-  /* the accent ring is always there, not a hover state: a phone has no hover */
   border: 1px solid var(--accent);
   border-radius: 50%;
   background: var(--bg);
@@ -592,7 +486,6 @@ dialog.menu[data-open="true"] .menu-settings {
 @media (prefers-reduced-motion: reduce) { .kofi { translate: none; transition: none; } }
 .posts { list-style: none; padding: 0; margin: 2rem 0 0; }
 .posts li { margin: 0; padding: 1rem 0; border-top: 1px solid var(--rule); }
-/* a post's title is a heading (for a screen reader's list of headings) that looks like the link it holds */
 .posts h2 { display: block; margin: 0; font: inherit; letter-spacing: 0; text-transform: none; }
 .posts h2::after { content: none; }
 .posts a { display: inline-block; font-weight: 600; font-size: 1.05rem; }
@@ -602,11 +495,6 @@ dialog.menu[data-open="true"] .menu-settings {
 .tags li { margin: 0; }
 .post .tags { margin: 0 0 1.5rem; }
 
-/*
-  Wave footer (components/wave-footer.tsx). `.waves` is the scroll timeline:
-  the lines go from faint, flat and out of step to settled while it enters
-  the screen, and finish just as the page runs out.
-*/
 .waves {
   view-timeline-name: --waves;
   overflow: hidden;
@@ -615,7 +503,6 @@ dialog.menu[data-open="true"] .menu-settings {
 .waves-band {
   position: relative;
   opacity: 0.75;
-  /* the lines dissolve towards both edges */
   -webkit-mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
 }
@@ -626,7 +513,6 @@ dialog.menu[data-open="true"] .menu-settings {
   mask-repeat: repeat-x;
   -webkit-mask-size: var(--tile) 100%;
   mask-size: var(--tile) 100%;
-  /* 50%: the period's centre, where the line crosses the middle, sits mid-screen */
   -webkit-mask-position: 50% 50%;
   mask-position: 50% 50%;
 }
@@ -663,30 +549,20 @@ dialog.menu[data-open="true"] .menu-settings {
   .resume-header .intro h1, .headline { text-align: center; }
   .resume-header .intro h1 { margin-inline: auto; }
   .photo { width: 7.5rem; height: 7.5rem; }
-  /* the three words: the label on a line of its own, the words centred under it */
   .values { justify-content: center; row-gap: 0.35rem; margin-top: 1.25rem; }
   .values-label { flex-basis: 100%; margin-right: 0; text-align: center; }
   .values strong { font-size: 0.95rem; }
-  /* where, then phone and email side by side, then the handle */
   .contact { gap: 0 1.5rem; }
   .contact li:first-child, .contact li:last-child { flex-basis: 100%; }
   td:first-child { width: auto; }
 }
 
-/* Phones and tablets: the top row is the menu button and "Save as PDF", nothing
-   else; the links, the theme and the text size are in the menu. Scrolled, the
-   name lands between the two. A desk-wide screen (a tablet on its side
-   included) keeps the full row and has no menu. */
 @media (max-width: 60rem) {
   .actions > .links,
   .actions > .controls > .segmented { display: none; }
   .menu-button { display: grid; }
 }
-/* With no ring to show its edge, the icon is nudged left so the BARS, not the
-   invisible circle, line up with the page's text column. */
 .menu-button { margin-left: calc((1.1rem - var(--menu-size)) / 2); }
-/* A desk: the full row at the top of the page; scrolled, the links fade out and
-   the menu button comes in over them, as the row becomes the bar. */
 @media (min-width: 60.01rem) {
   .menu-button { display: grid; position: absolute; left: 0; top: 50%; translate: 0 -50%; opacity: 0; visibility: hidden; }
   html[data-head-stuck] .menu-button { opacity: 1; visibility: visible; }
@@ -702,32 +578,21 @@ dialog.menu[data-open="true"] .menu-settings {
     html:not([data-head-stuck]) .menu-button { pointer-events: none; }
   }
 }
-/* everywhere: the bar's name stands clear of the button */
 .sticky-name { margin-left: calc((var(--menu-size) + 1.1rem) / 2 + 0.75rem); }
-/* Phones and tablets: the bar's title is CENTRED, as in an app's navigation
-   bar, between the menu button and the page's action. --bar-side is the room
-   kept clear on EACH side, so the title stays centred whatever is beside it. */
 @media (max-width: 60rem) {
   .sticky-bar { --bar-side: 9rem; }
   .sticky-inner { justify-content: center; }
   .sticky-name { margin-left: 0; max-width: calc(100% - 2 * var(--bar-side)); }
-  /* a page with no action in its row only has the menu button to clear */
   .actions:not(:has(.pill)) + .sticky-bar { --bar-side: 3.25rem; }
 }
 @media (max-width: 40rem) {
   .sticky-bar { --bar-side: 4.5rem; }
 }
 
-/* Tablets: wider side margins. */
 @media (min-width: 40.01rem) and (max-width: 60rem) {
   .page, .sticky-inner { padding-inline: 2rem; }
 }
 
-/*
-  Touch screens of any width (K-Studio: "every control 44px on ANY touch
-  screen, not just below md"). The target is grown, not the drawing: links in
-  running text keep their size, but the ones that stand alone get a 44px box.
-*/
 @media (pointer: coarse) {
   :root { --menu-size: 2.75rem; }
   .segmented button { width: 2.75rem; height: 2.75rem; }
@@ -748,7 +613,6 @@ dialog.menu[data-open="true"] .menu-settings {
   .contact li { min-height: 2.75rem; }
 }
 
-/* PDF: A4, always light, tighter. Links stay clickable in the PDF. */
 @page { size: A4; margin: 13mm 15mm; }
 
 @media print {
@@ -756,7 +620,6 @@ dialog.menu[data-open="true"] .menu-settings {
     --bg: #fff; --fg: #1f2328; --muted: #555d66; --accent: #800020; --rule: #e3dfd9; --chip: #f3f1ee;
     color-scheme: light;
   }
-  /* paper ignores the reader's text size */
   html, html[data-size] { font-size: 16px; }
   body { display: block; min-height: 0; font-size: 9.6pt; line-height: 1.42; }
   .page { max-width: none; padding: 0; }
@@ -766,7 +629,6 @@ dialog.menu[data-open="true"] .menu-settings {
   h1 { font-size: 19pt; }
   h2 { font-size: 9.5pt; margin: 1rem 0 0.5rem; }
   h3 { margin: 0; break-after: avoid; }
-  /* paper: stacked */
   .entry { margin-top: 0.8rem; }
   .entry-when { font-family: inherit; font-size: 8.6pt; margin: 0; }
   .entry-when span, .entry-when span:first-child { color: var(--muted); }
