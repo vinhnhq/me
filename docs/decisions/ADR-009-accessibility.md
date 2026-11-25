@@ -30,7 +30,9 @@ hidden thing is reachable or whether a moving title is still a heading.
 - **Nothing pushes the page wider than the screen**: long words and addresses wrap.
 - **Text is at least 12px and 4.5:1** against the page (3:1 for large text).
 - **`scroll-padding-top`**, so keyboard focus never lands under the sticky bar.
-- **The dot between the three values is drawn, not read**: `content: "·" / ""`.
+- **The dot between the three values is seen, not read**: a `<span aria-hidden="true">`. It was
+  CSS generated content with an empty spoken text (`content: "·" / ""`) until 2026-11-25; a real
+  element does the same in every browser, with no fallback to carry.
 - **Reduced motion** gets the settled state of the waves, the title and the menu.
 
 ## Consequences

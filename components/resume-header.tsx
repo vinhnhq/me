@@ -11,7 +11,7 @@ const stroke = {
 } as const;
 
 const Icon = ({ children, solid }: { children: ReactNode; solid?: boolean }) => (
-  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" {...(solid ? { fill: "currentColor" } : stroke)}>
+  <svg className="flex-none align-baseline print:size-[10pt]" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" {...(solid ? { fill: "currentColor" } : stroke)}>
     {children}
   </svg>
 );
@@ -24,39 +24,59 @@ const icons = {
   ),
 };
 
+const LI =
+  "m-0 flex items-center gap-[0.4rem] text-pretty phone:first:basis-full phone:last:basis-full pointer-coarse:min-h-11";
+const LINK =
+  "touch-manipulation text-inherit underline decoration-rule underline-offset-[3px] hover:text-fg hover:decoration-current pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center";
+
 export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
     <header className="resume-header">
-      <div className="intro">
+      <div className="intro mt-2 mb-3 flex items-start gap-8 text-[1.05rem] phone:flex-col phone:items-center phone:gap-4 print:gap-[6mm]">
         {/* eslint-disable-next-line @next/next/no-img-element -- one small local file; the PDF prints it as is */}
-        <img className="photo" src="/vinh-nguyen.jpg" alt={r.name} width={160} height={160} fetchPriority="high" />
+        <img
+          className="m-[3px] size-[9.5rem] max-w-none flex-none rounded-[50%] border-4 border-bg object-cover align-baseline outline-[3px] outline-accent phone:size-[7.5rem] print:size-[30mm] print:border-[1mm] print:outline-[0.7mm]"
+          src="/vinh-nguyen.jpg" alt={r.name}
+          width={160}
+          height={160}
+          fetchPriority="high"
+        />
         <div>
           <h1>{r.name}</h1>
-          <p className="headline">{r.headline}</p>
+          <p className="mt-0 mb-2 text-[1.2rem] text-pretty text-accent phone:text-center print:mb-[0.3rem] print:text-[11.5pt]">{r.headline}</p>
           <div className="[&_p]:m-0 [&_p+p]:mt-[0.6rem] print:[&_p+p]:mt-1">
             <Markdown source={r.summary} />
           </div>
           {r.values.length > 0 && (
-            <p className="values">
-              <span className="values-label">Values</span>
-              {r.values.map((v) => (
-                <strong key={v}>{v}</strong>
+            <p className="mt-[0.9rem] mb-0 flex flex-wrap items-baseline gap-x-[0.6rem] gap-y-[0.15rem] text-pretty phone:mt-5 phone:justify-center phone:gap-y-[0.35rem] print:mt-[0.35rem]">
+              <span className="mr-[0.4rem] font-mono text-[0.72rem] tracking-[0.14em] text-muted uppercase phone:mr-0 phone:basis-full phone:text-center print:text-[7pt]">
+                Values
+              </span>
+              {r.values.map((v, i) => (
+                <strong key={v} className="font-bold phone:text-[0.95rem]">
+                  {i > 0 && (
+                    <span className="mr-[0.6rem] font-normal text-muted" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
+                  {v}
+                </strong>
               ))}
             </p>
           )}
         </div>
       </div>
-      <ul className="contact">
-        <li>{r.location}</li>
-        <li>
-          <a href={`tel:${r.phone.replace(/\s/g, "")}`}>{r.phone}</a>
+      <ul className="mt-6 mb-0 flex list-none flex-wrap items-center gap-x-6 gap-y-[0.35rem] p-0 font-mono text-[0.8rem] text-muted phone:gap-y-0 pointer-coarse:gap-y-0 print:mt-[0.7rem] print:gap-x-[1.1rem] print:gap-y-[0.2rem] print:text-[8.4pt]">
+        <li className={LI}>{r.location}</li>
+        <li className={LI}>
+          <a className={LINK} href={`tel:${r.phone.replace(/\s/g, "")}`}>{r.phone}</a>
         </li>
-        <li>
-          <a href={`mailto:${r.email}`}>{r.email}</a>
+        <li className={LI}>
+          <a className={LINK} href={`mailto:${r.email}`}>{r.email}</a>
         </li>
-        <li>
+        <li className={LI}>
           {icons.github}
-          <a href={`https://github.com/${r.github}`} aria-label={`GitHub: ${r.github}`}>
+          <a className={LINK} href={`https://github.com/${r.github}`} aria-label={`GitHub: ${r.github}`}>
             {r.github}
           </a>
         </li>
