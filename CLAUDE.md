@@ -51,8 +51,9 @@ ADR.
   identical (ADR-004).
 - **A page passes `SiteNav` the same words as its `h1`** as `title` (ADR-004).
 - **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
-- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). Old rules live
-  in `@layer components`; an unlayered rule would beat every utility.
+- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). What is left
+  there lives in `@layer components`; an unlayered rule would beat every utility, and
+  `check:rules` fails on a rule for a bare content element.
 - **A rule in `@layer components` loses to ANY utility.** An old rule that restyles an element
   from outside (`.box p { … }`) stops working the moment that element gets a utility for the
   same property; move the override onto the container as a utility (`[&_p]:m-0`).

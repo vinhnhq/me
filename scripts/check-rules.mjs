@@ -53,6 +53,8 @@ const RULES = [
   }],
   ["ADR-012", "the verify gate runs the real browsers: Safari in the iOS simulators and Chrome in the Android emulator", () =>
     /step\("real", "bun run check:real"\)/.test(read("scripts/verify.mjs")) && pkg.scripts["check:real"] === "node scripts/check-real.mjs"],
+  ["ADR-015", "the stylesheet styles no bare content element: p, headings, lists, links, code and tables carry utilities", () =>
+    !/(^|,)[ \t]*(p|h1|h2|h3|ul|ol|li|a|strong|code|table|thead|td|th|figure|figcaption)(::?[a-z-]+)?[ \t]*[{,]/m.test(css.slice(css.indexOf("@layer components {")))],
   ["ADR-013", "nothing links to the K-Studio app's demo", () =>
     withText([...tracked("content"), ...source], text => /k-studio[a-z0-9-]*\.vercel\.app/.test(text)).length === 0],
 ];

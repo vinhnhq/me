@@ -46,41 +46,51 @@ const MEASURE = `(() => {
 const AXE = `axe.run(document, { runOnly: { type: "tag", values: ${JSON.stringify(TAGS)} } }).then(r => r.violations.map(v => v.id + " (" + v.impact + "): " + v.nodes.slice(0, 3).map(n => n.target.join(" ")).join(" | ")))`;
 const MENU_BUTTON = `document.querySelector('button[aria-label="Menu"]')`;
 const MENU_OPEN = `!!document.querySelector('dialog[open], [data-slot="dialog-content"][data-open]')`;
-const STATE = `({ y: Math.round(scrollY), end: parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--head-end")), usable: ${MENU_BUTTON}.getClientRects().length > 0 && !${MENU_BUTTON}.inert, stuck: document.documentElement.hasAttribute("data-head-stuck"), scheme: document.documentElement.dataset.colorScheme, size: document.documentElement.dataset.size, font: getComputedStyle(document.documentElement).fontSize, dark: getComputedStyle(document.body).backgroundColor })`;
+const STATE = `({ y: Math.round(scrollY), room: document.documentElement.scrollHeight - innerHeight, end: parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--head-end")), usable: ${MENU_BUTTON}.getClientRects().length > 0 && !${MENU_BUTTON}.inert, stuck: document.documentElement.hasAttribute("data-head-stuck"), scheme: document.documentElement.dataset.colorScheme, size: document.documentElement.dataset.size, font: getComputedStyle(document.documentElement).fontSize, dark: getComputedStyle(document.body).backgroundColor })`;
 const PRESS = label => `([...document.querySelectorAll('[role="radio"]')].filter(el => el.getAttribute("aria-label") === ${JSON.stringify(label)} && el.getClientRects().length)[0]?.click(), true)`;
+
+async function settled(js, done) {
+  let state = await js(STATE);
+  for (let waited = 0; waited < 4000 && !done(state); waited += 250) {
+    await sleep(250);
+    state = await js(STATE);
+  }
+  return state;
+}
+
+const DARK_PAGE = "rgb(17, 18, 20)";
 
 async function behaviour(js) {
   await js("(scrollTo(0, 600), true)");
-  await sleep(700);
-  const before = await js(STATE);
-  const title = ["title-in-bar", before.stuck === before.y >= before.end];
-  if (!before.usable) return { opened: false, checks: [title] };
+  const before = await settled(js, state => state.room < 600 || (state.y > 0 && state.stuck === state.y >= state.end));
+  const scrolls = before.room >= before.y && before.y > 0;
+  const title = ["title-in-bar", !scrolls || before.stuck === before.y >= before.end];
+  if (!before.usable) return { opened: false, states: { before }, checks: [title] };
   await js(`(${MENU_BUTTON}.click(), true)`);
   await sleep(900);
   const opened = await js(MENU_OPEN);
-  const during = await js(STATE);
+  const during = await settled(js, state => !scrolls || (state.y === before.y && state.stuck));
   await js(PRESS("Dark theme"));
-  await sleep(900);
-  const dark = await js(STATE);
+  const dark = await settled(js, state => state.scheme === "dark" && state.dark === DARK_PAGE);
   await js(PRESS("Large text"));
-  await sleep(500);
-  const large = await js(STATE);
+  const large = await settled(js, state => state.size === "l" && state.font === "19px");
   await js(PRESS("Follow the device"));
   await js(PRESS("Medium text"));
   await sleep(700);
   return {
     opened,
+    states: { before, during, dark, large },
     checks: [
       title,
       ["menu-opens", opened],
-      ["scroll-kept", during.y === before.y && during.stuck],
-      ["dark", dark.scheme === "dark" && dark.dark !== before.dark],
-      ["large-text", large.size === "l" && large.font !== before.font],
+      ["scroll-kept", !scrolls || (during.y === before.y && during.stuck)],
+      ["dark", dark.scheme === "dark" && dark.dark === DARK_PAGE],
+      ["large-text", large.size === "l" && large.font === "19px"],
     ],
   };
 }
 
-function verdict(name, page, report, violations, checks) {
+function verdict(name, page, report, violations, checks, states) {
   const wrong = checks.filter(([, ok]) => !ok).length;
   const bad = report.overflow > 0 || report.small.length || violations.length || wrong;
   if (bad) failures++;
@@ -88,6 +98,7 @@ function verdict(name, page, report, violations, checks) {
   console.log(
     `${bad ? "✗" : "✓"} ${name.padEnd(40)} ${page.padEnd(6)} width=${report.width} overflow=${report.overflow} axe=${violations.length} ` +
       checks.map(([what, ok]) => `${what}=${ok ? "ok" : "FAILED"}`).join(" ") +
+      (wrong ? `\n    states: ${JSON.stringify(states)}` : "") +
       (report.small.length ? `\n    small: ${report.small.join(" | ")}` : "") +
       violations.map(v => `\n    axe ${v}`).join(""),
   );
@@ -131,13 +142,13 @@ async function android() {
     const report = await js(MEASURE);
     await page.addScriptTag({ content: axe });
     const violations = await js(AXE);
-    const { opened, checks } = await behaviour(js);
+    const { opened, checks, states } = await behaviour(js);
     if (opened) picture(`${OUT}/${name}/${key}-menu.png`);
     await page.keyboard.press("Escape");
     await sleep(700);
     if (opened) checks.push(["menu-closes", !(await js(MENU_OPEN))]);
     picture(`${OUT}/${name}/${key}-scrolled.png`);
-    verdict(name, key, report, violations, checks);
+    verdict(name, key, report, violations, checks, states);
   }
   await browser.close();
   quiet(ADB, ["forward", "--remove", "tcp:9222"]);
@@ -187,9 +198,9 @@ async function safari(type) {
       picture(`${OUT}/${name}/${key}-top.png`);
       const report = await js(MEASURE);
       const violations = await driver("POST", `${at}/execute/async`, { script: `const done = arguments[0]; ${axe}; ${AXE}.then(done)`, args: [] });
-      const { opened, checks } = await behaviour(js);
+      const { opened, checks, states } = await behaviour(js);
       if (opened) picture(`${OUT}/${name}/${key}-menu.png`);
-      verdict(label, key, report, violations, checks);
+      verdict(label, key, report, violations, checks, states);
     }
   } finally {
     await driver("DELETE", at).catch(() => {});
