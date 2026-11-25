@@ -5,6 +5,7 @@ import { Support } from "@/components/support";
 import { Tags } from "@/components/tags";
 import { formatDay, listPosts } from "@/lib/markdown";
 import { shareCard } from "@/lib/site";
+import { HEADING, PAGE } from "@/lib/styles";
 
 const TITLE = "Blog — Field notes and case studies by Vinh Nguyen";
 const DESCRIPTION =
@@ -22,11 +23,11 @@ const LINK = "touch-manipulation text-accent underline underline-offset-2";
 export default async function BlogPage() {
   const posts = await listPosts();
   return (
-    <main className="page blog">
+    <main className={`${PAGE} blog`}>
       <SiteNav title="Vinh Nguyen">
         <Link href="/resume">Résumé</Link>
       </SiteNav>
-      <h1>Vinh Nguyen</h1>
+      <h1 className={HEADING}>Vinh Nguyen</h1>
       <p className="mt-2 mb-3 text-[1.05rem] text-pretty">
         Senior fullstack engineer in Ho Chi Minh City, building with React, Next.js, TypeScript and AI coding agents.
         Open to remote roles and contracts: here is my <Link className={LINK} href="/resume">résumé</Link>.

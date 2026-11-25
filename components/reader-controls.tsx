@@ -6,6 +6,7 @@ import { SegmentedControl, SegmentedControlItem } from "@ui-sdk/react/segmented-
 import { type ReactNode, useRef, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
 import { type SizeId, colorScheme, textSize } from "@/lib/preferences";
+import { FOCUS_RING } from "@/lib/styles";
 
 type Option<T extends string> = { readonly id: T; readonly label: string; readonly icon: ReactNode };
 
@@ -28,7 +29,7 @@ function Segmented<T extends string>({
   return (
     <SegmentedControl<T>
       ref={root}
-      className="segmented"
+      className="segmented inline-flex gap-[2px] rounded-[999px] border border-rule bg-bg p-[3px]"
       aria-label={label}
       value={hydrated ? value : null}
       onValueChange={(next) => {
@@ -36,7 +37,14 @@ function Segmented<T extends string>({
       }}
     >
       {options.map((o) => (
-        <SegmentedControlItem key={o.id} value={o.id} data-option={o.id} aria-label={o.label} title={o.label}>
+        <SegmentedControlItem
+          key={o.id}
+          className={`grid size-7 cursor-pointer touch-manipulation place-items-center rounded-[50%] border-0 bg-transparent p-0 font-mono text-[13.3333px] leading-normal text-muted [-webkit-tap-highlight-color:transparent] hover:text-fg data-checked:bg-fg data-checked:text-bg data-checked:hover:text-bg pointer-coarse:size-11 ${FOCUS_RING}`}
+          value={o.id}
+          data-option={o.id}
+          aria-label={o.label}
+          title={o.label}
+        >
           {o.icon}
         </SegmentedControlItem>
       ))}
@@ -89,7 +97,7 @@ const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
 ];
 
 const letter = (px: number) => (
-  <span className="size-letter" aria-hidden="true" style={{ fontSize: px }}>
+  <span className="font-sans leading-none font-medium" aria-hidden="true" style={{ fontSize: px }}>
     A
   </span>
 );

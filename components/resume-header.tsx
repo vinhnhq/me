@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Markdown } from "@/components/markdown";
 import type { Resume } from "@/lib/markdown";
+import { HEADING } from "@/lib/styles";
 
 const stroke = {
   fill: "none",
@@ -31,8 +32,8 @@ const LINK =
 
 export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
-    <header className="resume-header">
-      <div className="intro mt-2 mb-3 flex items-start gap-8 text-[1.05rem] phone:flex-col phone:items-center phone:gap-4 print:gap-[6mm]">
+    <header>
+      <div className="mt-2 mb-3 flex items-start gap-8 text-[1.05rem] phone:flex-col phone:items-center phone:gap-4 print:gap-[6mm]">
         {/* eslint-disable-next-line @next/next/no-img-element -- one small local file; the PDF prints it as is */}
         <img
           className="m-[3px] size-[9.5rem] max-w-none flex-none rounded-[50%] border-4 border-bg object-cover align-baseline outline-[3px] outline-accent phone:size-[7.5rem] print:size-[30mm] print:border-[1mm] print:outline-[0.7mm]"
@@ -42,7 +43,7 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
           fetchPriority="high"
         />
         <div>
-          <h1>{r.name}</h1>
+          <h1 className={`${HEADING} phone:mx-auto phone:text-center`}>{r.name}</h1>
           <p className="mt-0 mb-2 text-[1.2rem] text-pretty text-accent phone:text-center print:mb-[0.3rem] print:text-[11.5pt]">{r.headline}</p>
           <div className="[&_p]:m-0 [&_p+p]:mt-[0.6rem] print:[&_p+p]:mt-1">
             <Markdown source={r.summary} />
