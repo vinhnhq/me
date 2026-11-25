@@ -10,7 +10,7 @@ new ADR that supersedes it.
 | [ADR-002](ADR-002-content-as-markdown.md) | Markdown as the only source, hand-parsed front matter, three tags, pictures as figures |
 | [ADR-003](ADR-003-colour-type-and-themes.md) | Burgundy, the two faces, `light-dark()` pairs, ui-sdk preferences, text size, the theme's circle |
 | [ADR-004](ADR-004-the-header-and-the-travelling-title.md) | The sticky row, the bar, and the three paths a title takes into it |
-| [ADR-005](ADR-005-the-menu.md) | A native `<dialog>`, the travelling close button, and why not Vaul |
+| [ADR-005](ADR-005-the-menu.md) | The menu on ui-sdk's Dialog, the travelling close button, and why not Vaul |
 | [ADR-006](ADR-006-the-pdf.md) | The résumé printed by Chromium from the live page; two pages; the tracing includes |
 | [ADR-007](ADR-007-routes.md) | The blog at the root, the résumé at `/resume`, the redirects |
 | [ADR-008](ADR-008-sharing-search-and-agents.md) | Share cards, LinkedIn's own card, `robots.txt`, `llms.txt`, JSON-LD, the X handle |

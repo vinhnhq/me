@@ -17,9 +17,9 @@ react-doctor to be set up and the site refactored against them, with the look un
 ## Decision
 
 - **ui-sdk** (`@ui-sdk/react`, `@ui-sdk/core`, 0.1.0-beta.13, every API marked experimental)
-  provides the two things it ships that the site had hand-rolled: the pills are its
-  `SegmentedControl` (one Tab stop, arrow keys move the choice) and the settings are its
-  preferences (ADR-003). Do not hand-roll a `role=` it ships.
+  provides what it ships that the site had hand-rolled: the pills are its
+  `SegmentedControl` (one Tab stop, arrow keys move the choice), the settings are its
+  preferences (ADR-003), and since 2026-11-25 the menu is its Dialog (ADR-005). Do not hand-roll a `role=` it ships.
 - **Three guides are installed as agent skills**: `ui-sdk`, Chrome's `modern-web-guidance`
   (`npx modern-web-guidance search "<task>"`, then `retrieve <id>`, before HTML or CSS work) and
   Vercel's `web-design-guidelines`.

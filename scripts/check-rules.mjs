@@ -23,8 +23,8 @@ const RULES = [
   ["ADR-003", "the settings keep their storage keys (theme, size), so a returning reader keeps a choice", () =>
     /createLocalStorage\("theme"\)/.test(read("lib/preferences.ts")) && /createLocalStorage\("size"\)/.test(read("lib/preferences.ts"))],
   ["ADR-004", "the bar is opaque: no backdrop-filter, which re-reads the text under it every frame", () => !/backdrop-filter/.test(css)],
-  ["ADR-005", "the menu is a native dialog: Vaul pins the body and zeroes scrollY on iOS", () =>
-    !("vaul" in { ...pkg.dependencies, ...pkg.devDependencies }) && /<dialog/.test(read("components/site-menu.tsx"))],
+  ["ADR-005", "the menu is ui-sdk's Dialog, never Vaul, which pins the body and zeroes scrollY on iOS", () =>
+    !("vaul" in { ...pkg.dependencies, ...pkg.devDependencies }) && /from "@ui-sdk\/react\/dialog"/.test(read("components/site-menu.tsx"))],
   ["ADR-006", "next.config.ts keeps Chromium external and traces playwright-core into /api/pdf", () =>
     /serverExternalPackages:\s*\[[^\]]*"@sparticuz\/chromium"[^\]]*"playwright-core"/.test(config) &&
     /outputFileTracingIncludes[\s\S]*"\/api\/pdf"[\s\S]*playwright-core\/\*\*/.test(config)],

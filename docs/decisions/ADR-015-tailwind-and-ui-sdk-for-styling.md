@@ -102,6 +102,11 @@ The stylesheet is 554 lines.
 - **Proof that the utilities stand alone**: with the old rules switched off for every converted
   element of the résumé, 83 of 83 pictures matched.
 
+### Step four: the menu on ui-sdk's Dialog (2026-11-25)
+
+The behaviour moved to ui-sdk (ADR-005); the menu's look is unchanged, pixel for pixel, and its
+rules are still classes in the stylesheet. They become utilities with the header.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`
