@@ -43,6 +43,8 @@ take another address as an argument.
 | Command | What it proves |
 |---|---|
 | `bun run typecheck` | The types hold |
+| `bun run lint` | Biome: the code and the stylesheet are formatted and pass its lint rules. `bun run format` fixes what can be fixed |
+| `bun run check:classes` | Every Tailwind class is in its canonical spelling (`z-9`, not `z-[9]`) and in Tailwind's order, asked of Tailwind itself |
 | `bun run check:comments` | There is no comment in the code; a reason belongs in `docs/decisions` |
 | `bun run check:rules` | Nineteen rules, each tied to its decision record: the menu never uses a scroll-pinning drawer, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
 | `bun run doctor` | react-doctor scores 100 |
@@ -55,8 +57,8 @@ take another address as an argument.
 ## The loop
 
 1. A change is a branch and a pull request. Nobody pushes to `main`.
-2. Every pull request runs the fast gate in GitHub Actions: comments, rules, react-doctor, the
-   build, the types, the audit and the PDF.
+2. Every pull request runs the fast gate in GitHub Actions: lint, class names, comments, rules,
+   react-doctor, the build, the types, the audit and the PDF.
 3. The owner reads the pull request and merges it. A merge to `main` deploys production on
    Vercel; any other branch gets a preview.
 4. Every day at 08:00 in Vietnam a workflow checks the live site. A failure opens an issue.

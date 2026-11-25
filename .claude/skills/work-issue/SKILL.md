@@ -24,7 +24,7 @@ One issue, one branch, one pull request. The owner verifies and merges; you neve
 4. **Make the smallest change** that satisfies the issue. No comments in code; a decision goes
    into its ADR in the same change.
 5. **Verify, in this order, and fix what fails:**
-   - `bun run typecheck && bun run check:comments && bun run check:rules` — seconds.
+   - `bun run format`, then `bun run typecheck && bun run lint && bun run check:classes && bun run check:comments && bun run check:rules` — seconds.
    - `bun run verify` — everything (a few minutes). `SKIP=real,visual` on a
      machine with no baseline pictures, and say so in the pull request.
    - `check:visual` must stay at 83/83 unless the issue changes the look. If it does, look at

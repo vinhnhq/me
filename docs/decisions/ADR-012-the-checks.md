@@ -55,8 +55,8 @@ able to fail.
     simulator's window shelf lets a page that fits the screen report a scroll position, which
     the menu's scroll lock then resets (2026-11-25). A failure prints the states it measured.
 - **`bun run verify`** runs everything in order and prints pass, FAIL or skipped per step:
-  typecheck, comments, rules, react-doctor at 100, the build, the audit, the PDF's page count,
-  the visual check, the real browsers. `SKIP=real` on a machine without the simulators, said
+  typecheck, lint and class names (ADR-016), comments, rules, react-doctor at 100, the build,
+  the audit, the PDF's page count, the visual check, the real browsers. `SKIP=real` on a machine without the simulators, said
   out loud in the pull request.
 - **In the simulators, open a fresh tab with a new `?r=N`.** Safari there does not reliably pick
   up a change; several "it is not working" reports were old code.

@@ -21,7 +21,8 @@ agent.
 - **A change is a pull request.** Branch from `main`, open a pull request, and the owner merges.
   A merge to `main` deploys production on Vercel; any other branch deploys a preview.
 - **An agent never merges and never deploys.** It opens the pull request and stops.
-- **Every pull request runs the fast gate** (`.github/workflows/checks.yml`): `check:comments`,
+- **Every pull request runs the fast gate** (`.github/workflows/checks.yml`): `lint`,
+  `check:classes` (ADR-016), `check:comments`,
   `check:rules`, react-doctor at 100, the build, typecheck, then the audit and the PDF's page
   count against the build.
 - **The live site is checked every day** (`.github/workflows/daily.yml`, 01:00 UTC, 08:00 in

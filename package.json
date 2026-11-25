@@ -17,7 +17,8 @@
     "verify": "node scripts/verify.mjs",
     "check:real": "node scripts/check-real.mjs",
     "lint": "biome check .",
-    "format": "biome check --write ."
+    "format": "node scripts/check-classes.mjs --write && biome check --write .",
+    "check:classes": "node scripts/check-classes.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^153.0.0",

@@ -41,7 +41,7 @@ export default async function BlogPage() {
       <ul className="mt-8 mb-0 list-none p-0">
         {posts.map((p) => (
           <li key={p.slug} className="m-0 border-t border-rule py-4 text-pretty">
-            <h2 className="m-0 block text-balance normal-case tracking-normal [font:inherit] after:content-none">
+            <h2 className="m-0 block tracking-normal text-balance normal-case [font:inherit] after:content-none">
               <Link
                 className="inline-block touch-manipulation text-[1.05rem] font-semibold text-accent underline underline-offset-2 pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
                 href={`/blog/${p.slug}`}

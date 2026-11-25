@@ -7,11 +7,11 @@ function EntryRow({ entry: e }: { entry: Entry }) {
       <h3 className="mt-0 mb-[0.1rem] text-[1.05rem] font-semibold text-balance print:m-0 print:break-after-avoid">
         {e.title} <span className="font-normal text-muted">· {e.org}</span>
       </h3>
-      <p className="mt-[0.1rem] mb-[0.4rem] font-mono text-[0.8rem] leading-normal text-pretty text-muted print:m-0 print:text-[8.6pt] print:[font-family:inherit]">
+      <p className="mt-[0.1rem] mb-[0.4rem] font-mono text-[0.8rem] leading-normal text-pretty text-muted print:m-0 print:font-[inherit] print:text-[8.6pt]">
         <span className="text-fg print:text-muted">{e.when}</span>
         {e.where && <span className="before:content-['_·_']">{e.where}</span>}
       </p>
-      <div className="[&>:first-child]:mt-[0.35rem] print:[&>ul:last-child]:mb-0">
+      <div className="*:first:mt-[0.35rem] print:[&>ul:last-child]:mb-0">
         <Markdown source={e.text} />
       </div>
     </div>

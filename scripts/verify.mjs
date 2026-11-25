@@ -23,6 +23,8 @@ const stopServer = () => {
 };
 
 step("typecheck", "bun run typecheck");
+step("lint", "bun run lint");
+step("classes", "bun run check:classes");
 step("comments", "bun run check:comments");
 step("rules", "bun run check:rules");
 step("react-doctor", "bun run doctor 2>&1 | tee /dev/stderr | grep -q '100 / 100'");

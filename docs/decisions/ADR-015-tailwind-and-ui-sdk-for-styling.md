@@ -144,7 +144,8 @@ pill and the bar's inner row carry utilities. The stylesheet is 476 lines.
 
 ### Where it ended
 
-`app/globals.css` went from 647 lines to about 420: the colour pairs, the base (the body, the
+`app/globals.css` went from 231 rules and 677 declarations to 109 and 324 (647 lines to about
+420, before Biome put one declaration on each line, ADR-016): the colour pairs, the base (the body, the
 graph paper, the text size), state and motion (the travelling title, the bar, the menu, the
 waves) and the print sheet. Everything else is utilities in the markup.
 
