@@ -56,7 +56,10 @@
       }
     },
     "Markdown": {
-      "format_on_save": "off"
+      "formatter": "prettier",
+      "prettier": {
+        "allowed": true
+      }
     }
   }
 }

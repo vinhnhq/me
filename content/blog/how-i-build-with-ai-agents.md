@@ -11,15 +11,15 @@ I build production software with AI coding agents, mostly Claude Code. The agent
 
 [K-Studio](/blog/k-studio) is the operating system for a ~20-person wedding photo studio in Nha Trang. It replaced three things the studio ran by hand: an Excel cash book, a shoot schedule kept in Zalo, and a payroll sheet computed by hand. It covers contracts and invoices, shoot scheduling and crew, two money books (cash and bank), payroll, a photo-proofing gallery for couples, and server-rendered PDFs, in Vietnamese and English.
 
-| | |
-|---|---|
-| First commit → daily production use | about 10 weeks (Sep → Nov 2026) |
-| Commits | 325 |
-| TypeScript in `src/` | ~120,000 lines, 823 files |
-| Database | Postgres, 42 tables, 19 migrations |
-| Specs / ADRs | 32 versioned specs, 14 architecture decision records |
-| Tests | 89 unit/integration test files, 18 Playwright suites |
-| Recorded pitfalls ("landmines") | ~350, each with what broke and what proves the fix |
+|                                     |                                                      |
+| ----------------------------------- | ---------------------------------------------------- |
+| First commit → daily production use | about 10 weeks (Sep → Nov 2026)                      |
+| Commits                             | 325                                                  |
+| TypeScript in `src/`                | ~120,000 lines, 823 files                            |
+| Database                            | Postgres, 42 tables, 19 migrations                   |
+| Specs / ADRs                        | 32 versioned specs, 14 architecture decision records |
+| Tests                               | 89 unit/integration test files, 18 Playwright suites |
+| Recorded pitfalls ("landmines")     | ~350, each with what broke and what proves the fix   |
 
 Stack: Next.js (App Router), React 19, TypeScript, Postgres on Neon, Kysely, better-auth, Cloudflare R2, Vercel, Playwright, Vitest.
 
@@ -39,8 +39,8 @@ Every change goes through the same six steps. I wrote them down once as a small 
 Speed is easy with an agent. The work is making sure fast doesn't mean wrong. These are the parts that made the difference:
 
 - **A map, not a manual.** `CLAUDE.md` points at the authoritative source for each area (scope, specs, decisions, vocabulary) instead of repeating them, so the agent reads the real source and not a stale copy.
-- **A landmines file.** Every time something broke in a way that could happen again, it got a one-line title in `CLAUDE.md` and a full write-up: what broke, how it was found, and what proves the fix. The agent reads an area's section before touching it. Example: *"A cash deposit into the bank is a fund transfer, not revenue."*
-- **A glossary for overloaded words.** In this studio, *show* means a paid shoot, *chốt sổ* means closing the day's cash book, and *ca* means a shift. Pinning those down stopped a whole class of plausible-looking mistakes.
+- **A landmines file.** Every time something broke in a way that could happen again, it got a one-line title in `CLAUDE.md` and a full write-up: what broke, how it was found, and what proves the fix. The agent reads an area's section before touching it. Example: _"A cash deposit into the bank is a fund transfer, not revenue."_
+- **A glossary for overloaded words.** In this studio, _show_ means a paid shoot, _chốt sổ_ means closing the day's cash book, and _ca_ means a shift. Pinning those down stopped a whole class of plausible-looking mistakes.
 - **Hooks.** A pre-tool guard runs before every shell command or file edit the agent makes. At the end of each session, a summary is written into the pull request, so every PR records what was done and why.
 - **Screenshots as a gate.** Three blank pages once got past `tsc`, lint and the build. Now the e2e suite photographs every page, and a page that renders nothing fails.
 - **Rules that read the code.** Some guards are tests over the source itself. For example, a test fails if a Vietnamese string appears outside a translation file.

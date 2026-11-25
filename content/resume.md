@@ -26,7 +26,7 @@ I lead teams and mentor developers, and care about testing, developer experience
 
 ### Freelance Fullstack Engineer
 
-*Self-employed · Jun 2025 – Present · remote*
+_Self-employed · Jun 2025 – Present · remote_
 
 Designed, built and ran production web apps for two businesses, solo and end to end: requirements, architecture, deploy and support.
 
@@ -37,7 +37,7 @@ Designed, built and ran production web apps for two businesses, solo and end to 
 
 ### Fullstack Engineer
 
-*BodiData · Jun 2024 – May 2025 · full-time, remote*
+_BodiData · Jun 2024 – May 2025 · full-time, remote_
 
 Size-matching software for retail and uniform businesses, built to reduce apparel returns.
 
@@ -47,7 +47,7 @@ Size-matching software for retail and uniform businesses, built to reduce appare
 
 ### Principal Engineer
 
-*MessageMedia · Oct 2021 – May 2024 · full-time, Ho Chi Minh City*
+_MessageMedia · Oct 2021 – May 2024 · full-time, Ho Chi Minh City_
 
 Customer messaging across SMS, social and 85+ integrations.
 
@@ -58,7 +58,7 @@ Customer messaging across SMS, social and 85+ integrations.
 
 ### Senior Engineer & Team Lead
 
-*Dwarves Foundation · Ninja Van · Grab · Nov 2017 – Sep 2021 · full-time, Ho Chi Minh City*
+_Dwarves Foundation · Ninja Van · Grab · Nov 2017 – Sep 2021 · full-time, Ho Chi Minh City_
 
 - **[Dwarves Foundation · Jan 2020 – Sep 2021]** Led a team of 8 frontend developers replacing a UK client's legacy Windows system with React web apps and a Node.js GraphQL BFF, improving system response time by 20%.
 - **[Ninja Van · Jul 2018 – Dec 2019]** Built an Electron app for e-weighing device integration and Cross Border portal features with React, Node.js and Next.js, automating 50% of manual processes behind a TypeScript BFF and design system.
@@ -69,7 +69,7 @@ Customer messaging across SMS, social and 85+ integrations.
 
 ### Software Engineer
 
-*NashTech · Aug 2014 – Oct 2017 · full-time, Ho Chi Minh City*
+_NashTech · Aug 2014 – Oct 2017 · full-time, Ho Chi Minh City_
 
 - Built web portals with AngularJS, .NET and SharePoint for an advertising client.
 - Led the team's move to React and Redux, upskilling developers in modern frontend practice.
@@ -78,4 +78,4 @@ Customer messaging across SMS, social and 85+ integrations.
 
 ### Bachelor's degree in Computer Science
 
-*Ho Chi Minh City University of Science · 2014*
+_Ho Chi Minh City University of Science · 2014_

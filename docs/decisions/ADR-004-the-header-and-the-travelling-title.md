@@ -16,7 +16,7 @@ a discrete view-transition morph (the K-Studio way) less smooth.
 
 ## Decision
 
-- **The top row (`.actions`) is `position: sticky`.** Scrolled, its buttons simply stay. 
+- **The top row (`.actions`) is `position: sticky`.** Scrolled, its buttons simply stay.
   `sticky-bar.tsx` only draws the strip behind the row and holds the title.
 - **Every page's own `h1` becomes the bar's title.** The page passes the same words to `SiteNav`
   as `title`, so they are in the server's HTML and nothing is read from the DOM after hydration.

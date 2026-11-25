@@ -16,8 +16,8 @@
     "shots:baseline": "node scripts/check-visual.mjs --update",
     "verify": "node scripts/verify.mjs",
     "check:real": "node scripts/check-real.mjs",
-    "lint": "biome check .",
-    "format": "node scripts/check-classes.mjs --write && biome check --write .",
+    "lint": "biome check . && prettier --check \"**/*.md\"",
+    "format": "node scripts/check-classes.mjs --write && biome check --write . && prettier --write \"**/*.md\"",
     "check:classes": "node scripts/check-classes.mjs"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "oxc-parser": "^0.159.0",
     "playwright-core": "1.64.1",
     "pngjs": "^7.0.0",
+    "prettier": "3.10.1",
     "react-doctor": "^0.9.23",
     "tailwindcss": "4",
     "typescript": "^7.0.2"

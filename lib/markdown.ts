@@ -48,9 +48,9 @@ function parseEntry(block: string): Entry {
   const [titleLine, ...rest] = block.split("\n");
   const title = titleLine.trim();
   const metaAt = rest.findIndex((l) => l.trim() !== "");
-  const meta = /^\*(.+)\*$/.exec(rest[metaAt]?.trim() ?? "");
+  const meta = /^([*_])(.+)\1$/.exec(rest[metaAt]?.trim() ?? "");
   if (!meta) throw new Error(`content/resume.md: "${title}" needs an *Org · Dates · Where* line under it`);
-  const parts = meta[1].split(" · ");
+  const parts = meta[2].split(" · ");
   if (parts.length < 2) throw new Error(`content/resume.md: "${title}" needs at least *Org · Dates*`);
   const where = parts.length > 2 ? parts.pop() : undefined;
   const when = parts.pop() ?? "";

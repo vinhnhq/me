@@ -63,8 +63,8 @@ his other projects use, and accepted that the file would shrink but not disappea
 - **Sizes in pixels stay in pixels** (`rounded-[4px]`, `after:h-[2px]`): the root font size is
   17px here, so Tailwind's rem-based `rounded-sm` would be 4.25px.
 - **Proof that the utilities stand alone**: with the old element rules switched off inside the
-  markdown (`all: revert-layer`, injected for the test only), the pictures still matched, 83 of
-  83. The old global element rules stay until the other components no longer need them.
+  markdown (`all: revert-layer`, injected for the test only), the pictures still matched,
+  83 of 83. The old global element rules stay until the other components no longer need them.
 
 ### Step three, first half: the blog's components (2026-11-25)
 
@@ -93,8 +93,8 @@ The photo, the headline, the values, the contact line, each job's title, organis
 and the section headings now carry utilities, their phone, touch and print variants included.
 The stylesheet is 554 lines.
 
-- **The contact links stay underlined on paper.** The print sheet said `a { text-decoration:
-  none }`, but `.contact a` was more specific, so those four links kept their underline in the
+- **The contact links stay underlined on paper.** The print sheet said
+  `a { text-decoration: none }`, but `.contact a` was more specific, so those four links kept their underline in the
   PDF. The first conversion removed it (`print:no-underline`), and the print picture showed one
   changed row of pixels.
 - **The two pills are not in this step.** Their rules are tied to the top row
