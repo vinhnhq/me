@@ -1,302 +1,66 @@
 # CLAUDE.md
 
-Vinh Nguyen's résumé site, for a job search (targets: Vietnam companies + remote international).
-Live at https://vinhn.dev. Built 2026-11-16 in a session started from `~/github.com/k-studio`.
+Vinh Nguyen's site: a blog at the root and a résumé at `/resume`, live at https://vinhn.dev.
+The repository is public.
+
+`README.md` says how to run, write and check. `docs/decisions/README.md` indexes the reasons.
+This file is a map and the traps a script cannot test. Do not repeat a decision here: link its
+ADR.
+
+## Working here
+
+- **No comments in code** (ADR-001). A reason goes in an ADR, in the same change.
+- **A change is a branch and a pull request.** Never push to `main`, never merge, never deploy:
+  open the pull request and stop (ADR-014).
+- **Before handing over: `bun run verify`**, then say what was not verified.
+- **Before HTML or CSS work**, look the task up in Modern Web Guidance; before a control, check
+  whether ui-sdk ships it (ADR-010).
+- **Private facts stay out of this repository.** What the résumé claims (dates, titles, numbers,
+  skills) is the owner's to write; never add a skill or a figure he has not given.
 
 ## Where things are
 
-The site is TWO places: the CV, and a blog that holds everything else.
-
-| Path | What |
-|---|---|
-| `content/resume.md` | The CV: the single source for `/resume` and for the PDF |
-| `content/blog/<slug>.md` | Posts and case studies (`/blog`, `/blog/<slug>`) |
-| `app/page.tsx` | The ROOT: the blog list (since 2026-11-18). `/blog` redirects to it |
-| `app/resume/page.tsx`, `components/resume-header.tsx`, `components/resume-body.tsx` | The CV page, at `/resume` |
-| `app/blog/[slug]/` | A post (`/blog/<slug>`) |
-| `components/support.tsx` | The Ko-fi line under the blog list and each post |
-| `app/api/pdf/route.ts`, `lib/pdf.ts` | The CV as a PDF, drawn on the server |
-| `components/site-nav.tsx` | The top row of every page |
-| `components/sticky-bar.tsx` | The bar the top row becomes when scrolled, and the travelling title |
-| `components/site-menu.tsx` | The full-screen menu |
-| `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx` | Theme and text-size pills, on ui-sdk (see "Tooling and guidelines") |
-| `components/wave-footer.tsx` | The wave lines at the foot of every page |
-| `app/favicon.ico`, `app/icon.png`, `app/apple-icon.tsx` | The icon: white "VN" on a burgundy disc. Static files, so `/favicon.ico` exists. (The icon on the Vercel DASHBOARD is unrelated: it is the project's Avatar, uploaded by hand in Settings → General; set 2026-11-16) |
-| `app/globals.css` | ALL styling: plain CSS, no Tailwind |
-| `lib/markdown.ts` | Reads and parses everything in `content/` |
-| `scripts/ui-audit.ts` | `bun run audit`: the phone audit |
-
-Stack: Next.js 16 App Router, React 19, plain CSS, `marked`, Bun, `@ui-sdk/react` (beta) for the
-two interactive controls. No database, no CMS.
-
-## Tooling and guidelines (set up 2026-11-21)
-
-Three guides are installed as skills, and the site was refactored against them the same day
-with NO visual change (phone screenshots pixel-identical to the live site; desktop differs only
-in line endings, from `text-wrap`).
-
-| What | Where | Use |
+| Path | What | ADR |
 |---|---|---|
-| **ui-sdk** (Vercel Labs, ui-sdk.dev, BETA 0.1.0-beta.13, every API marked experimental) | `@ui-sdk/react`, `@ui-sdk/core`; skill `.claude/skills/ui-sdk`; docs in `node_modules/@ui-sdk/react/docs/` | Behaviours for controls. Do not hand-roll a `role=` it ships |
-| **Modern Web Guidance** (Chrome) | skill `.agents/skills/modern-web-guidance` (symlinked into `.claude/skills`) | `npx modern-web-guidance@latest search "<task>"` then `retrieve <id>` before HTML/CSS work; `legacy-scan .` found 0 legacy patterns |
-| **Web Interface Guidelines** (Vercel) | skill `.claude/skills/web-design-guidelines` | The review checklist |
-| **react-doctor** | dev dependency, `bun run doctor`, skill `.claude/skills/react-doctor` | Lints React. Its installer also added a GitHub workflow, a pre-commit hook and `.kiro/`; those were removed on purpose |
-| **axe-core** | inside `bun run audit` | Every machine-testable WCAG 2.2 A/AA rule, on 4 pages x 3 screens x 2 themes |
+| `content/resume.md`, `content/blog/` | The résumé and the posts | 002 |
+| `lib/markdown.ts` | Reads and parses everything in `content/` | 002 |
+| `app/page.tsx` | The root: the blog list | 007 |
+| `app/resume/page.tsx`, `components/resume-*.tsx` | The résumé | 007 |
+| `app/blog/[slug]/page.tsx` | A post | 002, 013 |
+| `app/api/pdf/route.ts`, `lib/pdf.ts` | The résumé as a PDF | 006 |
+| `components/site-nav.tsx`, `components/sticky-bar.tsx` | The top row, and the bar it becomes | 004 |
+| `components/site-menu.tsx` | The full-screen menu | 005 |
+| `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx` | Theme and text size | 003, 010 |
+| `components/support.tsx` | The Ko-fi cup | 011 |
+| `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
+| `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents | 008 |
+| `app/globals.css` | ALL styling: plain CSS, no Tailwind | 003, 004, 009 |
+| `scripts/` | The checks | 012 |
+| `.github/workflows/` | The pull-request gate and the daily check | 014 |
 
-- **Theme and text size are ui-sdk preferences** (`lib/preferences.ts`): `colorScheme`
-  (`data-color-scheme` = system/light/dark on `<html>`) and `textSize` (`data-size`). `Preferences`
-  (in the layout) renders the inline script that applies the saved values before first paint,
-  saves to localStorage under the OLD keys (`theme`, `size`, so returning readers keep their
-  choice) and syncs every control and tab. There is no hand-written boot script or event bus any
-  more.
-- **The pills are ui-sdk's `SegmentedControl`**: one Tab stop per pill, arrow keys move the
-  choice (the hand-rolled radiogroup had no arrow keys). Styled by `.segmented` and `[data-checked]`.
-- **Colours are `light-dark()` pairs** (`--bg-light`/`--bg-dark` and so on in `globals.css`), with a
-  `prefers-color-scheme` fallback for browsers before 2024, which then follow the device only.
-- **The menu stays a native `<dialog>`**: both guides prefer the native element, so ui-sdk's
-  Dialog was not used.
-- **react-doctor: 5 warnings left, all judged false positives** (score 53; it was 50 with 8):
-  three `dangerouslySetInnerHTML` (the HTML is our own markdown from `content/`, not user input)
-  and two plain `<a href="/api/pdf">` (a file download, which must NOT be a router `<Link>`).
-- Not done from the guidelines, on purpose: curly quotes in the content, `translate="no"` on brand
-  names, and updating `theme-color` when the reader overrides the device's scheme.
+## Traps a script cannot test
 
-## Content rules
+- **Read `components/sticky-bar.tsx` and ADR-004 before touching the header.** The title's three
+  paths are chosen by measuring; a small CSS change near the top row can break a landing.
+- **`--title-*` has three users** (the big title, the bar's title, the menu's links). Keep them
+  identical (ADR-004).
+- **A page passes `SiteNav` the same words as its `h1`** as `title` (ADR-004).
+- **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
+- **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
+- **The baseline for `check:visual` comes from a local build of `main`, never from the live
+  site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).
+- **If port 3100 is busy, find what holds it**: an old server once answered for a build that was
+  not running (ADR-012).
+- **In the simulators, open a fresh tab with a new `?r=N`** (ADR-012). Booting them:
+  `xcrun simctl boot <id>`, `xcrun simctl openurl <id> <url>`, `xcrun simctl io <id> screenshot`;
+  Android through `adb reverse tcp:3100 tcp:3100`. Taps can be sent to Android (`adb shell input
+  tap`), not to iOS.
+- **In `next dev`, `/llms-full.txt` once answered 500 on a stale module** while the build was
+  fine; restart dev.
+- **The K-Studio post's pictures follow ADR-013**: invented data only, names and photographs
+  blurred, no link to the app's demo.
 
-### `content/resume.md`
+## Never checked
 
-- Front matter (plain `key: value`, parsed by hand, no YAML library): `name`, `headline`, `email`,
-  `phone`, `location`, `github`, `values`. These feed the header.
-- The paragraphs before the first `##` are the summary (two paragraphs: who and where; how I work).
-- A job is `### Title` + an italic `*Org · Dates · Where*` line. It is read from the END, so the
-  org may itself contain " · " (three employers in one entry).
-- Every bullet is shown, on the web and in the PDF. There was a "All N highlights" fold
-  (`<!-- more -->`); Vinh had it removed on 2026-11-16. Do not bring it back.
-- Keep ← → arrows and other unusual symbols OUT of this file: neither font's Google subset has
-  them, and on Vercel's Linux Chromium a missing glyph has no fallback, so it prints as a box.
-- The PDF must stay 2 pages. Check after any content change (see Verifying).
-
-### `content/blog/<slug>.md`
-
-- Front matter: `title`, `date` (ISO day), `description`, `tags`.
-- EXACTLY three comma-separated tags per post; the build fails otherwise.
-- A case study is an ordinary post tagged `case-study`, with `role`, `when`, `stack` (and optional
-  `link` + `linkLabel`) added; the post page shows those as a facts block and a button.
-- A picture is `![alt](/blog/<slug>/name-WIDTHxHEIGHT.jpg "Caption")` on a line of its own. It
-  becomes a `<figure>`; the size in the file NAME becomes width/height (no layout shift), so
-  keep that naming. Files live in `public/blog/<slug>/`.
-- The `k-studio` post (rewritten 2026-11-17, modelled on tungv.com's Billy J archive) tells the
-  three parts by picture: the public landing page (www.k-studio.photo, repo
-  `~/github.com/k-studio-landing`), the internal app (behind sign-in, no public address) and
-  the couple's portal with the album review; then how it was built (hand-drawn wireframes with
-  the studio, then a prototype),
-  the loop, and lessons. The portal shots are contract KS112026-0019 on dev (NOT 0004, whose
-  contact phone is Vinh's own). Its facts come
-  from k-studio's `__project__/docs/retro.md`, `scope.md`, `ui-review.md` and the specs. Its
-  screenshots are from the DEV-DEMO data (invented), in English, never from the local database
-  (which holds real imported albums and couples). Names, phones and contract codes on the portal are blurred, and so
-  are the album's photographs (`/gallery-lab` scenarios 2 and 6, `img { filter: blur(9px) }`):
-  they are a real couple's photos, and Vinh asked for sensitive data to be blurred. Left out
-  on purpose: the studio's letterhead
-  (address, phone, email), pay figures next to staff names, and couples' photos. To retake:
-  in `~/github.com/k-studio`,
-  `BETTER_AUTH_URL=http://localhost:3200 APP_URL=http://localhost:3200 bun --env-file=.env.dev.local x next dev -p 3200`,
-  set the `locale=en` cookie, sign in from the picker.
-- `how-i-build-with-ai-agents` and `k-studio` carry numbers from the k-studio repo (first commit
-  2026-09-10, 325 commits, ~120k LOC, 823 files, 42 tables, 19 migrations, 32 specs, 14 ADRs,
-  89 test files + 18 Playwright suites, ~350 landmines). Refresh them from there if they drift.
-- Redirects in `next.config.ts`: `/agents` → the agents post, `/projects/k-studio` →
-  `/blog/k-studio`, `/vinh-nguyen-resume.pdf` → `/api/pdf`.
-
-## Decisions Vinh made (do not undo without asking)
-
-All dated 2026-11-16 unless they say otherwise.
-
-- **The blog list is the root** (2026-11-18): a visitor lands on the posts and goes from there to
-  a post or to the résumé at `/resume`. The PDF is drawn from `/resume`. Each page sets its own
-  canonical and share card; the layout's are only a fallback.
-- **Ko-fi** (2026-11-18): https://ko-fi.com/vinhn (`KOFI_URL` in `lib/site.ts`), as ONE small round
-  cup button (44px, bottom right) on the blog list and on each post (`components/support.tsx`),
-  and a line in `/llms.txt`. It shows only when the reader reaches the END of the page. Ko-fi's
-  own floating widget was live for an hour and dropped: Vinh found it too big and annoying,
-  always on screen. Do not bring it back. NOT on the CV or the PDF (he agreed).
-- **The root opens with his name** (2026-11-18): `h1` "Vinh Nguyen", one line of introduction
-  with a link to the résumé, then the blog's lede and the posts. Vinh does not want the résumé
-  link pushed everywhere: visitors meet the blog, and he hands out `/resume` when asked.
-- **Accent is burgundy `#800020`**, his lucky colour. On dark it is `oklch(0.66 0.18 18)`, because
-  burgundy itself is unreadable on a dark page. Light and dark themes only.
-- **Fonts:** Manrope for text; Geist Mono for dates, the contact line, pills, code, AND page
-  titles, the name and menu links at weight 500 (bold Manrope titles were "too bold").
-- **Jobs are ONE column on every screen.** No dates column, not even on desktop.
-- **Values:** "Ownership · Adaptability · Mentorship".
-- **Contact line:** plain mono text; only GitHub has a mark; no X/Twitter. Location reads
-  "Ho Chi Minh City, Viet Nam · Open to remote" (he is looking for a remote position).
-- **Skills:** Saga, MobX, AntD, Styled Components, WebdriverIO, Percy, Webpack, Immer, EC2,
-  Python and Pulumi were removed as dated or not defensible in an interview. Do not add skills
-  he has not claimed.
-- **No link to the K-Studio demo in the blog posts** (2026-11-17): "just a topic and photos are
-  enough to explain". The post has screenshots instead. Do not add the link back. The CV's
-  "Live demo" link was removed too ("yes remove all link"). The post DOES link the public landing
-  page (https://www.k-studio.photo/en), inline and as its button: Vinh asked for that.
-- **No Bảo Minh case-study page.** He dropped it (too like K-Studio, and K-Studio is the better
-  one). It lives only as a bullet on the CV. Do not re-create it.
-- **Menu and close buttons are bare icons**, "like Apple": no ring, no fill. The round area is
-  still the 44px target, shown only on hover and keyboard focus.
-- **The menu is at the site's own sizes**, not larger than the page.
-- **Blog description:** "Field notes and case studies from shipping real products."
-
-## How the header works
-
-This is the intricate part. Read `components/sticky-bar.tsx` before touching it.
-
-- `.actions` (the top row) is `position: sticky`: scrolled, its buttons simply stay where they
-  are. `sticky-bar.tsx` draws the strip behind the row and holds the page's title.
-- EVERY page's own `h1` becomes the bar's title: "Vinh Nguyen" on the home page and the CV, a
-  post's title. The page passes it to `SiteNav` as `title` (the same words as its `h1`), so it is
-  in the server's HTML; it used to be read from the DOM in an effect.
-  The motion is CONTINUOUS and tied to the scroll, as on tungv.com. Vinh preferred this to
-  k-studio's discrete view-transition morph, which he found less smooth.
-- Three paths, chosen by measuring:
-  - **land, two legs** (desktop CV only): UP while shrinking, then LEFT along the bar, so the name
-    never crosses the photo.
-  - **land, one leg** (every other one-line title): across WHILE it rises. Going up first ran it
-    over the menu button.
-  - **fade** (a title that wraps, or that the bar must cut short): shrinks towards the bar and
-    cross-fades with the bar's title over the last stretch.
-- The component only MEASURES (`--head-end/-end2/-slide/-dx/-scale` on `<html>`) and flips
-  `data-head-stuck/-collapsed/-travels/-direct/-fades`. The per-frame motion is a CSS scroll-driven
-  animation in `globals.css`, with a `requestAnimationFrame` fallback in the component.
-- `--title-*` in `globals.css` is shared by the big title, the bar's title and the menu links.
-  Keep them identical, or a travelling title will not land on the bar's.
-- By width:
-  - **≥60rem (desk, and a tablet on its side):** full row at the top (links, text size, theme,
-    "Save as PDF"). Scrolled: the links and text size fade out, a menu button comes in at the
-    left, and the title sits beside it.
-  - **≤60rem (phones, iPad and iPad mini upright):** the row is only a menu button (left) and
-    "Save as PDF" (right). Scrolled: the title is CENTRED between them. On phones the pill reads
-    just "PDF" to make room.
-- The menu (`site-menu.tsx`) is a native `<dialog>` that fades in over the page: Résumé, Blog,
-  "Save as PDF", then a gap, then theme and text size at the foot. No divider lines, no name.
-  Its close button is in the top right corner and TRAVELS there from the menu button (start pose
-  measured on open as `--from-x/-y/-scale`) while the bars cross into an X.
-- Theme and text size live on `<html>` (`data-color-scheme`, `data-size`) and in localStorage,
-  through ui-sdk preferences (`lib/preferences.ts`), which keep the control in the row and the
-  one in the menu in step. Changing theme plays a circular reveal (View Transitions API) from the pressed button.
-- Text size: medium (default) 17px, small 16px, large 19px.
-
-## Things that were tried and broke
-
-- **A top row with no pill was shorter than the bar's row** (2026-11-18): on a phone the menu
-  button sat 4px above the bar's title on the blog pages. `.actions` now has a `min-height`
-  equal to the bar's row. Keep the two in step.
-- **Vaul / shadcn's Drawer for the menu.** On iOS, Vaul locks scrolling by pinning `<body>` with
-  `position: fixed`, which zeroes `scrollY`. The header is driven by `scrollY`, so opening the
-  menu threw the header back to its top-of-page state (it looked like a jump to the top).
-- **Up-then-sideways for every title.** Right for the CV (photo on the left), wrong elsewhere: the
-  title ran over the menu button.
-- **A full-page Playwright screenshot drops touch emulation** (k-studio's landmine, met again
-  here). Judge touch layouts from viewport screenshots or the simulators, never `fullPage: true`.
-- **Comparing page width with `innerWidth` in the audit.** A phone browser widens `innerWidth` to
-  fit an overflowing page, so the check passed falsely. The audit compares with the SCREEN width.
-- **Backdrop blur on the bar.** It re-reads the text scrolling under it every frame (k-studio's
-  lesson). The bar is opaque.
-- **Stale tabs in the simulators.** Safari there does not reliably pick up dev changes; several
-  "it's not working" reports were old code. Open a fresh tab with a new `?r=N` query.
-
-## Accessibility and search (checked 2026-11-16)
-
-- Lighthouse on the live site: 100 for accessibility, best practices and SEO on all four pages,
-  mobile and desktop; performance 99-100 (one mobile run of 82 was noise). Re-run with
-  `bunx lighthouse https://vinhn.dev/ --chrome-flags="--headless=new"`.
-- What Lighthouse cannot see, and the code now does:
-  - "Skip to content" is the first Tab stop on every page (`site-nav.tsx`, `.skip`, `#content`).
-  - What is INVISIBLE is `inert`: the bar's title before the bar is there, and on a desk the menu
-    button until the page is scrolled (`sticky-bar.tsx`, `reach()`).
-  - The page's `h1`, once it has become the bar's title, is hidden with `opacity`, NOT
-    `visibility`: a screen reader must still find it.
-  - Post titles in the blog list are `h2`s.
-  - The menu is a native `<dialog>`: focus goes to its close button, stays inside, Escape closes,
-    focus returns to the menu button.
-- Sharing: every page sets its own `openGraph` through `shareCard()` in `lib/site.ts` (a page's
-  `openGraph` replaces the layout's; Next does not merge them). The image is `/og.png`
-  (`app/og.png/route.tsx`, 1200×630): solid burgundy, the photo SMALL and round, name and
-  headline in words. Vinh did not want his photo filling the card (2026-11-16). Few elements, all
-  large, plus a "Read my résumé" pill. LinkedIn is the exception: it shows a card as a ~200px
-  thumbnail beside the title, so LinkedInBot is rewritten (`next.config.ts`) from `/og.png` to
-  `/og-photo.png`, the photo alone on burgundy. Check with
-  `curl -A LinkedInBot https://vinhn.dev/og.png`; opengraph.xyz cannot show it (it does not
-  fetch as LinkedInBot), LinkedIn's Post Inspector can.
-  `app/sitemap.ts` and `app/robots.ts` make `/sitemap.xml` and `/robots.txt`.
-- For AI agents and crawlers: `/llms.txt` (index, llmstxt.org) and `/llms-full.txt` (the CV and
-  every post as one markdown file), both written from `content/` at build; schema.org JSON-LD
-  on the CV (`ProfilePage` + `Person`) and on each post (`BlogPosting`). `robots.txt` allows
-  every crawler, AI ones included: for a job search, being read is the point. In `next dev`,
-  `/llms-full.txt` once 500'd on a stale module while the build was fine; restart dev if so.
-- Checkers used: opengraph.xyz, opengraph.to (92 before the theme colour, 32px icon and
-  manifest were added), LinkedIn Post Inspector. Deliberately NOT done: opengraph.xyz's "no
-  call-to-action" warning (its own detector; the pill is on the card).
-- X: the handle (`X_HANDLE` in `lib/site.ts`) is in `twitter:site`/`twitter:creator` and the
-  JSON-LD `sameAs` ONLY. Vinh does not want it listed on the résumé (2026-11-17), so it is not
-  in the header, the PDF or the llms files.
-- `app/icon2.svg` is the icon as a drawing (strokes, no font), matched by eye to `icon.png`.
-- Never tested with a real screen reader (VoiceOver).
-
-## PDF
-
-- `/api/pdf` draws the CV as a 2-page A4 PDF with Chromium from the live `/` (`lib/pdf.ts`, the
-  k-studio approach: `@sparticuz/chromium` on Vercel, local Playwright Chromium elsewhere).
-- Cached by the CDN for a day; a new deployment starts with an empty cache.
-- Keep `outputFileTracingIncludes` and `serverExternalPackages` in `next.config.ts`, or the
-  function 500s on Vercel (`playwright-core` reads its own files at load).
-- Print and the PDF are always light, at the default text size.
-
-## Verifying
-
-```bash
-bun run dev                                  # port 3100 (the session used 3101; see below)
-bun run audit [baseUrl]                      # overflow, 44px touch targets, text ≥ 12px, contrast ≥ 4.5:1, axe-core WCAG 2.2 AA
-bun run doctor                               # react-doctor (5 known false positives)
-curl -s -o /tmp/cv.pdf <base>/api/pdf && pdfinfo /tmp/cv.pdf | grep Pages   # must say 2
-```
-
-- Phone rules come from k-studio's ui-review: no sideways overflow, 44px targets on any touch
-  screen (`@media (pointer: coarse)`), `touch-action: manipulation`, text ≥ 12px, contrast ≥ 4.5:1.
-- Real iOS Safari: Vinh keeps Device Hub open with an iPhone, an iPad Air and an iPad mini.
-  `xcrun simctl openurl <device-id> "http://localhost:<port>/?r=N"` then
-  `xcrun simctl io <device-id> screenshot <file>`. There is no way to tap or scroll them from the
-  CLI; `#:~:text=...` in the URL jumps to a piece of text.
-- On 2026-11-16 an old `bun run start` (PID 73661) still held port 3100 and the dev server ran on
-  3101. If 3100 is busy, check what holds it before assuming the dev server is up.
-
-## Deploy
-
-- GitHub `vinhnhq/me` (private) → Vercel project `vinhnguyen-projects/me`. A push to `main`
-  deploys to production.
-- **Commit locally; push only on Vinh's go.** He batches changes while iterating.
-- Domain `vinhn.dev` is registered at Cloudflare; one DNS-only CNAME points it at Vercel. There
-  is no `www` record.
-- The page publicly shows his phone number and email.
-
-## Facts behind the CV
-
-- Freelance Jun 2025 – present, paid. Two projects:
-  - Bảo Minh Gia Định insurance sales portal, Jun 2025 – Apr 2026, ~50 sales staff + customers,
-    same stack as K-Studio, built with Cursor (more hand-coding). Retired when the parent company
-    moved subsidiaries onto its group-wide platform.
-  - K-Studio, Sep 2026 – present, built with Claude Code. Public demo (invented data, one-tap
-    sign-in): https://k-studio-git-dev-vinhnguyen-projects.vercel.app (the owner OK'd showing it).
-- BodiData (Jun 2024 – May 2025) was full-time, remote.
-- Grab / Ninja Van / Dwarves were three separate jobs, deliberately combined into one entry.
-- Photo: `public/vinh-nguyen.jpg`, cropped from `~/Downloads/me/vinhn_square.jpg`.
-
-## Open
-
-1. The Grab / Ninja Van / Dwarves years in `content/resume.md` are PLACEHOLDERS. Vinh replaces them.
-2. Tags are labels only. Vinh wants "click a tag to search/filter posts" LATER. Do not build it
-   until he asks.
-3. The "Before this: Cursor" section of the agents post still describes the Bảo Minh project
-   (no link). Vinh has not said whether to keep it.
-4. A desktop left-side drawer was discussed and not built; desktop uses the same full-screen menu.
-5. Never checked by hand on a touch screen: the feel of the scroll-linked title, and tapping the
-   menu. All checks so far were headless or static simulator screenshots.
-6. Novorésumé (the old CV) was only partly updated; this site replaces it.
+- A real screen reader.
+- The feel of the scroll-linked title and the menu under a real finger on iOS.

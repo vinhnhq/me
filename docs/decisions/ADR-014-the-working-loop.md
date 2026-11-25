@@ -12,8 +12,9 @@ Accepted
 
 Until 2026-11-23 changes were committed on `main` and pushed when the owner said "deploy". The
 sister project adopted a tighter loop that day (rules in place of prose, a gate on every pull
-request, a daily check, one issue at a time), and the owner asked for the same here. This
-repository was also made public, as an example of a product built with an agent.
+request, a daily check, one issue at a time), and the owner asked for the same here. The
+owner also decided to make this repository public, as an example of a product built with an
+agent.
 
 ## Decision
 

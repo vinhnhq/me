@@ -31,8 +31,10 @@ able to fail.
 - **`bun run check:comments`** (ADR-001).
 - **`bun run check:visual`**: viewport pictures of every page, at a phone and a desk, light and
   dark, with reduced motion on. A pixel counts as changed past 2 levels on a channel, and ONE
-  changed pixel fails the picture. The baseline (`visual/`) is this machine's rendering and is
-  not in git; `bun run shots:baseline` saves it.
+  changed pixel fails the picture. The baseline (`visual/`) is this machine's rendering of a
+  local build and is not in git; `bun run shots:baseline` saves it. A baseline taken from the
+  live site does not work: Vercel's build of the same commit differed from a local one by 12
+  pixels in the text-size pill (2026-11-23), while two local builds match exactly.
 - **Viewport pictures, never full-page ones.** A full-page Playwright screenshot drops touch
   emulation and re-lays the page.
 - **`bun run verify`** runs everything in order and prints pass, FAIL or skipped per step:
