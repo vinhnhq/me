@@ -25,8 +25,8 @@ agent.
   `check:classes` (ADR-016), `check:comments`,
   `check:rules`, react-doctor at 100, the build, typecheck, then the audit and the PDF's page
   count against the build.
-- **The live site is checked every day** (`.github/workflows/daily.yml`, 01:00 UTC, 08:00 in
-  Vietnam): the audit against https://vinhn.dev and the PDF's page count. A failure opens an
+- **The live site is checked every day** (`.github/workflows/daily.yml`, 18:00 UTC, which is
+  01:00 in Vietnam, the hour the owner chose on 2026-11-26): the audit against https://vinhn.dev and the PDF's page count. A failure opens an
   issue labelled `daily-check` and `agent-ready`, or comments on the open one. No agent runs.
 - **A trap that can be tested is a rule** in `check:rules`. `CLAUDE.md` keeps only what a script
   cannot test.

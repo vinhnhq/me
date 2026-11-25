@@ -61,7 +61,7 @@ take another address as an argument.
    react-doctor, the build, the types, the audit and the PDF.
 3. The owner reads the pull request and merges it. A merge to `main` deploys production on
    Vercel; any other branch gets a preview.
-4. Every day at 08:00 in Vietnam a workflow checks the live site. A failure opens an issue.
+4. Every day at 01:00 in Vietnam a workflow checks the live site. A failure opens an issue.
 5. Issues carry the queue: `agent-ready` for work an agent can finish against the checks,
    `needs-owner` for what waits on a person.
 
