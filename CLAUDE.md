@@ -34,7 +34,7 @@ ADR.
 | `components/support.tsx` | The Ko-fi cup | 011 |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
 | `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents | 008 |
-| `app/globals.css` | ALL styling: plain CSS, no Tailwind | 003, 004, 009 |
+| `app/globals.css` | Tokens, the old class rules (being moved to Tailwind utilities, step by step), the motion and the print sheet | 003, 004, 009, 015 |
 | `scripts/` | The checks | 012 |
 | `.github/workflows/` | The pull-request gate and the daily check | 014 |
 
@@ -46,6 +46,8 @@ ADR.
   identical (ADR-004).
 - **A page passes `SiteNav` the same words as its `h1`** as `title` (ADR-004).
 - **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
+- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). Old rules live
+  in `@layer components`; an unlayered rule would beat every utility.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
 - **The baseline for `check:visual` comes from a local build of `main`, never from the live
   site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).
