@@ -38,6 +38,7 @@ try {
     step("audit", "bun run audit");
     step("pdf", "bun run check:pdf");
     step("visual", "bun run check:visual");
+    step("real", "bun run check:real");
   }
 } finally {
   if (server) server.kill();
@@ -52,6 +53,6 @@ console.log(
     ? `\n${failed.length} step(s) failed — not ready to hand over`
     : skipped.length
       ? `\nwhat ran passed, but this is NOT a full verification — skipped: ${skipped.join(", ")}`
-      : "\nevery step passed — look at the page in the simulators, then hand over",
+      : "\nevery step passed — look through screens/real, then hand over",
 );
 process.exit(failed.length ? 1 : 0);

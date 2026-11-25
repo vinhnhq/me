@@ -9,7 +9,9 @@ down in [`docs/decisions`](docs/decisions/README.md); the code itself carries no
 
 ## How it is made
 
-- **Next.js 16** (App Router), **React 19**, plain CSS in one file, **Bun**. No database, no CMS.
+- **Next.js 16** (App Router), **React 19**, **Tailwind v4** (the move from one hand-written
+  stylesheet is under way, [ADR-015](docs/decisions/ADR-015-tailwind-and-ui-sdk-for-styling.md)),
+  **Bun**. No database, no CMS.
 - **Content is markdown**: `content/resume.md` and `content/blog/<slug>.md`, read at build.
 - **The PDF is the page**: `/api/pdf` opens `/resume` in Chromium on the server and prints it.
 - **Two interactive controls** (theme and text size) use [ui-sdk](https://ui-sdk.dev); the menu
@@ -42,12 +44,13 @@ take another address as an argument.
 |---|---|
 | `bun run typecheck` | The types hold |
 | `bun run check:comments` | There is no comment in the code; a reason belongs in `docs/decisions` |
-| `bun run check:rules` | Fifteen rules, each tied to its decision record: the menu stays a native dialog, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
+| `bun run check:rules` | Seventeen rules, each tied to its decision record: the menu stays a native dialog, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
 | `bun run doctor` | react-doctor scores 100 |
 | `bun run audit [url]` | On 4 pages, 3 touch screens and both themes: the page is no wider than the screen, controls are 44×44, text is at least 12px and 4.5:1, and no WCAG 2.2 A or AA rule that axe-core can test is broken |
 | `bun run check:pdf [url]` | The résumé's PDF answers, has exactly 2 pages and is marked `noindex` |
 | `bun run check:visual` | 80 pictures (4 pages, 3 sizes, both themes, the menu, keyboard focus) match the baseline with zero changed pixels. `bun run shots:baseline` saves the baseline from a build you trust, on the same machine |
-| `bun run verify` | All of the above, in order, on a fresh build. `SKIP=visual` leaves a step out and says so |
+| `bun run check:real` | In real Safari (iPhone and iPad simulators) and real Chrome (Android emulator): no overflow, 44px targets, the accessibility rules, the title reaching the bar, the menu, the scroll position kept under the menu, the dark theme and large text. Needs Xcode and Android Studio |
+| `bun run verify` | All of the above, in order, on a fresh build. `SKIP=real` leaves a step out and says so |
 
 ## The loop
 

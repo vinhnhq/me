@@ -12,7 +12,10 @@ ADR.
 - **No comments in code** (ADR-001). A reason goes in an ADR, in the same change.
 - **A change is a branch and a pull request.** Never push to `main`, never merge, never deploy:
   open the pull request and stop (ADR-014).
-- **Before handing over: `bun run verify`**, then say what was not verified.
+- **Before handing over: `bun run verify`, real devices included.** It drives Safari in the iOS
+  simulators (Device Hub) and Chrome in the Android Studio emulator through `check:real`. Do not
+  skip that step on this Mac; then look through `screens/real` and say what was not verified
+  (ADR-012).
 - **Before HTML or CSS work**, look the task up in Modern Web Guidance; before a control, check
   whether ui-sdk ships it (ADR-010).
 - **Private facts stay out of this repository.** What the résumé claims (dates, titles, numbers,
@@ -34,7 +37,7 @@ ADR.
 | `components/support.tsx` | The Ko-fi cup | 011 |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
 | `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents | 008 |
-| `app/globals.css` | ALL styling: plain CSS, no Tailwind | 003, 004, 009 |
+| `app/globals.css` | Tokens, the old class rules (being moved to Tailwind utilities, step by step), the motion and the print sheet | 003, 004, 009, 015 |
 | `scripts/` | The checks | 012 |
 | `.github/workflows/` | The pull-request gate and the daily check | 014 |
 
@@ -46,6 +49,8 @@ ADR.
   identical (ADR-004).
 - **A page passes `SiteNav` the same words as its `h1`** as `title` (ADR-004).
 - **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
+- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). Old rules live
+  in `@layer components`; an unlayered rule would beat every utility.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
 - **The baseline for `check:visual` comes from a local build of `main`, never from the live
   site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).

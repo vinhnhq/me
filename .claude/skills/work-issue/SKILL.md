@@ -25,7 +25,7 @@ One issue, one branch, one pull request. The owner verifies and merges; you neve
    into its ADR in the same change.
 5. **Verify, in this order, and fix what fails:**
    - `bun run typecheck && bun run check:comments && bun run check:rules` — seconds.
-   - `bun run verify` — everything (a few minutes). `SKIP=visual` on a
+   - `bun run verify` — everything (a few minutes). `SKIP=real,visual` on a
      machine with no baseline pictures, and say so in the pull request.
    - `check:visual` must stay at 80/80 unless the issue changes the look. If it does, look at
      every picture in `visual/diff`, and re-save the baseline only for changes the issue asked for.

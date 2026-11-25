@@ -20,3 +20,4 @@ new ADR that supersedes it.
 | [ADR-012](ADR-012-the-checks.md) | The audit, axe-core, the rules, zero changed pixels, `verify` |
 | [ADR-013](ADR-013-the-k-studio-post.md) | What the K-Studio post may show, and what is blurred or left out |
 | [ADR-014](ADR-014-the-working-loop.md) | Pull requests, the gate, the daily check, `/daily` and `/work-issue` |
+| [ADR-015](ADR-015-tailwind-and-ui-sdk-for-styling.md) | Tailwind v4 and ui-sdk in place of the single stylesheet; what stays as CSS; the steps |
