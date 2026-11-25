@@ -50,9 +50,13 @@ able to fail.
     text. Whole-screen pictures, bars included, go to `screens/real/` (not in git).
   - Only the iOS 18.6 simulators take WebDriver; the newest iOS (27.0) gets first-screen
     pictures to look at, with nothing measured. A press there is a script click, not a finger.
+  - **It waits for a state, never for a fixed time, and judges the scroll position only on a page
+    that can scroll that far.** Fixed waits failed at random on a slow emulator, and the iPad
+    simulator's window shelf lets a page that fits the screen report a scroll position, which
+    the menu's scroll lock then resets (2026-11-25). A failure prints the states it measured.
 - **`bun run verify`** runs everything in order and prints pass, FAIL or skipped per step:
-  typecheck, comments, rules, react-doctor at 100, the build, the audit, the PDF's page count,
-  the visual check, the real browsers. `SKIP=real` on a machine without the simulators, said
+  typecheck, lint and class names (ADR-016), comments, rules, react-doctor at 100, the build,
+  the audit, the PDF's page count, the visual check, the real browsers. `SKIP=real` on a machine without the simulators, said
   out loud in the pull request.
 - **In the simulators, open a fresh tab with a new `?r=N`.** Safari there does not reliably pick
   up a change; several "it is not working" reports were old code.

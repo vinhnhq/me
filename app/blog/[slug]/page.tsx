@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Markdown } from "@/components/markdown";
 import { SiteNav } from "@/components/site-nav";
 import { Support } from "@/components/support";
-import { notFound } from "next/navigation";
 import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
-import { SITE_URL, jsonLd, shareCard } from "@/lib/site";
+import { jsonLd, SITE_URL, shareCard } from "@/lib/site";
 import { HEADING, PAGE } from "@/lib/styles";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -26,7 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: post.description,
     alternates: { canonical: path },
-    openGraph: { type: "article", publishedTime: post.date, authors: ["Vinh Nguyen"], tags: [...post.tags], ...shareCard(title, post.description, path) },
+    openGraph: {
+      type: "article",
+      publishedTime: post.date,
+      authors: ["Vinh Nguyen"],
+      tags: [...post.tags],
+      ...shareCard(title, post.description, path),
+    },
   };
 }
 
@@ -49,6 +55,7 @@ export default async function PostPage({ params }: Props) {
   };
   return (
     <main className={`${PAGE} post`}>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD from our own data, with "<" escaped by jsonLd() */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(article) }} />
       <SiteNav title={post.title}>
         <Link href="/resume">Résumé</Link>

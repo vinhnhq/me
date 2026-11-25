@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run check:classes
       - run: bun run check:comments
       - run: bun run check:rules
       - run: bun run doctor 2>&1 | tee doctor.log && grep -q '100 / 100' doctor.log

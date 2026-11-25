@@ -23,6 +23,8 @@ const stopServer = () => {
 };
 
 step("typecheck", "bun run typecheck");
+step("lint", "bun run lint");
+step("classes", "bun run check:classes");
 step("comments", "bun run check:comments");
 step("rules", "bun run check:rules");
 step("react-doctor", "bun run doctor 2>&1 | tee /dev/stderr | grep -q '100 / 100'");
@@ -31,7 +33,10 @@ const built = step("build", "bun run build");
 const server = built && spawn("./node_modules/.bin/next", ["start", "-p", String(PORT)], { stdio: "ignore" });
 const answers =
   server &&
-  spawnSync(`for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:${PORT}/ && exit 0; sleep 0.5; done; exit 1`, { shell: true, stdio: "ignore" }).status === 0;
+  spawnSync(`for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:${PORT}/ && exit 0; sleep 0.5; done; exit 1`, {
+    shell: true,
+    stdio: "ignore",
+  }).status === 0;
 if (server && !answers) results.push(["server", "FAIL", `the build did not answer on :${PORT}`]);
 try {
   if (answers) {
@@ -45,7 +50,7 @@ try {
   stopServer();
 }
 
-console.log("\n" + results.map(([name, state, last]) => `${state.padEnd(8)} ${name.padEnd(13)} ${last}`).join("\n"));
+console.log(`\n${results.map(([name, state, last]) => `${state.padEnd(8)} ${name.padEnd(13)} ${last}`).join("\n")}`);
 const failed = results.filter(([, state]) => state === "FAIL");
 const skipped = results.filter(([, state]) => state === "skipped").map(([name]) => name);
 console.log(

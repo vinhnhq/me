@@ -5,13 +5,18 @@ import { usePreference } from "@ui-sdk/react/preferences";
 import { SegmentedControl, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
 import { type ReactNode, useRef, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
-import { type SizeId, colorScheme, textSize } from "@/lib/preferences";
+import { colorScheme, type SizeId, textSize } from "@/lib/preferences";
 import { FOCUS_RING } from "@/lib/styles";
 
 type Option<T extends string> = { readonly id: T; readonly label: string; readonly icon: ReactNode };
 
 const noop = () => () => {};
-const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
+const useHydrated = () =>
+  useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
 
 function Segmented<T extends string>({
   label,
@@ -61,7 +66,6 @@ const svg = {
   strokeWidth: 1.8,
   strokeLinecap: "round",
   strokeLinejoin: "round",
-  "aria-hidden": true,
 } as const;
 
 const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
@@ -69,7 +73,7 @@ const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
     id: "light",
     label: "Light theme",
     icon: (
-      <svg {...svg}>
+      <svg {...svg} aria-hidden="true">
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
       </svg>
@@ -79,7 +83,7 @@ const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
     id: "dark",
     label: "Dark theme",
     icon: (
-      <svg {...svg}>
+      <svg {...svg} aria-hidden="true">
         <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
       </svg>
     ),
@@ -88,7 +92,7 @@ const THEME_OPTIONS: readonly Option<ColorSchemeValue>[] = [
     id: "system",
     label: "Follow the device",
     icon: (
-      <svg {...svg}>
+      <svg {...svg} aria-hidden="true">
         <rect x="3" y="4" width="18" height="12" rx="2" />
         <path d="M8 20h8M12 16v4" />
       </svg>
@@ -142,5 +146,7 @@ export function ThemeControl() {
 
 export function SizeControl() {
   const size = usePreference(textSize);
-  return <Segmented label="Text size" options={SIZE_OPTIONS} value={size.value} onChange={(id) => textSize.set(id, { reason: "item-press" })} />;
+  return (
+    <Segmented label="Text size" options={SIZE_OPTIONS} value={size.value} onChange={(id) => textSize.set(id, { reason: "item-press" })} />
+  );
 }

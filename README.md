@@ -9,9 +9,9 @@ down in [`docs/decisions`](docs/decisions/README.md); the code itself carries no
 
 ## How it is made
 
-- **Next.js 16** (App Router), **React 19**, **Tailwind v4** (the move from one hand-written
-  stylesheet is under way, [ADR-015](docs/decisions/ADR-015-tailwind-and-ui-sdk-for-styling.md)),
-  **Bun**. No database, no CMS.
+- **Next.js 16** (App Router), **React 19**, **Tailwind v4**, **Bun**. No database, no CMS. The
+  look is utility classes; scroll-driven motion and the print sheet are plain CSS
+  ([ADR-015](docs/decisions/ADR-015-tailwind-and-ui-sdk-for-styling.md)).
 - **Content is markdown**: `content/resume.md` and `content/blog/<slug>.md`, read at build and
   rendered as React components, never as raw HTML.
 - **The PDF is the page**: `/api/pdf` opens `/resume` in Chromium on the server and prints it.
@@ -43,8 +43,10 @@ take another address as an argument.
 | Command | What it proves |
 |---|---|
 | `bun run typecheck` | The types hold |
+| `bun run lint` | Biome: the code and the stylesheet are formatted and pass its lint rules. `bun run format` fixes what can be fixed |
+| `bun run check:classes` | Every Tailwind class is in its canonical spelling (`z-9`, not `z-[9]`) and in Tailwind's order, asked of Tailwind itself |
 | `bun run check:comments` | There is no comment in the code; a reason belongs in `docs/decisions` |
-| `bun run check:rules` | Eighteen rules, each tied to its decision record: the menu never uses a scroll-pinning drawer, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
+| `bun run check:rules` | Nineteen rules, each tied to its decision record: the menu never uses a scroll-pinning drawer, the PDF route stays out of search results, the résumé has no symbol the PDF cannot print, and so on |
 | `bun run doctor` | react-doctor scores 100 |
 | `bun run audit [url]` | On 4 pages, 3 touch screens and both themes: the page is no wider than the screen, controls are 44×44, text is at least 12px and 4.5:1, and no WCAG 2.2 A or AA rule that axe-core can test is broken |
 | `bun run check:pdf [url]` | The résumé's PDF answers, has exactly 2 pages and is marked `noindex` |
@@ -55,8 +57,8 @@ take another address as an argument.
 ## The loop
 
 1. A change is a branch and a pull request. Nobody pushes to `main`.
-2. Every pull request runs the fast gate in GitHub Actions: comments, rules, react-doctor, the
-   build, the types, the audit and the PDF.
+2. Every pull request runs the fast gate in GitHub Actions: lint, class names, comments, rules,
+   react-doctor, the build, the types, the audit and the PDF.
 3. The owner reads the pull request and merges it. A merge to `main` deploys production on
    Vercel; any other branch gets a preview.
 4. Every day at 08:00 in Vietnam a workflow checks the live site. A failure opens an issue.
@@ -72,7 +74,7 @@ and stops. It never merges and never deploys. The reasoning is in
 | Path | What |
 |---|---|
 | `content/` | The résumé and the posts |
-| `app/` | Pages and routes; `app/globals.css` holds all the styling |
+| `app/` | Pages and routes; `app/globals.css` holds the tokens, the motion and the print sheet |
 | `components/` | The header, the menu, the controls, the résumé's parts |
 | `lib/` | Reading the markdown, drawing the PDF, the site's constants |
 | `scripts/` | The checks |

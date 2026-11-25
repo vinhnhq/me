@@ -1,5 +1,5 @@
 import { getResume, listPosts } from "@/lib/markdown";
-import { SITE_URL, absoluteLinks } from "@/lib/site";
+import { absoluteLinks, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 

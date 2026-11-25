@@ -15,7 +15,10 @@
     "check:visual": "node scripts/check-visual.mjs",
     "shots:baseline": "node scripts/check-visual.mjs --update",
     "verify": "node scripts/verify.mjs",
-    "check:real": "node scripts/check-real.mjs"
+    "check:real": "node scripts/check-real.mjs",
+    "lint": "biome check .",
+    "format": "node scripts/check-classes.mjs --write && biome check --write .",
+    "check:classes": "node scripts/check-classes.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^153.0.0",
@@ -29,6 +32,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.9",
     "@tailwindcss/postcss": "4",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",

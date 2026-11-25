@@ -12,6 +12,9 @@ ADR.
 - **No comments in code** (ADR-001). A reason goes in an ADR, in the same change.
 - **A change is a branch and a pull request.** Never push to `main`, never merge, never deploy:
   open the pull request and stop (ADR-014).
+- **After editing code, run `bun run format`** (Biome, then Tailwind's canonical class names and
+  order). The owner's editor formats on save; unformatted work comes back as noise in his next
+  diff (ADR-016).
 - **Before handing over: `bun run verify`, real devices included.** It drives Safari in the iOS
   simulators (Device Hub) and Chrome in the Android Studio emulator through `check:real`. Do not
   skip that step on this Mac; then look through `screens/real` and say what was not verified
@@ -51,8 +54,9 @@ ADR.
   identical (ADR-004).
 - **A page passes `SiteNav` the same words as its `h1`** as `title` (ADR-004).
 - **A page's `openGraph` replaces the layout's**; build it with `shareCard()` (ADR-008).
-- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). Old rules live
-  in `@layer components`; an unlayered rule would beat every utility.
+- **New styling is Tailwind utilities, not new rules in `globals.css`** (ADR-015). What is left
+  there lives in `@layer components`; an unlayered rule would beat every utility, and
+  `check:rules` fails on a rule for a bare content element.
 - **A rule in `@layer components` loses to ANY utility.** An old rule that restyles an element
   from outside (`.box p { … }`) stops working the moment that element gets a utility for the
   same property; move the override onto the container as a utility (`[&_p]:m-0`).
@@ -65,6 +69,9 @@ ADR.
   utilities, hide it on paper with `print:hidden`.
 - **Before deleting an old class rule, search for every element with that class name**, and for
   descendants its selector reaches by accident (`.intro` and `.posts li` both did, ADR-015).
+- **A sentence with a link in it stays one text node.** The formatter breaks long JSX text around
+  a link with `{" "}`, which shifts the link by a sub-pixel; put the words in a string constant
+  (ADR-016).
 - **The root font size is 17px**, so rem-based utilities are not the pixel sizes Tailwind's docs
   list. Keep a pixel value as pixels: `rounded-[4px]`.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).

@@ -29,8 +29,8 @@ his other projects use, and accepted that the file would shrink but not disappea
 - **What stays as CSS, on purpose**: the keyframes and scroll-driven timelines of the travelling
   title and the waves (ADR-004), the print sheet that draws the PDF (ADR-006), and the colour
   pairs themselves.
-- **The move is made in steps, each with zero changed pixels** (`check:visual`, ADR-012). The
-  plan is issue #10.
+- **The move was made in six steps, each with zero changed pixels** (`check:visual`, ADR-012),
+  from 2026-11-25. The plan was issue #10.
 
 ### Step one: Tailwind under the existing styles (2026-11-25)
 
@@ -130,6 +130,25 @@ pill and the bar's inner row carry utilities. The stylesheet is 476 lines.
   the tablet one won and moved every line of the PDF.
 - The menu's own rules stay as they are: nearly all of them are state and motion.
 
+### Step six: the old global rules are gone (2026-11-25)
+
+- The rules for bare elements (`p`, `h2`, `h3`, `ul`, `li`, `a`, `strong`, `code`, the table) and
+  the seven `:where()` defaults from step one are deleted. Every element that needed them carries
+  utilities. A rule in `check:rules` fails if a bare content element is styled again.
+- **One global rule stays, in `@layer base`**: `a, button, summary { touch-action: manipulation }`.
+  It is behaviour, not look (ADR-009), and the menu's and the bar's own controls rely on it.
+- Comparing every element's computed style with `main` after the deletion left only differences
+  that cannot be seen (the baseline of icons inside grid buttons, the underline offset of links
+  that have no underline). 83 of 83 pictures matched, and so did the newest post, compared
+  separately.
+
+### Where it ended
+
+`app/globals.css` went from 231 rules and 677 declarations to 109 and 324 (647 lines to about
+420, before Biome put one declaration on each line, ADR-016): the colour pairs, the base (the body, the
+graph paper, the text size), state and motion (the travelling title, the bar, the menu, the
+waves) and the print sheet. Everything else is utilities in the markup.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`
@@ -141,8 +160,10 @@ pill and the bar's inner row carry utilities. The stylesheet is 476 lines.
 
 ## Consequences
 
-- Until the last step, two systems live side by side: utilities and the old class rules.
+- Two systems live side by side for good, with a line between them: look in utilities, state and
+  motion in CSS.
 - ui-sdk's Dialog locks scrolling in a way its docs do not describe. Vaul broke the header on
   iOS by doing that badly (ADR-005), so the menu's move starts with a check on real iOS Safari
   that `scrollY` does not change.
-- A fair guess for the end state is 250 to 350 lines of CSS, down from 647.
+- The first guess for the end state was 250 to 350 lines. It ended near 420: the header's and
+  the menu's state rules are more of the file than expected.

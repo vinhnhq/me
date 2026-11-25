@@ -1,6 +1,6 @@
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright-core";
 import { PNG } from "pngjs";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 const BASE = process.env.BASE ?? "http://localhost:3100";
 const UPDATE = process.argv.includes("--update");
@@ -20,8 +20,8 @@ const shots = [];
 async function settle(page) {
   await page.evaluate(async () => {
     await document.fonts.ready;
-    const limit = new Promise(done => setTimeout(done, 4000));
-    await Promise.all([...document.images].map(img => Promise.race([img.decode().catch(() => {}), limit])));
+    const limit = new Promise((done) => setTimeout(done, 4000));
+    await Promise.all([...document.images].map((img) => Promise.race([img.decode().catch(() => {}), limit])));
   });
   await page.waitForTimeout(250);
 }
@@ -47,7 +47,7 @@ for (const [size, [width, height, touch]] of Object.entries(SIZES)) {
       await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
       await page.addStyleTag({ content: "* { caret-color: transparent !important; }" });
       await take(page, `${size}-${scheme}-${name}-top`);
-      await page.evaluate(top => window.scrollTo(0, top), height * 1.5);
+      await page.evaluate((top) => window.scrollTo(0, top), height * 1.5);
       await take(page, `${size}-${scheme}-${name}-scrolled`);
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       await take(page, `${size}-${scheme}-${name}-end`);
@@ -72,8 +72,12 @@ const paper = await browser.newContext({ viewport: { width: 794, height: 1123 },
 const sheet = await paper.newPage();
 await sheet.emulateMedia({ media: "print" });
 await sheet.goto(`${BASE}/resume`, { waitUntil: "networkidle" });
-for (const [name, top] of [["print-resume-1", 0], ["print-resume-2", 1123], ["print-resume-3", 2246]]) {
-  await sheet.evaluate(y => window.scrollTo(0, y), top);
+for (const [name, top] of [
+  ["print-resume-1", 0],
+  ["print-resume-2", 1123],
+  ["print-resume-3", 2246],
+]) {
+  await sheet.evaluate((y) => window.scrollTo(0, y), top);
   await take(sheet, name);
 }
 await paper.close();
@@ -102,7 +106,7 @@ for (const name of shots) {
   const diff = new PNG({ width: a.width, height: a.height });
   let pixels = 0;
   for (let i = 0; i < a.data.length; i += 4) {
-    const differs = [0, 1, 2].some(c => Math.abs(a.data[i + c] - b.data[i + c]) > CHANNEL);
+    const differs = [0, 1, 2].some((c) => Math.abs(a.data[i + c] - b.data[i + c]) > CHANNEL);
     if (differs) pixels++;
     diff.data[i] = differs ? 255 : a.data[i] >> 2;
     diff.data[i + 1] = differs ? 0 : a.data[i + 1] >> 2;
