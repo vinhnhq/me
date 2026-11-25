@@ -5,6 +5,7 @@ import { ResumeHeader } from "@/components/resume-header";
 import { SiteNav } from "@/components/site-nav";
 import { getResume } from "@/lib/markdown";
 import { SITE_URL, X_HANDLE, jsonLd, shareCard } from "@/lib/site";
+import { FOCUS_RING, PAGE } from "@/lib/styles";
 
 const TITLE = "Vinh Nguyen — Senior Fullstack Engineer";
 const DESCRIPTION =
@@ -36,14 +37,19 @@ export default async function ResumePage() {
     },
   };
   return (
-    <main className="page resume" data-resume>
+    <main className={`${PAGE} resume`} data-resume>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <SiteNav
         title={resume.name}
         action={
           // react-doctor-disable-next-line react-doctor/nextjs-no-a-element
-          <a className="pill" href="/api/pdf" rel="nofollow" aria-label="Save as PDF">
-            <span className="pill-wide">Save as&nbsp;</span>PDF
+          <a
+            className={`pill inline-flex h-[calc(1.75rem+8px)] touch-manipulation items-center rounded-[999px] border border-rule bg-bg px-[0.9rem] font-mono text-[0.78rem] whitespace-nowrap text-fg no-underline [-webkit-tap-highlight-color:transparent] hover:border-muted pointer-coarse:h-[calc(2.75rem+8px)] ${FOCUS_RING}`}
+            href="/api/pdf"
+            rel="nofollow"
+            aria-label="Save as PDF"
+          >
+            <span className="phone:hidden">Save as&nbsp;</span>PDF
           </a>
         }
       >

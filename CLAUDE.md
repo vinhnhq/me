@@ -38,7 +38,8 @@ ADR.
 | `components/support.tsx` | The Ko-fi cup | 011 |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
 | `app/og.png/`, `app/og-photo.png/`, `lib/site.ts`, `app/llms*.txt/`, `app/robots.ts`, `app/sitemap.ts` | Share cards, crawlers, agents | 008 |
-| `app/globals.css` | Tokens, the old class rules (being moved to Tailwind utilities, step by step), the motion and the print sheet | 003, 004, 009, 015 |
+| `app/globals.css` | Tokens, state and motion (the travelling title, the bar, the menu, the waves), the print sheet | 003, 004, 005, 015 |
+| `lib/styles.ts` | Class strings shared by the pages: the page shell, the page title, the focus ring | 015 |
 | `scripts/` | The checks | 012 |
 | `.github/workflows/` | The pull-request gate and the daily check | 014 |
 
@@ -55,6 +56,11 @@ ADR.
 - **A rule in `@layer components` loses to ANY utility.** An old rule that restyles an element
   from outside (`.box p { … }`) stops working the moment that element gets a utility for the
   same property; move the override onto the container as a utility (`[&_p]:m-0`).
+- **Look in utilities; state and motion in CSS, keyed on hook classes** (`actions`, `links`,
+  `controls`, `segmented`, `pill`, `page`, `menu`, `sticky-bar`, `sticky-name`, `menu-button`).
+  Do not remove a hook class, and never put a utility on an element for a property a state rule
+  sets on it (`display`, `opacity`, `visibility`, `pointer-events` in the header): the utility
+  wins and the state is lost (ADR-015).
 - **`.no-print` loses to a display utility** (`grid`, `flex`, `block`): on an element with
   utilities, hide it on paper with `print:hidden`.
 - **Before deleting an old class rule, search for every element with that class name**, and for

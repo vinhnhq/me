@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { Tags } from "@/components/tags";
 import { formatDay, getPost, listPosts } from "@/lib/markdown";
 import { SITE_URL, jsonLd, shareCard } from "@/lib/site";
+import { HEADING, PAGE } from "@/lib/styles";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -47,13 +48,13 @@ export default async function PostPage({ params }: Props) {
     publisher: author,
   };
   return (
-    <main className="page post">
+    <main className={`${PAGE} post`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(article) }} />
       <SiteNav title={post.title}>
         <Link href="/resume">Résumé</Link>
         <Link href="/">Blog</Link>
       </SiteNav>
-      <h1>{post.title}</h1>
+      <h1 className={HEADING}>{post.title}</h1>
       <p className="mt-0 mb-2 text-pretty text-muted">
         <time dateTime={post.date}>{formatDay(post.date)}</time>
       </p>

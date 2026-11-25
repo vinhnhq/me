@@ -123,7 +123,7 @@ export function StickyBar({ title }: { title: string }) {
 
   return (
     <div ref={bar} className="sticky-bar no-print">
-      <div className="sticky-inner">
+      <div className="mx-auto flex h-[calc(1.75rem+8px+1rem)] max-w-[50rem] items-center px-4 narrow:justify-center tablet:px-8 pointer-coarse:h-[calc(2.75rem+8px+1rem)]">
         <a
           className="sticky-name"
           href="#top"

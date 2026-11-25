@@ -107,6 +107,29 @@ The stylesheet is 554 lines.
 The behaviour moved to ui-sdk (ADR-005); the menu's look is unchanged, pixel for pixel, and its
 rules are still classes in the stylesheet. They become utilities with the header.
 
+### Step five: the header's look (2026-11-25)
+
+The page shell, the page titles, the top row, the skip link, the two pills, the "Save as PDF"
+pill and the bar's inner row carry utilities. The stylesheet is 476 lines.
+
+- **The line between the two systems: look in utilities, state and motion in CSS.** What an
+  element always looks like is a utility. What changes with the scroll, the menu or a measured
+  number stays a rule, keyed on a hook class (`actions`, `links`, `controls`, `segmented`,
+  `pill`, `page`, `menu`, `sticky-bar`, `sticky-name`, `menu-button`): the title's keyframes and
+  timelines, `html[data-head-*]`, the menu's transitions, the bar's measured widths.
+- **A property that a state rule sets must not also be a utility on that element**, or the
+  utility wins and the state is lost. So the top row keeps `pointer-events` in CSS (the menu
+  button is switched off there until the page is scrolled), and nothing sets `display`,
+  `opacity` or `visibility` on the menu button or the bar.
+- **Hiding a child from its parent**: the pills sit in the top row and in the menu, and only the
+  row hides them on a narrow screen. The old rule (`.actions > .controls > .segmented`) would
+  lose to the pill's own `inline-flex`, so the row says it as a utility:
+  `narrow:[&>.segmented]:hidden`.
+- **`tablet:` is a screen-only variant.** An A4 page is 794px wide, inside the tablet range; the
+  old print sheet came later in the file and overrode the tablet padding, but among utilities
+  the tablet one won and moved every line of the PDF.
+- The menu's own rules stay as they are: nearly all of them are state and motion.
+
 ## Alternatives considered
 
 - **Importing Tailwind without its reset.** Zero risk today, but utilities such as `border`
