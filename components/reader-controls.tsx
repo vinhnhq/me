@@ -44,7 +44,7 @@ function Segmented<T extends string>({
       {options.map((o) => (
         <SegmentedControlItem
           key={o.id}
-          className={`grid size-7 cursor-pointer touch-manipulation place-items-center rounded-[50%] border-0 bg-transparent p-0 font-mono text-[13.3333px] leading-normal text-muted [-webkit-tap-highlight-color:transparent] hover:text-fg data-checked:bg-fg data-checked:text-bg data-checked:hover:text-bg pointer-coarse:size-11 ${FOCUS_RING}`}
+          className={`grid size-7 cursor-pointer touch-manipulation place-items-center rounded-[50%] border-0 bg-transparent p-0 font-mono text-[13.3333px] leading-normal text-muted [-webkit-tap-highlight-color:transparent] hover:text-fg data-checked:bg-fg data-checked:text-bg data-checked:hover:text-bg pointer-coarse:size-touch ${FOCUS_RING}`}
           value={o.id}
           data-option={o.id}
           aria-label={o.label}

@@ -24,7 +24,9 @@ hidden thing is reachable or whether a moving title is still a heading.
 - **Post titles in the blog list are `h2`s** that look like the links they hold.
 - **Every stand-alone control is at least 44×44 on any touch screen** (`@media (pointer:
   coarse)`), at any width. The target is grown, not the drawing. A link inside a sentence is
-  exempt (WCAG 2.5.8).
+  exempt (WCAG 2.5.8). The size is one token, `--spacing-touch: max(2.75rem, 44px)` (`size-touch`,
+  `min-h-touch`): it grows with large text and never drops under 44px on small text, where
+  2.75rem alone would be 41px (2026-11-25).
 - **`touch-action: manipulation`** on links and buttons: without it iOS waits about 300ms for a
   double-tap.
 - **Nothing pushes the page wider than the screen**: long words and addresses wrap.

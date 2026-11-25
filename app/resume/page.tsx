@@ -45,7 +45,7 @@ export default async function ResumePage() {
         action={
           // react-doctor-disable-next-line react-doctor/nextjs-no-a-element
           <a
-            className={`pill inline-flex h-[calc(1.75rem+8px)] touch-manipulation items-center rounded-[999px] border border-rule bg-bg px-[0.9rem] font-mono text-[0.78rem] whitespace-nowrap text-fg no-underline [-webkit-tap-highlight-color:transparent] hover:border-muted pointer-coarse:h-[calc(2.75rem+8px)] ${FOCUS_RING}`}
+            className={`pill inline-flex h-[calc(1.75rem+8px)] touch-manipulation items-center rounded-[999px] border border-rule bg-bg px-[0.9rem] font-mono text-[0.78rem] whitespace-nowrap text-fg no-underline [-webkit-tap-highlight-color:transparent] hover:border-muted pointer-coarse:h-[calc(var(--spacing-touch)+8px)] ${FOCUS_RING}`}
             href="/api/pdf"
             rel="nofollow"
             aria-label="Save as PDF"

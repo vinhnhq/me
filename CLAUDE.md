@@ -72,8 +72,9 @@ ADR.
 - **A sentence with a link in it stays one text node.** The formatter breaks long JSX text around
   a link with `{" "}`, which shifts the link by a sub-pixel; put the words in a string constant
   (ADR-016).
-- **The root font size is 17px**, so rem-based utilities are not the pixel sizes Tailwind's docs
-  list. Keep a pixel value as pixels: `rounded-[4px]`.
+- **The root font size follows the reader's text size** (15, 16 or 18px; 16 is the default), so
+  a rem-based utility is its documented pixel size only at the default. A value meant in pixels
+  stays in pixels: `rounded-[4px]`.
 - **A new colour is a pair** (`--x-light`, `--x-dark`) joined by `light-dark()` (ADR-003).
 - **The baseline for `check:visual` comes from a local build of `main`, never from the live
   site**: Vercel's build differs from a local one by a few pixels in the text-size pill (ADR-012).

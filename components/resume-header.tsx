@@ -32,9 +32,9 @@ const icons = {
   ),
 };
 
-const LI = "m-0 flex items-center gap-[0.4rem] text-pretty pointer-coarse:min-h-11 phone:first:basis-full phone:last:basis-full";
+const LI = "m-0 flex items-center gap-[0.4rem] text-pretty pointer-coarse:min-h-touch phone:first:basis-full phone:last:basis-full";
 const LINK =
-  "touch-manipulation text-inherit underline decoration-rule underline-offset-[3px] hover:text-fg hover:decoration-current pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center";
+  "touch-manipulation text-inherit underline decoration-rule underline-offset-[3px] hover:text-fg hover:decoration-current pointer-coarse:inline-flex pointer-coarse:min-h-touch pointer-coarse:items-center";
 
 export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
@@ -59,7 +59,7 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
           </div>
           {r.values.length > 0 && (
             <p className="mt-[0.9rem] mb-0 flex flex-wrap items-baseline gap-x-[0.6rem] gap-y-[0.15rem] text-pretty print:mt-[0.35rem] phone:mt-5 phone:justify-center phone:gap-y-[0.35rem]">
-              <span className="mr-[0.4rem] font-mono text-[0.72rem] tracking-[0.14em] text-muted uppercase print:text-[7pt] phone:mr-0 phone:basis-full phone:text-center">
+              <span className="mr-[0.4rem] font-mono text-[0.75rem] tracking-[0.14em] text-muted uppercase print:text-[7pt] phone:mr-0 phone:basis-full phone:text-center">
                 Values
               </span>
               {r.values.map((v, i) => (
