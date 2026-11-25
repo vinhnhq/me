@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   openGraph: { type: "website", ...shareCard(TITLE, DESCRIPTION, "/") },
 };
 
+const INTRO =
+  "Senior fullstack engineer in Ho Chi Minh City, building with React, Next.js, TypeScript and AI coding agents. Open to remote roles and contracts: here is my ";
 const LINK = "touch-manipulation text-accent underline underline-offset-2";
 
 export default async function BlogPage() {
@@ -29,8 +31,11 @@ export default async function BlogPage() {
       </SiteNav>
       <h1 className={HEADING}>Vinh Nguyen</h1>
       <p className="mt-2 mb-3 text-[1.05rem] text-pretty">
-        Senior fullstack engineer in Ho Chi Minh City, building with React, Next.js, TypeScript and AI coding agents.
-        Open to remote roles and contracts: here is my <Link className={LINK} href="/resume">résumé</Link>.
+        {INTRO}
+        <Link className={LINK} href="/resume">
+          résumé
+        </Link>
+        .
       </p>
       <p className="mt-0 mb-2 text-pretty text-muted">Field notes and case studies from shipping real products.</p>
       <ul className="mt-8 mb-0 list-none p-0">

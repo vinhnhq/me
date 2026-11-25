@@ -3,10 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@sparticuz/chromium", "playwright-core"],
   outputFileTracingIncludes: {
-    "/api/pdf": [
-      "./node_modules/@sparticuz/chromium/bin/**",
-      "./node_modules/playwright-core/**",
-    ],
+    "/api/pdf": ["./node_modules/@sparticuz/chromium/bin/**", "./node_modules/playwright-core/**"],
   },
   async redirects() {
     return [

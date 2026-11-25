@@ -46,7 +46,8 @@ try {
             });
             return 0.2126 * r + 0.7152 * g + 0.0722 * b;
           };
-          const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true })!;
+          const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+          if (!ctx) return ["contrast: this browser gave no canvas to measure colours with"];
           const rgb = (css: string) => {
             ctx.clearRect(0, 0, 1, 1);
             ctx.fillStyle = css;
@@ -63,8 +64,8 @@ try {
           const seen = new Set<string>();
           const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
           for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-            const el = n.parentElement!;
-            if (!n.textContent?.trim() || el.closest("script, style, [aria-hidden]")) continue;
+            const el = n.parentElement;
+            if (!el || !n.textContent?.trim() || el.closest("script, style, [aria-hidden]")) continue;
             const cs = getComputedStyle(el);
             if (cs.display === "none" || el.getClientRects().length === 0) continue;
             const size = parseFloat(cs.fontSize);
@@ -89,7 +90,13 @@ try {
           const { violations } = await (window as unknown as { axe: typeof axe }).axe.run(document, {
             runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] },
           });
-          return violations.map((v) => `wcag: ${v.id} (${v.impact}) ${v.help}: ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(", ")}`);
+          return violations.map(
+            (v) =>
+              `wcag: ${v.id} (${v.impact}) ${v.help}: ${v.nodes
+                .map((n) => n.target.join(" "))
+                .slice(0, 3)
+                .join(", ")}`,
+          );
         });
         problems.push(...violations);
         for (const p of problems) {

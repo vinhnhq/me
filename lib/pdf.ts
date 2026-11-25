@@ -25,7 +25,7 @@ export async function renderResumePdf(origin: string): Promise<Uint8Array> {
     if ((await page.locator("[data-resume]").count()) === 0) throw new Error(`pdf: ${origin} has no résumé on it`);
     await page.evaluate((site) => {
       for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="/"]')) {
-        a.href = new URL(a.getAttribute("href")!, site).toString();
+        a.href = new URL(a.getAttribute("href") ?? "", site).toString();
       }
     }, SITE_URL);
     await page.evaluate(() => document.fonts.ready);

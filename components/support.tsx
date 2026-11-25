@@ -28,7 +28,18 @@ export function Support() {
         data-shown={shown}
         inert={!shown}
       >
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <span className="sr-only">Buy me a coffee on Ko-fi</span>
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
           <path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z" />
           <path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" />
           <path d="M8 2.5v2.5M12 2.5v2.5" />

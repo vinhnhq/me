@@ -4,7 +4,7 @@ import { ResumeBody } from "@/components/resume-body";
 import { ResumeHeader } from "@/components/resume-header";
 import { SiteNav } from "@/components/site-nav";
 import { getResume } from "@/lib/markdown";
-import { SITE_URL, X_HANDLE, jsonLd, shareCard } from "@/lib/site";
+import { jsonLd, SITE_URL, shareCard, X_HANDLE } from "@/lib/site";
 import { FOCUS_RING, PAGE } from "@/lib/styles";
 
 const TITLE = "Vinh Nguyen — Senior Fullstack Engineer";
@@ -38,6 +38,7 @@ export default async function ResumePage() {
   };
   return (
     <main className={`${PAGE} resume`} data-resume>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD from our own data, with "<" escaped by jsonLd() */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <SiteNav
         title={resume.name}

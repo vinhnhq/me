@@ -53,7 +53,7 @@ function parseEntry(block: string): Entry {
   const parts = meta[1].split(" · ");
   if (parts.length < 2) throw new Error(`content/resume.md: "${title}" needs at least *Org · Dates*`);
   const where = parts.length > 2 ? parts.pop() : undefined;
-  const when = parts.pop()!;
+  const when = parts.pop() ?? "";
   const text = rest.slice(metaAt + 1).join("\n");
   return {
     title,
@@ -69,10 +69,7 @@ function parseSection(block: string): Section {
   const title = block.slice(0, nl).trim();
   const text = block.slice(nl + 1);
   if (!/^### /m.test(text)) return { title, text };
-  const entries = text
-    .split(/^### /m)
-    .slice(1)
-    .map(parseEntry);
+  const entries = text.split(/^### /m).slice(1).map(parseEntry);
   return { title, entries };
 }
 
@@ -88,7 +85,10 @@ export async function getResume(): Promise<Resume> {
     phone: meta.phone,
     location: meta.location,
     github: meta.github,
-    values: (meta.values ?? "").split("·").map((v) => v.trim()).filter(Boolean),
+    values: (meta.values ?? "")
+      .split("·")
+      .map((v) => v.trim())
+      .filter(Boolean),
     summary,
     sections: sections.map(parseSection),
     markdown: body.trim(),
@@ -133,9 +133,7 @@ function parsePost(slug: string, source: string): Post {
 
 export async function listPosts(): Promise<Post[]> {
   const files = (await readdir(path.join(CONTENT, "blog"))).filter((f) => f.endsWith(".md"));
-  const posts = await Promise.all(
-    files.map(async (f) => parsePost(f.slice(0, -3), await readFile(path.join(CONTENT, "blog", f), "utf8"))),
-  );
+  const posts = await Promise.all(files.map(async (f) => parsePost(f.slice(0, -3), await readFile(path.join(CONTENT, "blog", f), "utf8"))));
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 

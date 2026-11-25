@@ -13,7 +13,8 @@ export function StickyBar({ title }: { title: string }) {
     const heading = document.querySelector<HTMLElement>("main h1");
     const barEl = bar.current;
     const slotEl = slot.current;
-    if (!heading || !barEl || !slotEl) return;
+    const nameEl = slotEl?.parentElement;
+    if (!heading || !barEl || !slotEl || !nameEl) return;
 
     let mode: "land" | "fade" = "land";
     let legs: 1 | 2 = 1;
@@ -26,7 +27,6 @@ export function StickyBar({ title }: { title: string }) {
     let isStuck = false;
     let isSwapped = false;
     let frame = 0;
-    const nameEl = slotEl.parentElement!;
     const menuButton = document.querySelector<HTMLElement>(".actions > .menu-button");
     const wide = window.matchMedia("(min-width: 60.01rem)");
     const reach = () => {
@@ -48,7 +48,7 @@ export function StickyBar({ title }: { title: string }) {
         heading.style.scale = moving ? String(1 + (scale - 1) * up) : "";
         heading.style.translate = travels ? `${dx * left}px ${slide * left}px` : fades || direct ? `${dx * up}px 0px` : "";
         heading.style.opacity = fades ? String(1 - late) : "";
-        slotEl.parentElement!.style.opacity = fades ? String(late) : "";
+        nameEl.style.opacity = fades ? String(late) : "";
         barEl.style.opacity = String(still.matches ? Math.floor(up) : clamp((up - 0.5) / 0.5));
       }
       const stuckNow = up >= 1;
@@ -117,25 +117,25 @@ export function StickyBar({ title }: { title: string }) {
       heading.style.opacity = "";
       nameEl.inert = false;
       if (menuButton) menuButton.inert = false;
-      for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels", "data-head-direct", "data-head-fades"]) root.removeAttribute(attr);
+      for (const attr of ["data-head-stuck", "data-head-collapsed", "data-head-travels", "data-head-direct", "data-head-fades"])
+        root.removeAttribute(attr);
     };
   }, [title]);
 
   return (
     <div ref={bar} className="sticky-bar no-print">
       <div className="mx-auto flex h-[calc(1.75rem+8px+1rem)] max-w-[50rem] items-center px-4 narrow:justify-center tablet:px-8 pointer-coarse:h-[calc(2.75rem+8px+1rem)]">
-        <a
+        <button
+          type="button"
           className="sticky-name"
-          href="#top"
           aria-label={`${title}: back to the top`}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
             window.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
           }}
         >
           <span ref={slot}>{title}</span>
-        </a>
+        </button>
       </div>
     </div>
   );

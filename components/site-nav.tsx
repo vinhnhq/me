@@ -4,7 +4,7 @@ import { type MenuLink, SiteMenu } from "@/components/site-menu";
 import { StickyBar } from "@/components/sticky-bar";
 import { FOCUS_RING } from "@/lib/styles";
 
-export function SiteNav({ title, children, action }: {  title: string; children: ReactNode; action?: ReactNode }) {
+export function SiteNav({ title, children, action }: { title: string; children: ReactNode; action?: ReactNode }) {
   const menu: MenuLink[] = [
     { href: "/", label: "Blog", note: "Field notes and case studies" },
     { href: "/resume", label: "Résumé" },

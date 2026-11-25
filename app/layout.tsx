@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
 import { AppPreferences } from "@/components/app-preferences";
 import { WaveFooter } from "@/components/wave-footer";
-import { SITE_URL, X_HANDLE, shareCard } from "@/lib/site";
+import { SITE_URL, shareCard, X_HANDLE } from "@/lib/site";
 import "./globals.css";
 
 const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin", "vietnamese"] });

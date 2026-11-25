@@ -9,6 +9,7 @@ function Figure({ src = "", alt = "", title, lead }: Picture & { lead: boolean }
   const size = /-(\d+)x(\d+)\.[a-z]+$/.exec(src);
   return (
     <figure className="my-7">
+      {/* biome-ignore lint/performance/noImgElement: the file name carries the size, and the page stays static */}
       <img
         className="block h-auto w-full rounded-[0.6rem] border border-rule"
         src={src}
@@ -36,9 +37,7 @@ function components(): Components {
       }
       return <p className="my-2 text-pretty">{children}</p>;
     },
-    h2: ({ node: _, ...props }: Rest<"h2">) => (
-      <h2 className={SECTION_HEADING} {...props} />
-    ),
+    h2: ({ node: _, ...props }: Rest<"h2">) => <h2 className={SECTION_HEADING} {...props} />,
     h3: ({ node: _, ...props }: Rest<"h3">) => (
       <h3 className="mt-7 mb-[0.1rem] text-[1.05rem] font-semibold text-balance print:m-0 print:break-after-avoid" {...props} />
     ),
@@ -62,10 +61,7 @@ function components(): Components {
     thead: ({ node: _, ...props }: Rest<"thead">) => <thead className="hidden" {...props} />,
     th: ({ node: _, ...props }: Rest<"th">) => <th className="p-px" {...props} />,
     td: ({ node: _, ...props }: Rest<"td">) => (
-      <td
-        className="border-b border-rule py-[0.45rem] align-top first:w-[55%] first:pr-4 first:text-muted phone:first:w-auto"
-        {...props}
-      />
+      <td className="border-b border-rule py-[0.45rem] align-top first:w-[55%] first:pr-4 first:text-muted phone:first:w-auto" {...props} />
     ),
   };
 }

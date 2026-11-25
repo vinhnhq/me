@@ -1,6 +1,6 @@
-import { parseSync } from "oxc-parser";
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { parseSync } from "oxc-parser";
 
 const DIRECTIVE = /^\**\s*(react-doctor-disable|@ts-(expect-error|ignore|nocheck)|eslint-disable|biome-ignore)/;
 const STRIP = process.argv.includes("--strip");
@@ -8,13 +8,13 @@ const MARK = "\u0000";
 
 const files = execSync("git ls-files -co --exclude-standard app components lib scripts next.config.ts", { encoding: "utf8" })
   .split("\n")
-  .filter(file => /\.(tsx?|mjs|css)$/.test(file) && existsSync(file));
+  .filter((file) => /\.(tsx?|mjs|css)$/.test(file) && existsSync(file));
 
 function comments(file, text) {
   const found = file.endsWith(".css")
-    ? [...text.matchAll(/\/\*[\s\S]*?\*\//g)].map(m => ({ start: m.index, end: m.index + m[0].length, value: m[0].slice(2, -2) }))
+    ? [...text.matchAll(/\/\*[\s\S]*?\*\//g)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0].slice(2, -2) }))
     : parseSync(file, text).comments;
-  return found.filter(comment => !DIRECTIVE.test(comment.value));
+  return found.filter((comment) => !DIRECTIVE.test(comment.value));
 }
 
 function strip(file, text, found) {
@@ -29,7 +29,7 @@ function strip(file, text, found) {
   }
   return out
     .split("\n")
-    .flatMap(line => {
+    .flatMap((line) => {
       if (!line.includes(MARK)) return [line];
       const rest = line.replaceAll(MARK, "").trimEnd();
       return rest.trim() ? [rest] : [];

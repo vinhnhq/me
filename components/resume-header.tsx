@@ -12,7 +12,14 @@ const stroke = {
 } as const;
 
 const Icon = ({ children, solid }: { children: ReactNode; solid?: boolean }) => (
-  <svg className="flex-none align-baseline print:size-[10pt]" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" {...(solid ? { fill: "currentColor" } : stroke)}>
+  <svg
+    className="flex-none align-baseline print:size-[10pt]"
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    aria-hidden="true"
+    {...(solid ? { fill: "currentColor" } : stroke)}
+  >
     {children}
   </svg>
 );
@@ -25,8 +32,7 @@ const icons = {
   ),
 };
 
-const LI =
-  "m-0 flex items-center gap-[0.4rem] text-pretty phone:first:basis-full phone:last:basis-full pointer-coarse:min-h-11";
+const LI = "m-0 flex items-center gap-[0.4rem] text-pretty phone:first:basis-full phone:last:basis-full pointer-coarse:min-h-11";
 const LINK =
   "touch-manipulation text-inherit underline decoration-rule underline-offset-[3px] hover:text-fg hover:decoration-current pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center";
 
@@ -34,17 +40,20 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
   return (
     <header>
       <div className="mt-2 mb-3 flex items-start gap-8 text-[1.05rem] phone:flex-col phone:items-center phone:gap-4 print:gap-[6mm]">
-        {/* eslint-disable-next-line @next/next/no-img-element -- one small local file; the PDF prints it as is */}
+        {/* biome-ignore lint/performance/noImgElement: one small local file, printed as it is by the PDF */}
         <img
           className="m-[3px] size-[9.5rem] max-w-none flex-none rounded-[50%] border-4 border-bg object-cover align-baseline outline-[3px] outline-accent phone:size-[7.5rem] print:size-[30mm] print:border-[1mm] print:outline-[0.7mm]"
-          src="/vinh-nguyen.jpg" alt={r.name}
+          src="/vinh-nguyen.jpg"
+          alt={r.name}
           width={160}
           height={160}
           fetchPriority="high"
         />
         <div>
           <h1 className={`${HEADING} phone:mx-auto phone:text-center`}>{r.name}</h1>
-          <p className="mt-0 mb-2 text-[1.2rem] text-pretty text-accent phone:text-center print:mb-[0.3rem] print:text-[11.5pt]">{r.headline}</p>
+          <p className="mt-0 mb-2 text-[1.2rem] text-pretty text-accent phone:text-center print:mb-[0.3rem] print:text-[11.5pt]">
+            {r.headline}
+          </p>
           <div className="[&_p]:m-0 [&_p+p]:mt-[0.6rem] print:[&_p+p]:mt-1">
             <Markdown source={r.summary} />
           </div>
@@ -70,10 +79,14 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
       <ul className="mt-6 mb-0 flex list-none flex-wrap items-center gap-x-6 gap-y-[0.35rem] p-0 font-mono text-[0.8rem] text-muted phone:gap-y-0 pointer-coarse:gap-y-0 print:mt-[0.7rem] print:gap-x-[1.1rem] print:gap-y-[0.2rem] print:text-[8.4pt]">
         <li className={LI}>{r.location}</li>
         <li className={LI}>
-          <a className={LINK} href={`tel:${r.phone.replace(/\s/g, "")}`}>{r.phone}</a>
+          <a className={LINK} href={`tel:${r.phone.replace(/\s/g, "")}`}>
+            {r.phone}
+          </a>
         </li>
         <li className={LI}>
-          <a className={LINK} href={`mailto:${r.email}`}>{r.email}</a>
+          <a className={LINK} href={`mailto:${r.email}`}>
+            {r.email}
+          </a>
         </li>
         <li className={LI}>
           {icons.github}
