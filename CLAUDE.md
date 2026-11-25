@@ -33,7 +33,7 @@ ADR.
 | `app/blog/[slug]/page.tsx` | A post | 002, 013 |
 | `app/api/pdf/route.ts`, `lib/pdf.ts` | The résumé as a PDF | 006 |
 | `components/site-nav.tsx`, `components/sticky-bar.tsx` | The top row, and the bar it becomes | 004 |
-| `components/site-menu.tsx` | The full-screen menu | 005 |
+| `components/site-menu.tsx` | The full-screen menu, on ui-sdk's Dialog | 005 |
 | `components/reader-controls.tsx`, `lib/preferences.ts`, `components/app-preferences.tsx` | Theme and text size | 003, 010 |
 | `components/support.tsx` | The Ko-fi cup | 011 |
 | `components/wave-footer.tsx` | The wave lines at the foot of every page | 003 |
