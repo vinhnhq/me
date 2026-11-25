@@ -34,9 +34,15 @@ work is finished.
   `lib/`: the canonical spelling of each class (`canonicalizeCandidates`) and the order
   (`getClassOrder`, the order the official Prettier plugin uses). `bun run format` rewrites both.
 - **No pixel-to-rem conversion.** The root font size is 17px (ADR-003), so `pl-[40px]` is not
-  `pl-10`. The check passes no `rem` option, which keeps every pixel value as written, and
-  `.vscode/settings.json` sets `tailwindCSS.rootFontSize` to 17 so the editor does not suggest
-  the wrong class either.
+  `pl-10`. The check passes no `rem` option, which keeps every pixel value as written. The
+  Tailwind extension has the same assumption as a setting (`rootFontSize`, 16 by default; it is
+  the site's root size, nothing to do with the editor's own font size), set to 17 in
+  `.zed/settings.json` and `.vscode/settings.json` so the editor does not suggest the wrong
+  class either.
+- **The owner's editor is Zed.** `.zed/settings.json` makes Biome the formatter for TypeScript,
+  TSX, JavaScript, CSS and JSON, runs its fixes on format, and leaves markdown alone. It needs
+  Zed's Biome extension installed; without it Zed falls back to its own formatter, which is
+  what kept reformatting finished work.
 - **Both are steps of `bun run verify` and of the pull-request gate.**
 - **The reason for a suppression is on its line**: `biome-ignore lint/<group>/<rule>: reason`,
   which `check:comments` accepts as a directive (ADR-001). There are five: three plain `<img>`
@@ -71,5 +77,6 @@ work is finished.
   pinned with Tailwind's version; an upgrade may need the script changed.
 - The check finds class lists by looking at string literals whose words are mostly Tailwind
   classes. A class list hidden in some other shape would be missed.
-- The editor setting is for VS Code and its relatives. Another editor needs its own way to set
-  the Tailwind extension's root font size.
+- In Zed the Tailwind option sits at `lsp.tailwindcss-language-server.settings.rootFontSize`.
+  Zed's documentation shows that shape for other options of the same server (`classFunctions`,
+  `experimental`), not for this one, so it is inferred and was not seen working.
