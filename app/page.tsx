@@ -43,7 +43,7 @@ export default async function BlogPage() {
           <li key={p.slug} className="m-0 border-t border-rule py-4 text-pretty">
             <h2 className="m-0 block tracking-normal text-balance normal-case [font:inherit] after:content-none">
               <Link
-                className="inline-block touch-manipulation text-[1.05rem] font-semibold text-accent underline underline-offset-2 pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
+                className="inline-block touch-manipulation text-[1.05rem] font-semibold text-accent underline underline-offset-2 pointer-coarse:inline-flex pointer-coarse:min-h-touch pointer-coarse:items-center"
                 href={`/blog/${p.slug}`}
               >
                 {p.title}

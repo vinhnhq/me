@@ -74,7 +74,7 @@ async function behaviour(js) {
   await js(PRESS("Dark theme"));
   const dark = await settled(js, (state) => state.scheme === "dark" && state.dark === DARK_PAGE);
   await js(PRESS("Large text"));
-  const large = await settled(js, (state) => state.size === "l" && state.font === "19px");
+  const large = await settled(js, (state) => state.size === "l" && state.font === "18px");
   await js(PRESS("Follow the device"));
   await js(PRESS("Medium text"));
   await sleep(700);
@@ -86,7 +86,7 @@ async function behaviour(js) {
       ["menu-opens", opened],
       ["scroll-kept", !scrolls || (during.y === before.y && during.stuck)],
       ["dark", dark.scheme === "dark" && dark.dark === DARK_PAGE],
-      ["large-text", large.size === "l" && large.font === "19px"],
+      ["large-text", large.size === "l" && large.font === "18px"],
     ],
   };
 }

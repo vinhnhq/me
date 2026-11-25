@@ -33,8 +33,12 @@ choice must be right on the first paint, in every control on the page and in eve
   (`theme`, `size`), so a returning reader keeps their choice.
 - **Nothing is marked in a control until the page has hydrated**: the server cannot see the
   browser's choice.
-- **Text size**: medium (the default) is 17px, small the browser's own 16px, large 19px. The
-  whole page is in `rem`, so it all follows.
+- **Text size**: medium (the default) is the browser's own 16px, small 15px, large 18px. The
+  whole page is in `rem`, so it all follows. Until 2026-11-25 the steps were 16, 17 and 19px
+  with 17 as the default; the owner chose 16px, the size nearly every site and tool assumes.
+  Two labels that were 0.72rem (the "Values" label, the menu's setting names) became 0.75rem,
+  so nothing is under 12px at the default size. On small text the smallest labels are 11.25px:
+  the reader asked for smaller. The PDF did not change: paper was always 16px.
 - **Changing theme opens as a circle** growing from the chosen button (View Transitions). The
   script draws the circle, so the browser's own cross-fade is switched off. Skipped when nothing
   would change colour, for reduced motion, and where View Transitions are missing.

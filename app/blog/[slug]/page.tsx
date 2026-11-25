@@ -85,7 +85,7 @@ export default async function PostPage({ params }: Props) {
       {post.link && (
         <p className="my-6 text-pretty">
           <a
-            className="inline-flex min-h-11 touch-manipulation items-center rounded-lg bg-accent px-[1.1rem] font-semibold text-bg no-underline"
+            className="inline-flex min-h-touch touch-manipulation items-center rounded-lg bg-accent px-[1.1rem] font-semibold text-bg no-underline"
             href={post.link}
           >
             {post.linkLabel ?? "Open it"}

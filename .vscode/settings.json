@@ -1,5 +1,4 @@
 {
   "editor.defaultFormatter": "biomejs.biome",
-  "editor.formatOnSave": true,
-  "tailwindCSS.rootFontSize": 17
+  "editor.formatOnSave": true
 }

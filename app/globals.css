@@ -2,6 +2,7 @@
 @import "tailwindcss";
 
 @theme {
+  --spacing-touch: max(2.75rem, 44px);
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
@@ -86,14 +87,11 @@
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 5rem;
   }
-  html {
-    font-size: 106.25%;
-  }
   html[data-size="s"] {
-    font-size: 100%;
+    font-size: 93.75%;
   }
   html[data-size="l"] {
-    font-size: 118.75%;
+    font-size: 112.5%;
   }
 
   body {
@@ -478,7 +476,7 @@
   }
   .menu-settings > div > span {
     font-family: var(--font-geist-mono), ui-monospace, monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
@@ -658,13 +656,13 @@
 
   @media (pointer: coarse) {
     :root {
-      --menu-size: 2.75rem;
+      --menu-size: var(--spacing-touch);
     }
 
     .sticky-name {
       display: inline-flex;
       align-items: center;
-      min-height: 2.75rem;
+      min-height: var(--spacing-touch);
     }
   }
 
