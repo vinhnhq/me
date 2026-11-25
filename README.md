@@ -74,7 +74,7 @@ and stops. It never merges and never deploys. The reasoning is in
 | `lib/` | Reading the markdown, drawing the PDF, the site's constants |
 | `scripts/` | The checks |
 | `docs/decisions/` | Why each thing is the way it is |
-| `.claude/skills/`, `.agents/skills/` | The guides and commands the agent works from |
+| `.claude/skills/` | The guides and commands the agent works from |
 
 ## Licence
 
