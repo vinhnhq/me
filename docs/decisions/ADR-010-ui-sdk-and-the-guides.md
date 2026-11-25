@@ -23,9 +23,9 @@ react-doctor to be set up and the site refactored against them, with the look un
 - **Three guides are installed as agent skills**: `ui-sdk`, Chrome's `modern-web-guidance`
   (`npx modern-web-guidance search "<task>"`, then `retrieve <id>`, before HTML or CSS work) and
   Vercel's `web-design-guidelines`.
-- **react-doctor must score 100** (`bun run doctor`). Five findings are silenced in place, each a
-  judged false positive:
-  - `dangerous-html-sink`, three times: the HTML comes from the owner's own markdown (ADR-002).
+- **react-doctor must score 100** (`bun run doctor`). Two findings are silenced in place, each a
+  judged false positive (there were five until 2026-11-25, when rendering markdown as components
+  removed the three `dangerous-html-sink` ones, ADR-002):
   - `nextjs-no-a-element`, twice: "Save as PDF" downloads a file and must not be a router link.
 - **The refactor changed no pixels on a phone**; on a desk only line endings, from `text-wrap`.
 

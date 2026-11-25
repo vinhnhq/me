@@ -31,16 +31,23 @@ the content is worth, and the résumé must also print as a PDF from the same so
   fails otherwise. Tags are labels, not links: there are no tag pages.
 - **A case study is an ordinary post** with `role`, `when`, `stack` (and optional `link`,
   `linkLabel`) added; the post page shows them as a facts block and a button.
+- **Markdown is rendered to React components** (`components/markdown.tsx`, `react-markdown` with
+  `remark-gfm`, since 2026-11-25): each element maps to a component that carries its Tailwind
+  utilities. It runs on the server only. Before that, `marked` produced an HTML string that was
+  set as raw HTML in six places.
 - **A picture on a line of its own becomes a `<figure>`**: the title is the caption, and the size
   in the file's NAME (`name-1600x1000.jpg`) becomes `width`/`height`, so the page keeps the
   picture's room before it loads (no layout shift). Pictures load lazily, except the first of a
   page, which is on screen at once and is fetched early (`fetchpriority="high"`).
 - **A table gets its own sideways scroller**, so on a phone it never widens the page.
-- **The HTML is not sanitised.** The markdown is the owner's own files in this repository, never
-  a visitor's input.
+- **Raw HTML inside the markdown is not rendered**: `react-markdown` drops it. The only raw HTML
+  left on a page is the JSON-LD script (ADR-008).
 - **Only the posts on disk exist** (`dynamicParams = false`); any other slug is a 404.
 
 ## Consequences
 
 - A new kind of front matter means a change in `lib/markdown.ts`.
-- `check:rules` holds the three-tags rule, the picture naming and the symbols rule.
+- `check:rules` holds the three-tags rule, the picture naming, the symbols rule, and that no
+  page sets raw HTML outside JSON-LD.
+- A context that needs different spacing (the summary beside the photo, a job's first line, the
+  print sheet) sets it on the container, with utilities such as `[&_p]:m-0`.

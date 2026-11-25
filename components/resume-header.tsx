@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Markdown } from "@/components/markdown";
 import type { Resume } from "@/lib/markdown";
 
 const stroke = {
@@ -32,8 +33,9 @@ export function ResumeHeader({ resume: r }: { resume: Resume }) {
         <div>
           <h1>{r.name}</h1>
           <p className="headline">{r.headline}</p>
-          {/* react-doctor-disable-next-line react-doctor/dangerous-html-sink */}
-          <div className="summary" dangerouslySetInnerHTML={{ __html: r.summaryHtml }} />
+          <div className="[&_p]:m-0 [&_p+p]:mt-[0.6rem] print:[&_p+p]:mt-1">
+            <Markdown source={r.summary} />
+          </div>
           {r.values.length > 0 && (
             <p className="values">
               <span className="values-label">Values</span>

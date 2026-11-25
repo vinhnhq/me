@@ -5,8 +5,8 @@ import { WaveFooter } from "@/components/wave-footer";
 import { SITE_URL, X_HANDLE, shareCard } from "@/lib/site";
 import "./globals.css";
 
-const manrope = Manrope({ variable: "--font-sans", subsets: ["latin", "vietnamese"] });
-const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
+const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin", "vietnamese"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 const TITLE = "Vinh Nguyen — Senior Fullstack Engineer";
 const DESCRIPTION =

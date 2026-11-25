@@ -16,6 +16,8 @@ const RULES = [
   ["ADR-002", "resume.md holds no arrows, dingbats or emoji: the PDF's Chromium prints them as boxes", () => !/[←-⇿⌀-⏿☀-➿⬀-⯿\u{1f000}-\u{1faff}]/u.test(resume)],
   ["ADR-002", "every post has exactly three tags", () =>
     posts.every(file => (read(file).match(/^tags:\s*(.+)$/m)?.[1] ?? "").split(",").filter(tag => tag.trim()).length === 3)],
+  ["ADR-002", "no page sets raw HTML except the JSON-LD script: markdown is rendered as components", () =>
+    source.every(file => [...read(file).matchAll(/<(\w+)[^<>]*dangerouslySetInnerHTML/g)].every(([tag]) => /^<script type="application\/ld\+json"/.test(tag)))],
   ["ADR-002", "a picture in a post is named -WIDTHxHEIGHT and its file exists", () =>
     posts.every(file => [...read(file).matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)].every(([, src]) => /-\d+x\d+\.[a-z]+$/.test(src) && existsSync(`public${src}`)))],
   ["ADR-003", "the settings keep their storage keys (theme, size), so a returning reader keeps a choice", () =>
